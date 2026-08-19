@@ -1,0 +1,60 @@
+---
+description: Wire every new page into navigation and existing pages; maintain PAGE_CONNECTIONS.md
+alwaysApply: true
+---
+
+# Page Connections
+
+A built page is not finished until users can reach it from the site — and it links outward correctly.
+
+## Mandatory connection audit — separate step
+
+After building a page, **run a dedicated connection audit before marking it done**. Do not wire
+navigation casually during the build and skip the audit.
+
+Launch a **separate Task** (explore or generalPurpose subagent) that follows the
+`page-connections` skill. The audit must:
+
+1. Search the codebase for every inbound link opportunity (header, footer, hubs, siblings, compare, archive, chat).
+2. Verify every outbound link on the new page.
+3. Update `PAGE_CONNECTIONS.md`, inline page comments, `SITE_CHROME`, component `usedOn`, and hub `links`.
+4. Report remaining MISSING items — ask the user before wiring unclear targets.
+
+Only set `status: 'built'` in `PAGE_REGISTRY` after this audit passes.
+
+## Before marking a page done
+
+1. Read `PAGE_CONNECTIONS.md` and the inline `PAGE CONNECTIONS` block in the page file.
+2. Wire **inbound** links: header nav, footer, homepage sections, sibling pages, chat widget — anywhere the sitemap says users should enter.
+3. Wire **outbound** links: use `href()` from `site-registry.js` so planned pages go to `/planned/`, built pages go direct, externals stay external.
+4. Update `PAGE_CONNECTIONS.md` and the page's inline connection block in the same change.
+
+## When connection targets are unclear — ask first
+
+Stop and ask the user before wiring if any of these are unknown:
+
+- Which nav label or menu column should link to the new page
+- Whether a homepage or hub section should promote it (and with what CTA text)
+- Whether a link should go to the new page, a parent hub, or stay on a planned placeholder
+- Tab URL param names and values (e.g. `?type=prepaid`) — see `tab-urls` rule
+
+Name the source (header, footer, homepage hero, etc.) and the options. Do not guess.
+
+## Inline comments in every page file
+
+At the top of each page's main `<script>` block, add:
+
+```js
+/* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+ * INBOUND:  [list where users can arrive from, or MISSING]
+ * OUTBOUND: [section] → target — CONNECTED | PLANNED | MISSING
+ */
+```
+
+Use `CONNECTED` for built or external targets, `PLANNED` for intentional placeholder links, `MISSING` for gaps that still need a decision.
+
+## Registry rule
+
+When `status: 'built'` is set in `PAGE_REGISTRY`, at least one **public** inbound link must exist (header, footer, or a built page body — not only `/sitemap`).
+
+Never link `/sitemap` or `/components` from public navigation.

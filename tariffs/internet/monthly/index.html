@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>High-volume internet packages — Azercell</title>
+<meta name="description" content="Monthly internet add-on packs from 3GB to 56GB. Stack data on your current tariff and activate via Kabinetim or SMS to 2525.">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<div id="page-top"></div>
+<main id="page-main"></main>
+<div id="page-bottom"></div>
+<div id="page-chat"></div>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/internet-pack-data.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/internet-pack-page.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+/* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+ * INBOUND: header → Internet → High-volume / Monthly; footer → Internet packs;
+ *           /tariffs/mobile/ → internet upsell; tariff detail pages → addon grid;
+ *           support chat → internet pack links — CONNECTED after site-wide pass
+ * OUTBOUND:
+ *   category nav → hub + sibling categories — CONNECTED
+ *   pack cards → Kabinetim — CONNECTED (external)
+ *   cross-sell → /tariffs/compare/, tariff detail — CONNECTED
+ *   related → /tariffs/mobile/, /tariffs/roaming/ — CONNECTED
+ * Filter URLs: ?volume=30-50, ?sort=price-asc|price-desc
+ */
+(function () {
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+
+  Components.mount('#page-top', [
+    ['announcementBar', { messages: chrome.announcements }],
+    ['siteHeader', R.headerProps({ branch: 'personal' })]
+  ]);
+
+  Components.mount('#page-bottom', [['siteFooter', chrome.footer]]);
+  Components.mount('#page-chat', [['supportChat', chrome.supportChat]]);
+
+  InternetPackPage.mount('monthly');
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>

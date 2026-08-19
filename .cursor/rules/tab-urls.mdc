@@ -1,0 +1,85 @@
+---
+description: Every tab switch must have a shareable page URL — filter tabs, section tabs, and nav deep links
+alwaysApply: true
+---
+
+# Tab URLs
+
+Tabs are not just UI state. Every tab must have its own link so users can bookmark, share, and
+land on the right tab from header/footer links.
+
+## When this applies
+
+Any time a page has tabs that change what the user sees:
+
+- Filter tabs (All / Prepaid / Postpaid / …)
+- Section tabs on a hub page
+- Future tab patterns — same rule
+
+If switching tabs does not change the address bar, the work is not done.
+
+## Required behaviour
+
+1. **Each tab has a real URL** — usually a query param on the page path, e.g.
+   `/tariffs/mobile/?type=prepaid`. "All" clears the param.
+2. **Tabs are links** — `filterTabs` with `syncUrl: true` renders `<a href="…">`, not buttons only.
+3. **Click updates the URL** — in-page filter runs without reload; `history.pushState` updates the bar.
+4. **Load reads the URL** — opening a link with `?type=…` selects the matching tab on load.
+5. **Back/forward works** — browser back changes tab via `popstate`.
+6. **Nav uses the same URLs** — header, footer, and CTAs deep-link with the same param pattern.
+
+## How to build it
+
+### Page assembly (`filterTabs`)
+
+```js
+render('filterTabs', {
+  urlBase: href('/tariffs/mobile/'),
+  groups: [{
+    key: 'category',
+    label: 'Plan type',
+    syncUrl: true,
+    urlParam: 'type',
+    options: [
+      { value: 'all', label: 'All' },
+      { value: 'prepaid', label: 'Prepaid' }
+    ]
+  }]
+})
+```
+
+- `urlBase` — built route for this page (required when `syncUrl: true`)
+- `urlParam` — query key (default `type`); pick a clear name per page if multiple tab groups exist
+- Wrap in `[data-filter-scope]` with `[data-filter-target]` items tagged via `data-filter-tags`
+
+### Navigation helpers (`site-registry.js`)
+
+Add a small helper when nav links to a specific tab:
+
+```js
+function tariffFilterHref(type) {
+  var base = href('/tariffs/mobile/');
+  if (!type || type === 'all') return base;
+  return base + '?type=' + encodeURIComponent(type);
+}
+```
+
+Reuse the same param name and values as the page tabs.
+
+### Documentation (same change)
+
+1. **PAGE_CONNECTIONS.md** — list each tab URL under the page (inbound + tab URL table)
+2. **Inline comment** in the page script — note tab params, e.g. `filter tabs — ?type=prepaid|postpaid`
+3. **Changelog row** in `PAGE_CONNECTIONS.md`
+
+## Audit before done
+
+- [ ] Click each tab — address bar updates
+- [ ] Copy URL, open in new tab — correct tab selected
+- [ ] Header/footer deep links match in-page tab URLs
+- [ ] Back button restores previous tab
+
+## Local-only filters
+
+Tabs that only filter demo content on the homepage (devices by brand) may omit `syncUrl` until that
+page needs shareable filter links. Any tab the sitemap or nav references **must** use tab URLs.

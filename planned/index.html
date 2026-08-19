@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Page not built yet — Azercell Prototype</title>
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<div id="chrome-top"></div>
+
+<main class="wrap" style="padding-block: var(--sp-8)">
+  <div class="section__title-group" style="margin-bottom: var(--sp-5)">
+    <p class="t-label">Prototype status</p>
+    <h1 class="t-h1" id="title">This page is planned, not built yet</h1>
+    <p class="t-lead t-muted" id="intro">The link works and the page exists in the sitemap. It has not been built in the prototype yet.</p>
+  </div>
+
+  <div class="cmp-card" style="margin-bottom: var(--sp-5)">
+    <dl class="stack">
+      <div><dt class="t-label">Requested path</dt><dd class="t-body" id="path">—</dd></div>
+      <div><dt class="t-label">Section</dt><dd class="t-body" id="branch">—</dd></div>
+      <div><dt class="t-label">Position in the sitemap</dt><dd class="t-body" id="breadcrumb">—</dd></div>
+    </dl>
+  </div>
+
+  <div id="children"></div>
+
+  <div class="row-actions" style="margin-top: var(--sp-5)">
+    <a class="btn btn--primary" id="home-link" href="/">Back to homepage</a>
+    <a class="btn" href="/sitemap/">Open sitemap</a>
+  </div>
+</main>
+
+<div id="chrome-bottom"></div>
+<div id="page-chat"></div>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(function () {
+  var esc = Components.esc;
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+  var params = new URLSearchParams(window.location.search);
+  var path = params.get('path') || '';
+  var siteBranch = path.indexOf('/business') === 0 ? 'business' : 'personal';
+
+  Components.mount('#chrome-top', [
+    ['announcementBar', { messages: chrome.announcements }],
+    ['siteHeader', R.headerProps({ branch: siteBranch })]
+  ]);
+
+  Components.mount('#chrome-bottom', [['siteFooter', chrome.footer]]);
+  Components.mount('#page-chat', [['supportChat', chrome.supportChat]]);
+
+  var page = R.get(path);
+
+  document.getElementById('path').textContent = path || 'Not specified';
+  document.getElementById('home-link').href = siteBranch === 'business' ? R.href('/business/') : '/';
+
+  if (page) {
+    document.getElementById('title').textContent = page.title + ' — planned, not built yet';
+    var branch = R.BRANCHES.filter(function (b) { return b.id === page.branch; })[0];
+    document.getElementById('branch').textContent = branch ? branch.title : page.branch;
+
+    var trail = [];
+    var cursor = page;
+    while (cursor) {
+      trail.unshift(cursor.title);
+      cursor = cursor.parent ? R.get(cursor.parent) : null;
+    }
+    document.getElementById('breadcrumb').textContent = trail.join(' / ');
+
+    var kids = R.childrenOf(page.path);
+    if (kids.length) {
+      document.getElementById('children').innerHTML =
+        '<h2 class="t-h2" style="margin-bottom: var(--sp-4)">Pages planned underneath</h2>' +
+        '<div class="grid grid--3">' + kids.map(function (kid) {
+          return Components.render('linkCard', {
+            title: kid.title,
+            body: kid.path,
+            linkLabel: kid.status === 'built' ? 'Open page' : 'Also planned',
+            href: R.href(kid.path)
+          });
+        }).join('') + '</div>';
+    }
+  } else {
+    document.getElementById('branch').textContent = 'Not in the sitemap';
+    document.getElementById('breadcrumb').textContent = '—';
+    document.getElementById('intro').textContent =
+      'This path is not registered in the sitemap. Add it to the page registry before linking to it.';
+  }
+
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>

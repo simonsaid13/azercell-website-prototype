@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prepaid tariffs archive — Azercell</title>
+<meta name="description" content="Browse archived Azercell prepaid tariffs. Legacy plans are no longer sold to new subscribers but remain valid for existing customers.">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<div id="page-top"></div>
+<main id="page-main"></main>
+<div id="page-bottom"></div>
+<div id="page-chat"></div>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+/* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+ * INBOUND:  header → Mobile → Prepaid tariffs archive; /tariffs/mobile/ callout + legal link
+ * OUTBOUND:
+ *   archivePlanCard → legacy plan detail routes — PLANNED
+ *   promo section → DigiMax, Premium+, Alfa Plan detail pages — CONNECTED
+ *   calloutBanner → All mobile tariffs — CONNECTED
+ * URL params: ?q=search-term, ?page=2 (pagination + search sync)
+ */
+(function () {
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+  var href = R.href;
+  var render = Components.render;
+
+  Components.mount('#page-top', [
+    ['announcementBar', { messages: chrome.announcements }],
+    ['siteHeader', R.headerProps({ branch: 'personal' })]
+  ]);
+
+  Components.mount('#page-bottom', [['siteFooter', chrome.footer]]);
+  Components.mount('#page-chat', [['supportChat', chrome.supportChat]]);
+
+  /* Sample of legacy prepaid tariffs — real site has more; search covers all items on this page */
+  var archivePlans = [
+    { slug: 'istesen', name: 'İstəSən', tagline: 'Design your tariff' },
+    { slug: 'dovletcell', name: 'Dövlətcell', tagline: 'For public-sector employees' },
+    { slug: 'yeni-her-yere', name: 'Yeni hər yerə', tagline: 'Everywhere you go' },
+    { slug: 'supersen', name: 'SuperSən', tagline: 'SuperSən, choose your tariff!' },
+    { slug: 'premium', name: 'Premium', tagline: 'Choose excellence!' },
+    { slug: 'gencol', name: 'GəncOL', tagline: 'Enjoy the youth!' },
+    { slug: 'simsim', name: 'SimSim', tagline: 'Simple prepaid line' },
+    { slug: 'klass', name: 'Klass', tagline: 'Classic prepaid tariff' },
+    { slug: 'rahat', name: 'Rahat', tagline: 'Easy everyday calls' },
+    { slug: 'aktiv', name: 'Aktiv', tagline: 'Active lifestyle pack' },
+    { slug: 'start', name: 'Start', tagline: 'Entry-level prepaid' },
+    { slug: 'daimonline', name: 'DaimOnline', tagline: 'Always online data plan' },
+    { slug: 'sevimli', name: 'Sevimli', tagline: 'Favourite numbers tariff' },
+    { slug: 'genclik', name: 'Gənclik', tagline: 'Youth tariff' },
+    { slug: 'bonus', name: 'Bonus', tagline: 'Bonus minutes pack' },
+    { slug: 'mini', name: 'Mini', tagline: 'Low-cost starter' },
+    { slug: 'maxi', name: 'Maxi', tagline: 'High-volume legacy pack' },
+    { slug: 'smart', name: 'Smart', tagline: 'Smart combo tariff' },
+    { slug: 'family', name: 'Family', tagline: 'Shared family line' },
+    { slug: 'eurocell-classic', name: 'Eurocell Classic', tagline: 'Legacy brand tariff' }
+  ];
+
+  function section(inner, modifier) {
+    return '<section class="section' + (modifier ? ' ' + modifier : '') + '"><div class="wrap">' + inner + '</div></section>';
+  }
+
+  function archiveCard(plan) {
+    return render('archivePlanCard', {
+      name: plan.name,
+      tagline: plan.tagline,
+      href: href('/tariffs/mobile/prepaid/archive/' + plan.slug + '/')
+    });
+  }
+
+  var archiveList =
+    '<div data-archive-list data-per-page="8">' +
+      '<div class="cmp-archive-list__toolbar">' +
+        render('localSearchField', {
+          id: 'archive-search',
+          label: 'Search archive plans',
+          placeholder: 'Search by plan name…'
+        }) +
+        '<p class="t-small t-muted cmp-archive-list__count" data-archive-count hidden></p>' +
+      '</div>' +
+      '<div class="grid grid--4" data-archive-target>' +
+        archivePlans.map(archiveCard).join('') +
+      '</div>' +
+      '<p class="t-body t-muted" data-archive-empty hidden style="margin-top: var(--sp-4)">' +
+        'No archived plans match your search. Try another name or browse current plans below.</p>' +
+      render('pagination', { label: 'Archive pages' }) +
+    '</div>';
+
+  Components.mount('#page-main', [
+    section(
+      render('sectionHead', {
+        eyebrow: 'Tariffs archive',
+        title: 'Prepaid tariffs archive',
+        body: 'These legacy prepaid plans are no longer sold to new subscribers. If you are already on one, you can still view its terms and pricing here.',
+        action: { label: 'Current mobile tariffs', href: href('/tariffs/mobile/') }
+      })
+    ),
+
+    section(
+      '<p class="t-body t-muted" style="max-width: 72ch; margin-bottom: var(--sp-5)">' +
+        '<span class="badge">Archived</span> ' +
+        'Plans marked archived stay valid for existing subscribers. New sign-ups must choose from the current tariff list.</p>' +
+      archiveList
+    ),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Ready for something new?',
+        title: 'Explore our current mobile plans',
+        body: 'If your archived plan no longer fits, these are the tariffs we sell today — prepaid packs and postpaid contracts with up-to-date allowances.'
+      }) +
+      render('calloutBanner', {
+        inverse: true,
+        eyebrow: 'Most popular',
+        title: 'DigiMax — prepaid packs from 1 AZN',
+        body: 'Flexible prepaid with daily, weekly and monthly options. Pick a price tier and activate via Kabinetim or USSD.',
+        actions: [
+          { label: 'See DigiMax', href: href('/tariffs/mobile/prepaid/digimax/'), variant: 'primary' },
+          { label: 'All mobile tariffs', href: href('/tariffs/mobile/') }
+        ]
+      }) +
+      '<div class="grid grid--3" style="margin-top: var(--sp-5)">' +
+        render('promoCard', {
+          media: 'DigiMax',
+          eyebrow: 'Prepaid',
+          title: 'DigiMax',
+          body: 'From 1 AZN per day. Internet, calls and SMS in one pack — renew when it suits you.',
+          actions: [{ label: 'Plan details', href: href('/tariffs/mobile/prepaid/digimax/'), variant: 'primary' }]
+        }) +
+        render('promoCard', {
+          media: 'Premium+',
+          eyebrow: 'Prepaid',
+          title: 'Premium+',
+          body: 'Up to 100GB with social, WhatsApp and roaming data bundled. Top-tier prepaid.',
+          actions: [{ label: 'Plan details', href: href('/tariffs/mobile/prepaid/premium-plus/'), variant: 'primary' }]
+        }) +
+        render('promoCard', {
+          media: 'Alfa Plan',
+          eyebrow: 'Postpaid',
+          title: 'Alfa Plan',
+          body: 'Monthly contract from 20 AZN. Optional 12- or 24-month discounts when you sign in store.',
+          actions: [{ label: 'Plan details', href: href('/tariffs/mobile/postpaid/alfa/'), variant: 'primary' }]
+        }) +
+      '</div>'
+    )
+  ]);
+
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>

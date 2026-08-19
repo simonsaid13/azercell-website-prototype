@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azercell — Personal</title>
+<meta name="description" content="Azercell B2C prototype homepage. Wireframe-level structure for the website revamp.">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<div id="page-top"></div>
+<main id="page-main"></main>
+<div id="page-bottom"></div>
+<div id="page-chat"></div>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+/* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+ * INBOUND:  logo, branch switcher (from B2B)
+ * OUTBOUND:
+ *   hero → Compare all tariffs — CONNECTED (/tariffs/compare/)
+ *   hero → See DigiMax — CONNECTED (/tariffs/mobile/prepaid/digimax/)
+ *   hero → travel packs — PLANNED
+ *   quickActions → Change plan — CONNECTED (/tariffs/mobile/)
+ *   tariffs section → Compare all plans — CONNECTED (/tariffs/compare/)
+ *   planCard → Compare — CONNECTED (/tariffs/compare/)
+ *   planCard → Plan details — CONNECTED (all 6 tariffs)
+ *   planCard → Kabinetim — CONNECTED (external)
+ *   devices / services / reasons sections — PLANNED (mostly)
+ */
+(function () {
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+  var href = R.href;
+  var render = Components.render;
+
+  var KABINETIM = 'https://kabinetim.azercell.com/my/login';
+  var AZERCELLIM = 'https://azercellim.com/en/home';
+
+  /* ---------------------------------------------------------------- Chrome */
+
+  Components.mount('#page-top', [
+    ['announcementBar', { messages: chrome.announcements }],
+    ['siteHeader', R.headerProps({ branch: 'personal' })]
+  ]);
+
+  Components.mount('#page-bottom', [['siteFooter', chrome.footer]]);
+  Components.mount('#page-chat', [['supportChat', chrome.supportChat]]);
+
+  /* ------------------------------------------------------------------ Data */
+
+  var heroSlides = [
+    {
+      eyebrow: 'Meet DigiMax',
+      title: 'One prepaid plan, everything included',
+      body: 'Internet, calls and SMS in a single pack. No contract and no monthly commitment — top up and go.',
+      media: 'Hero visual — DigiMax',
+      actions: [
+        { label: 'See DigiMax packs', href: href('/tariffs/mobile/prepaid/digimax/'), variant: 'primary' },
+        { label: 'Compare all tariffs', href: href('/tariffs/compare/') }
+      ],
+      stats: [
+        { value: '25GB', label: 'Internet' },
+        { value: '1500 min', label: 'Countrywide calls' },
+        { value: '500', label: 'SMS' }
+      ]
+    },
+    {
+      eyebrow: 'Premium+ Prepaid',
+      title: 'The most data we offer, plus roaming included',
+      body: '100GB with 10GB social, 10GB WhatsApp and 3GB roaming data for 90 AZN per 28 days.',
+      media: 'Hero visual — Premium+',
+      actions: [
+        { label: 'See Premium+ packs', href: href('/tariffs/mobile/prepaid/premium-plus/'), variant: 'primary' },
+        { label: 'Roaming rates', href: href('/tariffs/roaming/') }
+      ],
+      stats: [
+        { value: '100GB', label: 'Internet' },
+        { value: '5000 min', label: 'Countrywide calls' },
+        { value: '3GB', label: 'Roaming data' }
+      ]
+    },
+    {
+      eyebrow: 'Travel packs',
+      title: 'Visiting Azerbaijan? Get connected on arrival',
+      body: '30GB with 100 minutes for 39 AZN, valid 30 days. Free SIM or eSIM when you arrive.',
+      media: 'Hero visual — travel packs',
+      actions: [
+        { label: 'See travel packs', href: href('/tariffs/roaming/travel-packs/'), variant: 'primary' },
+        { label: 'Switch to eSIM', href: href('/tariffs/esim/') }
+      ],
+      stats: [
+        { value: '30GB', label: 'Internet' },
+        { value: '100 min', label: 'Calls' },
+        { value: '30 days', label: 'Validity' }
+      ]
+    }
+  ];
+
+  var quickActions = [
+    { icon: '01', label: 'Top up balance', href: KABINETIM },
+    { icon: '02', label: 'Activate SIM', href: href('/join-azercell/') },
+    { icon: '03', label: 'Change plan', href: href('/tariffs/mobile/') },
+    { icon: '04', label: 'Switch to eSIM', href: href('/tariffs/esim/') },
+    { icon: '05', label: 'Transfer number', href: AZERCELLIM },
+    { icon: '06', label: 'Buy a new number', href: AZERCELLIM },
+    { icon: '07', label: 'Network status', href: href('/support/internet/') }
+  ];
+
+  /* Prices and specs from Azercell_Database_B2C.md */
+  var plans = [
+    {
+      compareId: 'digimax',
+      name: 'DigiMax',
+      type: 'Prepaid',
+      badge: 'Popular',
+      tiers: [
+        { price: '8 AZN', validity: 'Valid 14 days', specs: [
+          { value: '3GB', label: 'Internet' }, { value: '200 min', label: 'Calls' }, { value: '100', label: 'SMS' }] },
+        { price: '12 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '5GB', label: 'Internet' }, { value: '300 min', label: 'Calls' }, { value: '150', label: 'SMS' }, { value: '1GB', label: 'Social media' }] },
+        { price: '18 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '10GB', label: 'Internet' }, { value: '600 min', label: 'Calls' }, { value: '300', label: 'SMS' }, { value: '1GB', label: 'Social media' }, { value: '1GB', label: 'WhatsApp' }] },
+        { price: '30 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '25GB', label: 'Internet' }, { value: '1500 min', label: 'Calls' }, { value: '500', label: 'SMS' }, { value: '3GB', label: 'Social media' }, { value: '3GB', label: 'WhatsApp' }] }
+      ],
+      note: 'To join, send "SS10" to 7575. All prices include VAT.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/digimax/'), variant: 'primary' },
+        { label: 'Activate in Kabinetim', href: KABINETIM }
+      ]
+    },
+    {
+      compareId: 'premium-plus',
+      name: 'Premium+',
+      type: 'Prepaid',
+      tiers: [
+        { price: '60 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '60GB', label: 'Internet' }, { value: '3000 min', label: 'Calls' }, { value: '1500', label: 'SMS' }, { value: '5GB', label: 'Social media' }, { value: '5GB', label: 'WhatsApp' }, { value: '1GB', label: 'Roaming data' }] },
+        { price: '90 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '100GB', label: 'Internet' }, { value: '5000 min', label: 'Calls' }, { value: '2500', label: 'SMS' }, { value: '10GB', label: 'Social media' }, { value: '10GB', label: 'WhatsApp' }, { value: '3GB', label: 'Roaming data' }] }
+      ],
+      note: 'Roaming data is included in the pack. All prices include VAT.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/premium-plus/'), variant: 'primary' },
+        { label: 'Activate in Kabinetim', href: KABINETIM }
+      ]
+    },
+    {
+      compareId: 'data-plus',
+      name: '"Data+" tariff',
+      type: 'Prepaid',
+      tiers: [
+        { price: '9 AZN', validity: 'Valid 28 days. Data-only — no voice calls.', specs: [
+          { value: '3GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] },
+        { price: '12 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '6GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] },
+        { price: '19 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '12GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] },
+        { price: '29 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '30GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] },
+        { price: '39 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '60GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] }
+      ],
+      note: 'Video calls supported. Overage: 0.05 AZN per MB and per SMS.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/data-plus/'), variant: 'primary' },
+        { label: 'Activate in Kabinetim', href: KABINETIM }
+      ]
+    },
+    {
+      compareId: 'data',
+      name: 'Data',
+      type: 'Prepaid',
+      tiers: [
+        { price: '9 AZN', validity: 'Valid 28 days. Data-only for SimSim numbers.', specs: [
+          { value: '3GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] },
+        { price: '12 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '6GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] },
+        { price: '19 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '12GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] },
+        { price: '29 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '30GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] },
+        { price: '39 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '56GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] }
+      ],
+      note: 'No standard voice calls. All prices include VAT.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/data/'), variant: 'primary' },
+        { label: 'Activate in Kabinetim', href: KABINETIM }
+      ]
+    },
+    {
+      compareId: 'veteran',
+      name: 'Veteran',
+      type: 'Prepaid',
+      badge: 'Eligibility',
+      tiers: [
+        { price: 'No monthly fee', validity: 'For certified war veterans. Enrolment in store only.', specs: [
+          { value: '0.03 AZN', label: 'On-net calls / min' }, { value: '0.04 AZN', label: 'Off-net calls / min' }, { value: '0.03 AZN', label: 'SMS and data' }] }
+      ],
+      note: 'Balance-linked validity from 5 to 120 days depending on top-up amount.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/veteran/'), variant: 'primary' },
+        { label: 'Find a store', href: href('/stores/') }
+      ]
+    },
+    {
+      compareId: 'alfa',
+      name: 'Alfa Plan',
+      type: 'Postpaid',
+      badge: 'Contract',
+      tiers: [
+        { price: '20 AZN', validity: 'Monthly. 10% off on a 12-month and 20% off on a 24-month contract.', specs: [
+          { value: '12GB', label: 'Internet' }, { value: '1200 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }] },
+        { price: '30 AZN', validity: 'Monthly. Same contract discounts apply.', specs: [
+          { value: '25GB', label: 'Internet' }, { value: '2500 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }] },
+        { price: '40 AZN', validity: 'Monthly. Adds priority call-centre requests.', specs: [
+          { value: '40GB', label: 'Internet' }, { value: '4000 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }] },
+        { price: '60 AZN', validity: 'Monthly. Personal curator and callback service.', specs: [
+          { value: '60GB', label: 'Internet' }, { value: '5000 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }, { value: '5GB', label: 'Social media' }, { value: '5GB', label: 'WhatsApp' }, { value: '1GB', label: 'Roaming data' }] },
+        { price: '90 AZN', validity: 'Monthly. Free mobile customer service.', specs: [
+          { value: '120GB', label: 'Internet' }, { value: '10000 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }, { value: '10GB', label: 'Social media' }, { value: '10GB', label: 'WhatsApp' }, { value: '3GB', label: 'Roaming data' }] }
+      ],
+      note: 'Postpaid contract. Signing takes place in an Azercell store.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/postpaid/alfa/'), variant: 'primary' },
+        { label: 'Find a store', href: href('/stores/') }
+      ]
+    }
+  ];
+
+  var devices = [
+    { name: 'iPhone 16 Pro', category: 'phones', brand: 'apple', price: '2,949 AZN' },
+    { name: 'Galaxy S24 Ultra', category: 'phones', brand: 'samsung', price: '2,899 AZN' },
+    { name: 'Honor Magic6 Pro', category: 'phones', brand: 'honor', price: '2,499 AZN' },
+    { name: 'iPhone 16', category: 'phones', brand: 'apple', price: '2,199 AZN' },
+    { name: 'Galaxy S24 FE', category: 'phones', brand: 'samsung', price: '1,799 AZN' },
+    { name: 'Honor 200 Pro', category: 'phones', brand: 'honor', price: '1,599 AZN' },
+    { name: 'Galaxy Tab S9', category: 'tablets', brand: 'samsung', price: '1,499 AZN' },
+    { name: 'iPad 10th gen', category: 'tablets', brand: 'apple', price: '1,099 AZN' },
+    { name: 'Mi-Fi portable hotspot', category: 'routers', brand: 'other', price: '40 AZN per month' },
+    { name: 'WTTx home router', category: 'routers', brand: 'other', price: '50 AZN per month' },
+    { name: 'Kids smartwatch', category: 'accessories', brand: 'other', price: '199 AZN' },
+    { name: 'Wireless earbuds', category: 'accessories', brand: 'other', price: '149 AZN' }
+  ];
+
+  var services = [
+    { media: 'Roaming', title: 'International roaming', href: href('/tariffs/roaming/'),
+      body: 'Rates, packs and supported operators for around 190 destinations.', linkLabel: 'Learn more' },
+    { media: 'eSIM', title: 'Switch to eSIM', href: href('/tariffs/esim/'),
+      body: 'Go fully digital. First issue and transfer are free of charge.', linkLabel: 'Learn more' },
+    { media: '5G', title: 'Azercell 5G', href: href('/tariffs/5g/'),
+      body: 'The 5G test zone at Fountain Square in Baku, included in your tariff.', linkLabel: 'Learn more' },
+    { media: 'Aicell', title: 'Aicell assistant', href: href('/tariffs/services/aicell/'),
+      body: 'Free 24/7 assistant for balance, tariffs, roaming and troubleshooting.', linkLabel: 'Learn more' }
+  ];
+
+  var reasons = [
+    { media: 'Network', title: 'A network built for everyday use', href: href('/tariffs/5g/'),
+      body: 'Nationwide coverage with VoLTE HD calling included in every standard tariff.', linkLabel: 'Network and 5G' },
+    { media: 'Apps', title: 'Apps billed to your balance', href: href('/apps/'),
+      body: 'Kinon, Yandex Plus, Busuu and Litres charged straight to your mobile balance.', linkLabel: 'See all apps' },
+    { media: 'Zero balance', title: 'Never fully out of credit', href: href('/tariffs/services/zero-balance/'),
+      body: 'SimCredit and Paycell keep you connected when your balance runs out.', linkLabel: 'Zero balance options' },
+    { media: 'Community', title: 'Supporting people and communities', href: href('/about/sustainability/'),
+      body: 'Education, environment and social welfare programmes across Azerbaijan.', linkLabel: 'Sustainability' }
+  ];
+
+  /* ------------------------------------------------------------- Sections */
+
+  function section(inner, modifier) {
+    return '<section class="section' + (modifier ? ' ' + modifier : '') + '"><div class="wrap">' + inner + '</div></section>';
+  }
+
+  function take(list, max) {
+    return list.slice(0, max);
+  }
+
+  var planCards = plans.map(function (plan) { return render('planCard', plan); }).join('');
+
+  var devicesSection =
+    render('sectionHead', {
+      eyebrow: 'Devices',
+      title: 'Shop your favourite brands',
+      body: 'The latest devices with flexible payments. Filter by category and brand.',
+      action: { label: 'All devices', href: href('/devices/') }
+    }) +
+    render('splitBanner', {
+      eyebrow: 'Featured device',
+      title: 'iPhone 16 Pro',
+      body: 'From 2,949 AZN, with three months of 55GB data included.',
+      media: 'iPhone 16 Pro',
+      actions: [{ label: 'Device details', href: href('/devices/'), variant: 'primary' }],
+      note: 'Purchase happens in an Azercell store until the online shop launches.'
+    }) +
+    '<div data-filter-scope style="margin-top: var(--sp-6)">' +
+      render('filterTabs', {
+        groups: [
+          { key: 'category', label: 'Device category', options: [
+            { value: 'all', label: 'All' },
+            { value: 'phones', label: 'Phones' },
+            { value: 'tablets', label: 'Tablets' },
+            { value: 'routers', label: 'Routers' },
+            { value: 'accessories', label: 'Accessories' }
+          ] },
+          { key: 'brand', label: 'Brand', options: [
+            { value: 'all', label: 'All brands' },
+            { value: 'apple', label: 'Apple' },
+            { value: 'samsung', label: 'Samsung' },
+            { value: 'honor', label: 'Honor' }
+          ] }
+        ]
+      }) +
+      '<div class="grid grid--4" data-filter-target>' +
+        take(devices, 8).map(function (device) {
+          return render('deviceCard', {
+            name: device.name,
+            category: device.category,
+            brand: device.brand,
+            priceLabel: 'Starting from',
+            price: device.price,
+            action: { label: 'Device details', href: href('/devices/') }
+          });
+        }).join('') +
+      '</div>' +
+      '<p class="t-body t-muted" data-filter-empty hidden style="margin-top: var(--sp-4)">' +
+        'No devices match this combination. Choose another category or brand.</p>' +
+    '</div>';
+
+  Components.mount('#page-main', [
+    ['heroBanner', { slides: heroSlides }],
+
+    '<div class="wrap" style="padding-block: var(--sp-6)">' +
+      render('quickActions', { items: take(quickActions, 4) }) +
+    '</div>',
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Tariffs',
+        title: 'Pick your perfect plan',
+        body: 'Flexible plans built around how you actually use your phone. Choose a price to see what it includes.',
+        action: { label: 'Compare all plans', href: href('/tariffs/compare/') }
+      }) +
+      render('carousel', {
+        label: 'Prepaid and postpaid',
+        content: planCards
+      })
+    ),
+
+    section(devicesSection),
+
+    section(
+      render('splitBanner', {
+        eyebrow: 'Kinon Plus',
+        title: 'Dive into the world of cinema',
+        body: '240+ channels plus Viju, Wink and Premier on demand. Up to 5 profiles on 3 devices.',
+        media: 'Kinon Plus',
+        inverse: true,
+        flip: true,
+        points: [
+          '15.99 AZN per month, or 1 AZN per day',
+          '7-day free trial with 5GB bonus data',
+          'Billed straight to your mobile balance'
+        ],
+        actions: [
+          { label: 'Kinon Plus details', href: href('/apps/cinema-and-tv/kinon/'), variant: 'primary' },
+          { label: 'All Azercell apps', href: href('/apps/') }
+        ],
+        note: 'The subscription is started in the Kabinetim app.'
+      })
+    ),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Services',
+        title: 'More ways to stay connected',
+        body: 'From digital eSIMs to roaming and everyday assistance.'
+      }) +
+      '<div class="grid grid--4">' + services.map(function (s) { return render('linkCard', s); }).join('') + '</div>'
+    ),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Why Azercell',
+        title: 'Why Azercell is the right choice for you',
+        body: 'A network and a company built to empower the lives of people across Azerbaijan.'
+      }) +
+      '<div class="grid grid--4" style="margin-bottom: var(--sp-5)">' +
+        reasons.map(function (r) { return render('linkCard', r); }).join('') +
+      '</div>' +
+      render('statBand', {
+        items: [
+          { value: '5G', label: 'Live test zone in Baku' },
+          { value: '190+', label: 'Roaming destinations' },
+          { value: '0 AZN', label: 'First eSIM issue' },
+          { value: '24/7', label: 'Aicell assistant' }
+        ]
+      })
+    ),
+
+    section(
+      render('splitBanner', {
+        eyebrow: 'akart',
+        title: 'Your world, one card',
+        body: 'A free digital debit card from Azercell Fintech with cashback on every purchase.',
+        media: 'akart',
+        points: [
+          'Up to 120 AZN cashback per month',
+          'Payments, transfers, Apple Pay and Google Pay',
+          'Loan products: Tamamla and aKredit'
+        ],
+        actions: [{ label: 'Go to akart.az', href: 'https://akart.az', variant: 'primary' }],
+        note: 'akart is operated on a separate site by Azercell Fintech.'
+      })
+    ),
+
+    section(
+      render('appPromo', {
+        eyebrow: 'Kabinetim',
+        title: 'Manage your plan on the go',
+        body: 'Track your usage, switch tariffs, activate packs and pay your bill in the Kabinetim app.',
+        media: 'Kabinetim app screens',
+        stores: [
+          { pre: 'Download on the', name: 'App Store', href: 'https://apps.apple.com/az/app/kabinetim/id1050654556' },
+          { pre: 'Get it on', name: 'Google Play', href: 'https://play.google.com/store/apps/details?id=com.azercell.kabinetim' }
+        ]
+      })
+    ),
+
+    section(
+      '<div class="section__title-group" style="max-width: 70ch">' +
+        '<p class="t-label">Our mission</p>' +
+        '<h2 class="t-h1">Easing connectivity, empowering lives</h2>' +
+        '<p class="t-lead t-muted">We keep improving and building solutions that are good for our customers, ' +
+        'our business and our country.</p>' +
+      '</div>' +
+      '<div class="row-actions" style="margin-top: var(--sp-5)">' +
+        '<a class="btn" href="' + href('/about/') + '">About Azercell</a>' +
+        '<a class="btn" href="' + href('/business/') + '">Azercell Business</a>' +
+        '<a class="btn" href="' + href('/about/career/') + '">Careers</a>' +
+      '</div>'
+    )
+  ]);
+
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1384 @@
+/* ==========================================================================
+   Azercell HTML Prototype — registries
+   PAGE_REGISTRY drives /sitemap. COMPONENT_REGISTRY drives /components.
+   SITE_CHROME holds the shared header and footer content.
+
+   Page tree mirrors Azercell_Sitemap.md. Pages are 'planned' until they are
+   actually built; only built pages have an HTML file.
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  var BRANCHES = [
+    { id: 'b2c', title: 'B2C — Personal' },
+    { id: 'b2b', title: 'B2B — Business' },
+    { id: 'other', title: 'Other — Corporate / About Us' },
+    { id: 'external', title: 'External ecosystem (separate domains)' },
+    { id: 'internal', title: 'Internal prototype tools (not public)' }
+  ];
+
+  var MOBILE_TARIFF_DETAIL_PATHS = [
+    '/tariffs/mobile/prepaid/digimax/',
+    '/tariffs/mobile/prepaid/premium-plus/',
+    '/tariffs/mobile/prepaid/data-plus/',
+    '/tariffs/mobile/prepaid/data/',
+    '/tariffs/mobile/prepaid/veteran/',
+    '/tariffs/mobile/postpaid/alfa/'
+  ];
+
+  /* Fields: path, title, parent, branch, status ('built' | 'planned'),
+     links (cross-links to other paths or external URLs), note */
+  var PAGE_REGISTRY = [
+    /* ---------------- Internal tools ---------------- */
+    { path: '/sitemap/', title: 'Sitemap', parent: null, branch: 'internal', status: 'built',
+      note: 'Hidden route. Not linked from public navigation.' },
+    { path: '/components/', title: 'Components', parent: null, branch: 'internal', status: 'built',
+      note: 'Hidden route. Component library for the CMS block set.' },
+    { path: '/planned/', title: 'Planned page placeholder', parent: null, branch: 'internal', status: 'built',
+      note: 'Shown when a link points at a page that is not built yet.' },
+
+    /* ---------------- B2C ---------------- */
+    { path: '/', title: 'B2C Homepage', parent: null, branch: 'b2c', status: 'built',
+      links: ['/tariffs/', '/tariffs/internet/', '/tariffs/roaming/', '/devices/', '/campaigns/',
+              '/apps/', '/support/', '/about/', '/business/', 'https://kabinetim.azercell.com/my/login'] },
+    { path: '/join-azercell/', title: 'Join Azercell', parent: '/', branch: 'b2c', status: 'planned' },
+
+    { path: '/tariffs/', title: 'Tariffs and services', parent: '/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/mobile/', title: 'Tariffs', parent: '/tariffs/', branch: 'b2c', status: 'built',
+      links: MOBILE_TARIFF_DETAIL_PATHS.concat(['/tariffs/mobile/prepaid/archive/', '/tariffs/internet/', '/tariffs/compare/']) },
+    { path: '/tariffs/compare/', title: 'Compare tariffs', parent: '/tariffs/', branch: 'b2c', status: 'built',
+      links: MOBILE_TARIFF_DETAIL_PATHS.concat(['/tariffs/mobile/']) },
+    { path: '/tariffs/mobile/prepaid/', title: 'Prepaid', parent: '/tariffs/mobile/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/mobile/prepaid/digimax/', title: 'DigiMax', parent: '/tariffs/mobile/prepaid/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/mobile/prepaid/premium-plus/', title: 'Premium+ Prepaid', parent: '/tariffs/mobile/prepaid/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/mobile/prepaid/data-plus/', title: '"Data+" tariff', parent: '/tariffs/mobile/prepaid/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/mobile/prepaid/data/', title: 'Data', parent: '/tariffs/mobile/prepaid/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/mobile/prepaid/veteran/', title: 'Veteran', parent: '/tariffs/mobile/prepaid/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/mobile/prepaid/archive/', title: 'Prepaid tariffs archive', parent: '/tariffs/mobile/prepaid/', branch: 'b2c', status: 'built',
+      links: ['/tariffs/mobile/'] },
+    { path: '/tariffs/mobile/postpaid/', title: 'Postpaid', parent: '/tariffs/mobile/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/mobile/postpaid/alfa/', title: 'Alfa Plan', parent: '/tariffs/mobile/postpaid/', branch: 'b2c', status: 'built' },
+
+    { path: '/tariffs/services/', title: 'Services', parent: '/tariffs/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/services/payment-and-balance/', title: 'Payment and balance', parent: '/tariffs/services/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/services/call-management/', title: 'Call management', parent: '/tariffs/services/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/services/messages/', title: 'Messages', parent: '/tariffs/services/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/services/zero-balance/', title: '0 balance options', parent: '/tariffs/services/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/services/zero-balance/simcredit/', title: 'SimCredit', parent: '/tariffs/services/zero-balance/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/services/zero-balance/paycell/', title: 'Paycell', parent: '/tariffs/services/zero-balance/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/services/other/', title: 'Other Services', parent: '/tariffs/services/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/services/aicell/', title: 'Aicell', parent: '/tariffs/services/', branch: 'b2c', status: 'planned' },
+
+    { path: '/tariffs/internet/', title: 'Internet', parent: '/tariffs/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/internet/monthly/', title: 'High-volume / Monthly', parent: '/tariffs/internet/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/internet/weekly/', title: 'Weekly', parent: '/tariffs/internet/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/internet/daily/', title: 'Daily', parent: '/tariffs/internet/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/internet/unlimited/', title: 'Unlimited', parent: '/tariffs/internet/', branch: 'b2c', status: 'built' },
+
+    { path: '/tariffs/roaming/', title: 'Roaming', parent: '/tariffs/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/roaming/countries-and-prices/', title: 'Countries and prices', parent: '/tariffs/roaming/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/roaming/internet-packs/', title: 'Roaming internet packs', parent: '/tariffs/roaming/', branch: 'b2c', status: 'built' },
+    { path: '/tariffs/roaming/travel-packs/', title: 'Travel packs (tourist tariffs)', parent: '/tariffs/roaming/', branch: 'b2c', status: 'built' },
+
+    { path: '/tariffs/esim/', title: 'eSIM', parent: '/tariffs/', branch: 'b2c', status: 'planned',
+      links: ['https://azercellim.com/en/home'] },
+    { path: '/tariffs/5g/', title: 'Azercell 5G', parent: '/tariffs/', branch: 'b2c', status: 'planned' },
+    { path: '/tariffs/volte/', title: 'VoLTE', parent: '/tariffs/', branch: 'b2c', status: 'planned' },
+
+    { path: '/devices/', title: 'Devices', parent: '/', branch: 'b2c', status: 'planned',
+      note: 'Device catalogue. Informational only until the e-commerce platform exists.' },
+
+    { path: '/apps/', title: 'Azercell apps', parent: '/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/kabinetim/', title: 'Self-service / Kabinetim app', parent: '/apps/', branch: 'b2c', status: 'planned',
+      links: ['https://kabinetim.azercell.com/my/login'] },
+    { path: '/apps/yandex-plus/', title: 'Yandex Plus', parent: '/apps/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/self-development/', title: 'Self-development', parent: '/apps/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/self-development/busuu/', title: 'Busuu', parent: '/apps/self-development/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/self-development/litres/', title: 'Litres', parent: '/apps/self-development/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/self-development/kids/', title: 'Azercell Kids', parent: '/apps/self-development/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/cinema-and-tv/', title: 'Online cinema & TV', parent: '/apps/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/cinema-and-tv/kinon/', title: 'Kinon', parent: '/apps/cinema-and-tv/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/micromobility/', title: 'Micromobility', parent: '/apps/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/other/', title: 'Other', parent: '/apps/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/other/azparking/', title: 'AzParking', parent: '/apps/other/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/other/navimax/', title: 'NaviMax', parent: '/apps/other/', branch: 'b2c', status: 'planned' },
+    { path: '/apps/other/smsradar/', title: 'SMSRadar', parent: '/apps/other/', branch: 'b2c', status: 'planned' },
+
+    { path: '/campaigns/', title: 'Campaigns', parent: '/', branch: 'b2c', status: 'planned' },
+    { path: '/campaigns/special-offers/', title: 'Special offers', parent: '/campaigns/', branch: 'b2c', status: 'planned' },
+    { path: '/campaigns/special-offers/giqaaddim/', title: 'GiqaAddım', parent: '/campaigns/special-offers/', branch: 'b2c', status: 'planned' },
+    { path: '/campaigns/voice/', title: 'Voice', parent: '/campaigns/', branch: 'b2c', status: 'planned' },
+    { path: '/campaigns/internet/', title: 'Internet', parent: '/campaigns/', branch: 'b2c', status: 'planned' },
+    { path: '/campaigns/bonus-programs/', title: 'Bonus programs', parent: '/campaigns/', branch: 'b2c', status: 'planned' },
+    { path: '/campaigns/devices/', title: 'Devices', parent: '/campaigns/', branch: 'b2c', status: 'planned' },
+
+    { path: '/esgercell/', title: 'Əsgərcell', parent: '/', branch: 'b2c', status: 'planned' },
+
+    { path: '/support/', title: 'Support', parent: '/', branch: 'b2c', status: 'planned' },
+    { path: '/support/internet/', title: 'FAQ — Internet', parent: '/support/', branch: 'b2c', status: 'planned' },
+    { path: '/support/akart/', title: 'FAQ — akart', parent: '/support/', branch: 'b2c', status: 'planned', links: ['https://akart.az'] },
+    { path: '/support/balance-and-tariffs/', title: 'FAQ — Balance & Tariffs', parent: '/support/', branch: 'b2c', status: 'planned' },
+    { path: '/support/roaming/', title: 'FAQ — Roaming', parent: '/support/', branch: 'b2c', status: 'planned' },
+    { path: '/support/number-purchase/', title: 'FAQ — Number purchase', parent: '/support/', branch: 'b2c', status: 'planned' },
+    { path: '/support/apps/', title: 'FAQ — Azercell apps', parent: '/support/', branch: 'b2c', status: 'planned' },
+    { path: '/support/services/', title: 'FAQ — Services', parent: '/support/', branch: 'b2c', status: 'planned' },
+
+    { path: '/stores/', title: 'Azercell stores', parent: '/', branch: 'b2c', status: 'planned' },
+    { path: '/help/', title: 'Help', parent: '/', branch: 'b2c', status: 'planned' },
+    { path: '/search/', title: 'Search results', parent: '/', branch: 'b2c', status: 'planned' },
+
+    /* ---------------- B2B ---------------- */
+    { path: '/business/', title: 'Business homepage', parent: null, branch: 'b2b', status: 'built',
+      links: ['/', '/business/mobile/tariffs/', '/business/mobile/internet/', '/business/mobile/wifi/',
+              '/business/mobile/roaming/', '/business/mobile/campaigns/', '/business/fixed/leased-line/',
+              '/business/cloud/', '/business/iot/', '/about/contact/', 'https://biznes.azercell.com'] },
+    { path: '/business/mobile/', title: 'Mobile service', parent: '/business/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/tariffs/', title: 'My Business tariff plans', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/internet/', title: 'My Business internet packs', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/internet/monthly/', title: 'Monthly', parent: '/business/mobile/internet/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/internet/short-term/', title: 'Short-term packs', parent: '/business/mobile/internet/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/internet/social/', title: 'My Business Social Networks', parent: '/business/mobile/internet/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/club/', title: 'My Business Club', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/wifi/', title: 'My Business Wi-Fi', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/campaigns/', title: 'Campaigns', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/roaming/', title: 'Roaming', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/roaming/countries-and-prices/', title: 'Countries and prices', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/roaming/internet-packs/', title: 'Roaming internet packs', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/special-services/', title: 'Special services', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/special-services/mobile-marketing/', title: 'Mobile marketing', parent: '/business/mobile/special-services/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/special-services/bulk-sms/', title: 'Bulk & Profile SMS', parent: '/business/mobile/special-services/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/special-services/content-services/', title: 'Content Services', parent: '/business/mobile/special-services/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/special-services/itemized-bill/', title: 'Online Itemized Bill', parent: '/business/mobile/special-services/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/special-services/azercell-biznes/', title: 'Azercell Biznes', parent: '/business/mobile/special-services/', branch: 'b2b', status: 'planned',
+      links: ['https://biznes.azercell.com'] },
+    { path: '/business/mobile/tariffs-archive/', title: 'Tariffs archive', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
+    { path: '/business/unified/', title: 'Unified service', parent: '/business/', branch: 'b2b', status: 'planned' },
+    { path: '/business/fixed/', title: 'Fixed service', parent: '/business/', branch: 'b2b', status: 'planned' },
+    { path: '/business/fixed/leased-line/', title: 'My Business Internet Leased Line', parent: '/business/fixed/', branch: 'b2b', status: 'planned' },
+    { path: '/business/cloud/', title: 'Cloud services', parent: '/business/', branch: 'b2b', status: 'planned' },
+    { path: '/business/cloud/cpaas/', title: 'Customer Experience Management Platform (CPaaS)', parent: '/business/cloud/', branch: 'b2b', status: 'planned' },
+    { path: '/business/cloud/infohub/', title: 'InfoHUB', parent: '/business/cloud/', branch: 'b2b', status: 'planned' },
+    { path: '/business/iot/', title: 'IoT solutions', parent: '/business/', branch: 'b2b', status: 'planned' },
+    { path: '/business/iot/yoldash-360/', title: 'YolDASH360', parent: '/business/iot/', branch: 'b2b', status: 'planned' },
+    { path: '/business/iot/rpa/', title: 'Robotic Automation Solution (RPA)', parent: '/business/iot/', branch: 'b2b', status: 'planned' },
+    { path: '/business/iot/m2m/', title: 'M2M', parent: '/business/iot/', branch: 'b2b', status: 'planned' },
+    { path: '/business/iot/device-management/', title: 'Mobile device management', parent: '/business/iot/', branch: 'b2b', status: 'planned' },
+    { path: '/business/iot/irrigation/', title: 'Irrigation Control System', parent: '/business/iot/', branch: 'b2b', status: 'planned' },
+    { path: '/business/iot/team-management/', title: 'Mobile team management', parent: '/business/iot/', branch: 'b2b', status: 'planned' },
+    { path: '/business/iot/fleet/', title: 'My Business Fleet', parent: '/business/iot/', branch: 'b2b', status: 'planned' },
+
+    /* ---------------- Other ---------------- */
+    { path: '/about/', title: 'About us', parent: null, branch: 'other', status: 'planned',
+      links: ['/', '/business/', 'https://azercellliler.azercell.com/'] },
+    { path: '/about/academy/', title: 'Azercell Academy', parent: '/about/', branch: 'other', status: 'planned' },
+    { path: '/about/career/', title: 'Career', parent: '/about/', branch: 'other', status: 'planned',
+      links: ['https://careers.azercell.com/search/'] },
+    { path: '/about/sustainability/', title: 'Sustainability', parent: '/about/', branch: 'other', status: 'planned' },
+    { path: '/about/sustainability/csr/', title: 'Corporate Social Responsibility', parent: '/about/sustainability/', branch: 'other', status: 'planned' },
+    { path: '/about/press/', title: 'Press / News', parent: '/about/', branch: 'other', status: 'planned' },
+    { path: '/about/awards/', title: 'Awards', parent: '/about/', branch: 'other', status: 'planned' },
+    { path: '/about/values/', title: 'Our values', parent: '/about/', branch: 'other', status: 'planned' },
+    { path: '/about/contact/', title: 'Contact us', parent: '/about/', branch: 'other', status: 'planned' },
+    { path: '/about/privacy/', title: 'Privacy Policy', parent: '/about/', branch: 'other', status: 'planned' },
+    { path: '/about/rfc-2350/', title: 'RFC-2350', parent: '/about/', branch: 'other', status: 'planned' },
+    { path: '/terms/', title: 'Terms and Conditions', parent: '/about/', branch: 'other', status: 'planned' },
+
+    /* ---------------- External ---------------- */
+    { path: 'https://kabinetim.azercell.com/my/login', title: 'Kabinetim', parent: null, branch: 'external', status: 'external',
+      note: 'Linked from every B2C page header.' },
+    { path: 'https://biznes.azercell.com', title: 'Azercell Biznes portal', parent: null, branch: 'external', status: 'external',
+      note: 'Linked from every B2B page header.' },
+    { path: 'https://akart.az', title: 'akart', parent: null, branch: 'external', status: 'external',
+      note: 'Linked from B2C header navigation.' },
+    { path: 'https://azercellim.com/en/home', title: 'azercellim.com', parent: null, branch: 'external', status: 'external',
+      note: 'Number and eSIM purchase. Linked from eSIM and Join Azercell.' },
+    { path: 'https://careers.azercell.com/search/', title: 'Careers portal', parent: null, branch: 'external', status: 'external',
+      note: 'Linked from the Career page.' },
+    { path: 'https://azercellliler.azercell.com/', title: 'Azercell Life', parent: null, branch: 'external', status: 'external',
+      note: 'Linked from the About Us page.' }
+  ];
+
+  var byPath = {};
+  PAGE_REGISTRY.forEach(function (page) { byPath[page.path] = page; });
+
+  function isExternal(path) {
+    return /^https?:/.test(path || '');
+  }
+
+  /**
+   * Resolves a registry path to a usable href.
+   * Built pages link directly. Planned pages link to the placeholder route so
+   * the prototype never produces a dead link.
+   */
+  function href(path) {
+    if (!path) return '#';
+    if (isExternal(path)) return path;
+    var page = byPath[path];
+    if (page && page.status === 'built') return path;
+    return '/planned/?path=' + encodeURIComponent(path);
+  }
+
+  /** Deep link to a tab on /tariffs/mobile/ — same ?type= values as filterTabs on that page. */
+  function tariffFilterHref(type) {
+    var base = href('/tariffs/mobile/');
+    if (!type || type === 'all') return base;
+    if (base.indexOf('/planned/') === 0) return base;
+    var join = base.indexOf('?') >= 0 ? '&' : '?';
+    return base + join + 'type=' + encodeURIComponent(type);
+  }
+
+  /** Deep link to filter tabs on internet pack category pages (?sort=, ?volume=). */
+  function internetFilterHref(path, params) {
+    var base = href(path);
+    if (base.indexOf('/planned/') === 0) return base;
+    var search = new URLSearchParams();
+    if (params) {
+      Object.keys(params).forEach(function (key) {
+        var val = params[key];
+        if (val && val !== 'all' && val !== 'default') search.set(key, val);
+      });
+    }
+    var qs = search.toString();
+    return qs ? base + (base.indexOf('?') >= 0 ? '&' : '?') + qs : base;
+  }
+
+  /** Hand off one tariff to the compare tool (?add= is consumed on load, not a shareable full state). */
+  function tariffCompareHref(id, tier) {
+    var base = href('/tariffs/compare/');
+    if (!id || base.indexOf('/planned/') === 0) return base;
+    var join = base.indexOf('?') >= 0 ? '&' : '?';
+    var url = base + join + 'add=' + encodeURIComponent(id);
+    if (tier != null && tier !== '') url += '&tier=' + encodeURIComponent(String(tier));
+    return url;
+  }
+
+  var TARIFF_DETAIL_BY_ID = {
+    digimax: '/tariffs/mobile/prepaid/digimax/',
+    'premium-plus': '/tariffs/mobile/prepaid/premium-plus/',
+    'data-plus': '/tariffs/mobile/prepaid/data-plus/',
+    data: '/tariffs/mobile/prepaid/data/',
+    veteran: '/tariffs/mobile/prepaid/veteran/',
+    alfa: '/tariffs/mobile/postpaid/alfa/'
+  };
+
+  /** Detail page for a mobile tariff card (by compareId / tariff id). */
+  function tariffDetailHref(id) {
+    return href(TARIFF_DETAIL_BY_ID[id] || '/tariffs/mobile/');
+  }
+
+  function get(path) {
+    return byPath[path] || null;
+  }
+
+  function childrenOf(parentPath, branch) {
+    return PAGE_REGISTRY.filter(function (page) {
+      return page.parent === parentPath && (!branch || page.branch === branch);
+    });
+  }
+
+  function counts() {
+    var result = { total: 0, built: 0, planned: 0, external: 0 };
+    PAGE_REGISTRY.forEach(function (page) {
+      if (page.branch === 'internal') return;
+      result.total += 1;
+      if (page.status === 'built') result.built += 1;
+      else if (page.status === 'external') result.external += 1;
+      else result.planned += 1;
+    });
+    return result;
+  }
+
+  /* ======================================================================
+     Shared header and footer content
+     ====================================================================== */
+
+  var SITE_CHROME = {
+    announcements: [
+      'Naxçıvan daily talk — call all Azercell subscribers for 0.30 AZN per day.',
+      'DigiMax 25GB — 25GB, 1500 minutes and 500 SMS for 30 AZN per 28 days.',
+      'Travel pack 30GB — 100 minutes and 30GB for visitors, 39 AZN for 30 days.'
+    ],
+
+    search: {
+      id: 'header-search',
+      action: href('/search/'),
+      label: 'Search Azercell',
+      placeholder: 'Search anything...'
+    },
+
+    branches: [
+      { id: 'personal', label: 'Personal', href: '/' },
+      { id: 'business', label: 'Business', href: href('/business/') }
+    ],
+
+    businessAnnouncements: [
+      'My Business Wi-Fi — portable and fixed hotspots from 40 AZN per month.',
+      'My Business tariff plans — corporate lines from 15 AZN per month.',
+      'Manage every corporate number in one place with the Azercell Biznes portal.'
+    ],
+
+    businessSupportChat: {
+      eyebrow: 'Azercell Business',
+      title: 'Business support',
+      buttonLabel: 'Chat',
+      intro: 'Ask about corporate tariffs, roaming, IoT and cloud services. Pick a topic below or type your question.',
+      inputLabel: 'Your message',
+      inputPlaceholder: 'Type a question...',
+      note: 'This prototype shows the chat shell only. Live answers come from the business support team on the real site.',
+      handoff: { label: 'Contact the business team', href: href('/about/contact/') },
+      suggestions: [
+        {
+          label: 'Corporate tariffs',
+          answer: 'My Business plans run from 4GB at 15 AZN to 100GB at 80 AZN per line, per month.',
+          link: { label: 'My Business tariff plans', href: href('/business/mobile/tariffs/') }
+        },
+        {
+          label: 'Manage our numbers',
+          answer: 'Corporate numbers, billing and packages are managed in the Azercell Biznes portal.',
+          link: { label: 'Open Azercell Biznes', href: 'https://biznes.azercell.com' }
+        },
+        {
+          label: 'Roaming for staff',
+          answer: 'Roaming internet packs start at 500MB for 10 AZN over 3 days. Per-country rates are listed separately.',
+          link: { label: 'Roaming internet packs', href: href('/business/mobile/roaming/internet-packs/') }
+        },
+        {
+          label: 'IoT and automation',
+          answer: 'Fleet tracking, M2M, device management and RPA are quoted per project. The business team scopes it with you.',
+          link: { label: 'IoT solutions', href: href('/business/iot/') }
+        }
+      ]
+    },
+
+    supportChat: {
+      eyebrow: 'Aicell',
+      title: 'AI support',
+      buttonLabel: 'Chat',
+      intro: 'Ask about tariffs, roaming, internet packs and services. Pick a topic below or type your question.',
+      inputLabel: 'Your message',
+      inputPlaceholder: 'Type a question...',
+      note: 'This prototype shows the chat shell only. Live answers run in Aicell on the real site.',
+      handoff: { label: 'Talk to support', href: href('/support/') },
+      suggestions: [
+        {
+          label: 'Top up balance',
+          answer: 'Top up in the Kabinetim app or at an Azercell store.',
+          link: { label: 'Open Kabinetim', href: 'https://kabinetim.azercell.com/my/login' }
+        },
+        {
+          label: 'Activate a plan',
+          answer: 'Plans are activated in Kabinetim or by SMS/USSD code shown on each plan page.',
+          link: { label: 'See all mobile tariffs', href: href('/tariffs/mobile/') }
+        },
+        {
+          label: 'Roaming rates',
+          answer: 'Roaming prices depend on country and operator. Browse rates before you travel.',
+          link: { label: 'Countries and prices', href: href('/tariffs/roaming/countries-and-prices/') }
+        },
+        {
+          label: 'What is Aicell?',
+          answer: 'Aicell is Azercell\'s free 24/7 assistant for balance checks, tariffs, roaming and troubleshooting.',
+          link: { label: 'Aicell details', href: href('/tariffs/services/aicell/') }
+        }
+      ]
+    },
+
+    nav: [
+      {
+        label: 'Mobile',
+        columns: [
+          { title: 'Tariffs', links: [
+            { label: 'All mobile tariffs', href: href('/tariffs/mobile/') },
+            { label: 'Prepaid', href: tariffFilterHref('prepaid') },
+            { label: 'Postpaid', href: tariffFilterHref('postpaid') },
+            { label: 'Tariffs archive', href: href('/tariffs/mobile/prepaid/archive/') }
+          ] },
+          { title: 'Popular plans', links: [
+            { label: 'DigiMax', href: href('/tariffs/mobile/prepaid/digimax/') },
+            { label: 'Premium+ Prepaid', href: href('/tariffs/mobile/prepaid/premium-plus/') },
+            { label: '"Data+" tariff', href: href('/tariffs/mobile/prepaid/data-plus/') },
+            { label: 'Data (SimSim)', href: href('/tariffs/mobile/prepaid/data/') },
+            { label: 'Alfa Plan', href: href('/tariffs/mobile/postpaid/alfa/') },
+            { label: 'Veteran', href: href('/tariffs/mobile/prepaid/veteran/') }
+          ] },
+          { title: 'Services', links: [
+            { label: 'Payment and balance', href: href('/tariffs/services/payment-and-balance/') },
+            { label: 'Call management', href: href('/tariffs/services/call-management/') },
+            { label: '0 balance options', href: href('/tariffs/services/zero-balance/') },
+            { label: 'Aicell', href: href('/tariffs/services/aicell/') }
+          ] },
+          { title: 'Number', links: [
+            { label: 'Join Azercell', href: href('/join-azercell/') },
+            { label: 'eSIM', href: href('/tariffs/esim/') },
+            { label: 'Əsgərcell', href: href('/esgercell/') },
+            { label: 'Azercell stores', href: href('/stores/') }
+          ] }
+        ]
+      },
+      {
+        label: 'Internet',
+        columns: [
+          { title: 'Internet packs', links: [
+            { label: 'All internet packs', href: href('/tariffs/internet/') },
+            { label: 'High-volume / Monthly', href: href('/tariffs/internet/monthly/') },
+            { label: 'Weekly', href: href('/tariffs/internet/weekly/') },
+            { label: 'Daily', href: href('/tariffs/internet/daily/') },
+            { label: 'Unlimited', href: href('/tariffs/internet/unlimited/') }
+          ] },
+          { title: 'Roaming', links: [
+            { label: 'Roaming overview', href: href('/tariffs/roaming/') },
+            { label: 'Countries and prices', href: href('/tariffs/roaming/countries-and-prices/') },
+            { label: 'Roaming internet packs', href: href('/tariffs/roaming/internet-packs/') },
+            { label: 'Travel packs', href: href('/tariffs/roaming/travel-packs/') }
+          ] },
+          { title: 'Network', links: [
+            { label: 'Azercell 5G', href: href('/tariffs/5g/') },
+            { label: 'VoLTE', href: href('/tariffs/volte/') },
+            { label: 'Network support', href: href('/support/internet/') }
+          ] }
+        ]
+      },
+      {
+        label: 'Devices',
+        columns: [
+          { title: 'Shop', links: [
+            { label: 'All devices', href: href('/devices/') },
+            { label: 'Device campaigns', href: href('/campaigns/devices/') }
+          ] },
+          { title: 'Connectivity', links: [
+            { label: 'eSIM', href: href('/tariffs/esim/') },
+            { label: 'Buy a number', href: 'https://azercellim.com/en/home' }
+          ] }
+        ]
+      },
+      {
+        label: 'Deals',
+        columns: [
+          { title: 'Campaigns', links: [
+            { label: 'All campaigns', href: href('/campaigns/') },
+            { label: 'Special offers', href: href('/campaigns/special-offers/') },
+            { label: 'Voice', href: href('/campaigns/voice/') },
+            { label: 'Internet', href: href('/campaigns/internet/') },
+            { label: 'Bonus programs', href: href('/campaigns/bonus-programs/') }
+          ] },
+          { title: 'Azercell apps', links: [
+            { label: 'All apps', href: href('/apps/') },
+            { label: 'Kinon', href: href('/apps/cinema-and-tv/kinon/') },
+            { label: 'Yandex Plus', href: href('/apps/yandex-plus/') },
+            { label: 'Busuu', href: href('/apps/self-development/busuu/') }
+          ] },
+          { title: 'Money', links: [
+            { label: 'akart', href: 'https://akart.az' },
+            { label: 'Paycell', href: href('/tariffs/services/zero-balance/paycell/') },
+            { label: 'SimCredit', href: href('/tariffs/services/zero-balance/simcredit/') }
+          ] }
+        ]
+      },
+      {
+        label: 'Help',
+        columns: [
+          { title: 'Support', links: [
+            { label: 'Support overview', href: href('/support/') },
+            { label: 'Help', href: href('/help/') },
+            { label: 'Contact us', href: href('/about/contact/') },
+            { label: 'Azercell stores', href: href('/stores/') }
+          ] },
+          { title: 'Business', links: [
+            { label: 'Azercell Business', href: href('/business/') },
+            { label: 'Azercell Biznes portal', href: 'https://biznes.azercell.com' }
+          ] },
+          { title: 'Company', links: [
+            { label: 'About us', href: href('/about/') },
+            { label: 'Careers', href: href('/about/career/') },
+            { label: 'Press / News', href: href('/about/press/') }
+          ] }
+        ]
+      }
+    ],
+
+    businessNav: [
+      {
+        label: 'Mobile',
+        columns: [
+          { title: 'Mobile service', links: [
+            { label: 'Business homepage', href: href('/business/') },
+            { label: 'My Business tariffs', href: href('/business/mobile/tariffs/') },
+            { label: 'Internet packs', href: href('/business/mobile/internet/') },
+            { label: 'My Business Club', href: href('/business/mobile/club/') }
+          ] },
+          { title: 'Connectivity', links: [
+            { label: 'My Business Wi-Fi', href: href('/business/mobile/wifi/') },
+            { label: 'Roaming', href: href('/business/mobile/roaming/') },
+            { label: 'Special services', href: href('/business/mobile/special-services/') },
+            { label: 'Campaigns', href: href('/business/mobile/campaigns/') }
+          ] }
+        ]
+      },
+      {
+        label: 'Fixed & Cloud',
+        columns: [
+          { title: 'Fixed', links: [
+            { label: 'Fixed service', href: href('/business/fixed/') },
+            { label: 'Internet leased line', href: href('/business/fixed/leased-line/') }
+          ] },
+          { title: 'Cloud', links: [
+            { label: 'Cloud services', href: href('/business/cloud/') },
+            { label: 'CPaaS', href: href('/business/cloud/cpaas/') },
+            { label: 'InfoHUB', href: href('/business/cloud/infohub/') }
+          ] },
+          { title: 'Unified', links: [
+            { label: 'Unified service', href: href('/business/unified/') }
+          ] }
+        ]
+      },
+      {
+        label: 'Solutions',
+        columns: [
+          { title: 'IoT', links: [
+            { label: 'IoT solutions', href: href('/business/iot/') },
+            { label: 'YolDASH360', href: href('/business/iot/yoldash-360/') },
+            { label: 'M2M', href: href('/business/iot/m2m/') },
+            { label: 'My Business Fleet', href: href('/business/iot/fleet/') }
+          ] },
+          { title: 'Automation', links: [
+            { label: 'RPA', href: href('/business/iot/rpa/') },
+            { label: 'Mobile team management', href: href('/business/iot/team-management/') },
+            { label: 'Device management', href: href('/business/iot/device-management/') }
+          ] }
+        ]
+      },
+      {
+        label: 'Help',
+        columns: [
+          { title: 'Support', links: [
+            { label: 'Contact us', href: href('/about/contact/') },
+            { label: 'About us', href: href('/about/') }
+          ] },
+          { title: 'Personal', links: [
+            { label: 'Azercell Personal', href: '/' },
+            { label: 'Kabinetim', href: 'https://kabinetim.azercell.com/my/login' }
+          ] },
+          { title: 'Portals', links: [
+            { label: 'Azercell Biznes portal', href: 'https://biznes.azercell.com' }
+          ] }
+        ]
+      }
+    ],
+
+    footer: {
+      search: { id: 'footer-search', action: href('/search/'), label: 'Search Azercell', placeholder: 'Search anything...' },
+      columns: [
+        { title: 'Shop', links: [
+          { label: 'Tariffs', href: href('/tariffs/mobile/') },
+          { label: 'Internet packs', href: href('/tariffs/internet/') },
+          { label: 'Roaming packs', href: href('/tariffs/roaming/internet-packs/') },
+          { label: 'Devices', href: href('/devices/') },
+          { label: 'eSIM', href: href('/tariffs/esim/') },
+          { label: 'Azercell applications', href: href('/apps/') }
+        ] },
+        { title: 'Deals', links: [
+          { label: 'Campaigns', href: href('/campaigns/') },
+          { label: 'Special offers', href: href('/campaigns/special-offers/') },
+          { label: 'Voice', href: href('/campaigns/voice/') },
+          { label: 'Internet', href: href('/campaigns/internet/') },
+          { label: 'Bonus programs', href: href('/campaigns/bonus-programs/') },
+          { label: 'Device campaigns', href: href('/campaigns/devices/') }
+        ] },
+        { title: 'Help', links: [
+          { label: 'Support overview', href: href('/support/') },
+          { label: 'Contact us', href: href('/about/contact/') },
+          { label: 'Business support', href: href('/business/') },
+          { label: 'Kabinetim', href: 'https://kabinetim.azercell.com/my/login' },
+          { label: 'Azercell stores', href: href('/stores/') },
+          { label: 'Help', href: href('/help/') }
+        ] },
+        { title: 'About Azercell', links: [
+          { label: 'About us', href: href('/about/') },
+          { label: 'Careers', href: href('/about/career/') },
+          { label: 'Press / News', href: href('/about/press/') },
+          { label: 'Awards', href: href('/about/awards/') },
+          { label: 'Azercell 5G', href: href('/tariffs/5g/') },
+          { label: 'Azercell Academy', href: href('/about/academy/') }
+        ] }
+      ],
+      social: [
+        { label: 'Facebook', href: 'https://www.facebook.com/azercell' },
+        { label: 'Instagram', href: 'https://www.instagram.com/azercell' },
+        { label: 'YouTube', href: 'https://www.youtube.com/@azercell' },
+        { label: 'LinkedIn', href: 'https://www.linkedin.com/company/azercell' }
+      ],
+      legal: [
+        { label: 'Terms and Conditions', href: href('/terms/') },
+        { label: 'Privacy Policy', href: href('/about/privacy/') }
+      ],
+      copyright: '© 2026 "Azercell Telecom" LLC. All rights reserved.'
+    },
+
+    /* B2B keeps its own footer so the app links point at Azercell Business
+       rather than the consumer Kabinetim app. */
+    businessFooter: {
+      search: { id: 'footer-search', action: href('/search/'), label: 'Search Azercell Business', placeholder: 'Search business products...' },
+      columns: [
+        { title: 'Mobile service', links: [
+          { label: 'My Business tariff plans', href: href('/business/mobile/tariffs/') },
+          { label: 'My Business internet packs', href: href('/business/mobile/internet/') },
+          { label: 'My Business Club', href: href('/business/mobile/club/') },
+          { label: 'My Business Wi-Fi', href: href('/business/mobile/wifi/') },
+          { label: 'Roaming', href: href('/business/mobile/roaming/') },
+          { label: 'Special services', href: href('/business/mobile/special-services/') }
+        ] },
+        { title: 'Fixed & cloud', links: [
+          { label: 'Fixed service', href: href('/business/fixed/') },
+          { label: 'Internet leased line', href: href('/business/fixed/leased-line/') },
+          { label: 'Cloud services', href: href('/business/cloud/') },
+          { label: 'CPaaS', href: href('/business/cloud/cpaas/') },
+          { label: 'InfoHUB', href: href('/business/cloud/infohub/') },
+          { label: 'Unified service', href: href('/business/unified/') }
+        ] },
+        { title: 'Solutions', links: [
+          { label: 'IoT solutions', href: href('/business/iot/') },
+          { label: 'YolDASH360', href: href('/business/iot/yoldash-360/') },
+          { label: 'M2M', href: href('/business/iot/m2m/') },
+          { label: 'Robotic automation (RPA)', href: href('/business/iot/rpa/') },
+          { label: 'Mobile team management', href: href('/business/iot/team-management/') },
+          { label: 'My Business Fleet', href: href('/business/iot/fleet/') }
+        ] },
+        { title: 'Azercell Business', links: [
+          { label: 'Azercell Biznes portal', href: 'https://biznes.azercell.com' },
+          { label: 'Contact us', href: href('/about/contact/') },
+          { label: 'About us', href: href('/about/') },
+          { label: 'Press / News', href: href('/about/press/') },
+          { label: 'Azercell Personal', href: '/' },
+          { label: 'Campaigns', href: href('/business/mobile/campaigns/') }
+        ] }
+      ],
+      social: [
+        { label: 'Facebook', href: 'https://www.facebook.com/azercell' },
+        { label: 'Instagram', href: 'https://www.instagram.com/azercell' },
+        { label: 'YouTube', href: 'https://www.youtube.com/@azercell' },
+        { label: 'LinkedIn', href: 'https://www.linkedin.com/company/azercell' }
+      ],
+      legal: [
+        { label: 'Terms and Conditions', href: href('/terms/') },
+        { label: 'Privacy Policy', href: href('/about/privacy/') }
+      ],
+      copyright: '© 2026 "Azercell Telecom" LLC. Business call centre *6050.'
+    }
+  };
+
+  /* ======================================================================
+     Component registry — drives /components
+     ====================================================================== */
+
+  var COMPONENT_REGISTRY = [
+    {
+      id: 'announcementBar',
+      name: 'Announcement bar',
+      group: 'Global chrome',
+      usedOn: ['/', '/business/'],
+      description: 'Rotating one-line notice above the header. CMS-managed messages.',
+      props: { messages: SITE_CHROME.announcements }
+    },
+    {
+      id: 'siteHeader',
+      name: 'Site header',
+      group: 'Global chrome',
+      usedOn: ['/', '/business/'],
+      description: 'Mega menu from 1024px, collapsible drawer below it. Personal/Business switcher and search.',
+      props: {
+        branch: 'personal',
+        branches: SITE_CHROME.branches,
+        logo: 'Azercell',
+        logoHref: '/',
+        nav: SITE_CHROME.nav,
+        search: SITE_CHROME.search,
+        secondaryAction: { label: 'Kabinetim', href: 'https://kabinetim.azercell.com/my/login' },
+        primaryAction: { label: 'Join Azercell', href: href('/join-azercell/') }
+      }
+    },
+    {
+      id: 'supportChat',
+      name: 'Support chat',
+      group: 'Global chrome',
+      usedOn: ['/', '/business/', '/planned/'],
+      description: 'Floating chat button. Opens a panel with suggested topics and a message field. Topics differ per branch.',
+      props: SITE_CHROME.supportChat
+    },
+    {
+      id: 'siteFooter',
+      name: 'Site footer',
+      group: 'Global chrome',
+      usedOn: ['/', '/business/'],
+      description: 'Four link columns, search, social and legal row. B2C and B2B pass their own columns and app links.',
+      props: SITE_CHROME.footer
+    },
+    {
+      id: 'heroBanner',
+      name: 'Hero banner',
+      group: 'Page openers',
+      usedOn: ['/', '/business/'],
+      description: 'Any number of CMS slides — the layout does not depend on the count. Dot navigation, optional stat strip.',
+      props: {
+        slides: [
+          {
+            eyebrow: 'Meet DigiMax',
+            title: 'One prepaid plan, everything included',
+            body: 'Internet, calls and SMS in a single pack. No contract, no monthly commitment.',
+            media: 'Hero visual',
+            actions: [
+              { label: 'See DigiMax packs', href: href('/tariffs/mobile/prepaid/digimax/'), variant: 'primary' },
+              { label: 'Compare all tariffs', href: href('/tariffs/compare/') }
+            ],
+            stats: [
+              { value: '25GB', label: 'Internet' },
+              { value: '1500 min', label: 'Countrywide calls' },
+              { value: '500', label: 'SMS' }
+            ]
+          },
+          {
+            eyebrow: 'Travel packs',
+            title: 'Visiting Azerbaijan? Get connected on arrival',
+            body: '30GB with 100 minutes for 39 AZN, valid 30 days. Free SIM or eSIM.',
+            media: 'Travel pack visual',
+            actions: [
+              { label: 'See travel packs', href: href('/tariffs/roaming/travel-packs/'), variant: 'primary' }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'quickActions',
+      name: 'Quick actions',
+      group: 'Navigation blocks',
+      usedOn: ['/'],
+      description: 'Row of frequent jobs. Each links to a page or the external portal.',
+      props: {
+        items: [
+          { icon: '01', label: 'Top up balance', href: 'https://kabinetim.azercell.com/my/login' },
+          { icon: '02', label: 'Activate SIM', href: href('/join-azercell/') },
+          { icon: '03', label: 'Change plan', href: href('/tariffs/mobile/') },
+          { icon: '04', label: 'Switch to eSIM', href: href('/tariffs/esim/') }
+        ]
+      }
+    },
+    {
+      id: 'sectionHead',
+      name: 'Section heading',
+      group: 'Layout',
+      usedOn: ['/', '/business/', '/tariffs/mobile/', '/tariffs/compare/', '/tariffs/mobile/prepaid/archive/'].concat(MOBILE_TARIFF_DETAIL_PATHS),
+      description: 'Eyebrow, title, intro and an optional action on the right.',
+      props: {
+        eyebrow: 'Tariffs',
+        title: 'Pick your perfect plan',
+        body: 'Flexible plans built around how you actually use your phone.',
+        action: { label: 'Compare all plans', href: href('/tariffs/compare/') }
+      }
+    },
+    {
+      id: 'planCard',
+      name: 'Plan card',
+      group: 'Products',
+      usedOn: ['/', '/tariffs/mobile/', '/tariffs/compare/', '/business/'],
+      description: 'Tariff card with a price selector. Each price shows its own specs.',
+      props: {
+        compareId: 'digimax',
+        name: 'DigiMax',
+        type: 'Prepaid',
+        badge: 'Popular',
+        tiers: [
+          { price: '8 AZN', validity: 'Valid 14 days', specs: [
+            { value: '3GB', label: 'Internet' }, { value: '200 min', label: 'Calls' }, { value: '100', label: 'SMS' }] },
+          { price: '12 AZN', validity: 'Valid 28 days', specs: [
+            { value: '5GB', label: 'Internet' }, { value: '300 min', label: 'Calls' }, { value: '150', label: 'SMS' }, { value: '1GB', label: 'Social media' }] },
+          { price: '18 AZN', validity: 'Valid 28 days', specs: [
+            { value: '10GB', label: 'Internet' }, { value: '600 min', label: 'Calls' }, { value: '300', label: 'SMS' }, { value: '1GB', label: 'Social media' }, { value: '1GB', label: 'WhatsApp' }] }
+        ],
+        note: 'All prices include VAT.',
+        actions: [
+          { label: 'Plan details', href: href('/tariffs/mobile/prepaid/digimax/'), variant: 'primary' },
+          { label: 'Activate in Kabinetim', href: 'https://kabinetim.azercell.com/my/login' }
+        ]
+      }
+    },
+    {
+      id: 'tariffPackCard',
+      name: 'Tariff pack card',
+      group: 'Products',
+      usedOn: MOBILE_TARIFF_DETAIL_PATHS.slice(),
+      description: 'Single pack tier as its own plan card — used in detail page carousels.',
+      props: {
+        tierId: 'd3',
+        name: 'DigiMax 3GB',
+        type: 'Prepaid',
+        price: '8 AZN',
+        validity: 'Usage period 14 days.',
+        specs: [
+          { value: '3GB', label: 'Internet' },
+          { value: '200 min', label: 'Calls' },
+          { value: '100', label: 'SMS' }
+        ],
+        note: 'Send "D3" to 7575.',
+        ussd: 'Dial *750*4*203#YES',
+        compareHref: href('/tariffs/compare/?add=digimax'),
+        actions: [
+          { label: 'Activate in Kabinetim', href: 'https://kabinetim.azercell.com/my/login', variant: 'primary' }
+        ]
+      }
+    },
+    {
+      id: 'promoCard',
+      name: 'Promo card',
+      group: 'Products',
+      usedOn: ['/', '/business/', '/tariffs/mobile/prepaid/archive/'],
+      description: 'Card with a visual, short copy and a call to action.',
+      props: {
+        media: 'Plan builder',
+        eyebrow: 'Build your own',
+        title: 'Create a plan that fits your needs',
+        body: 'Choose your internet, minutes and SMS and get a plan built around them.',
+        actions: [{ label: 'Build my plan', href: href('/tariffs/mobile/'), variant: 'primary' }]
+      }
+    },
+    {
+      id: 'calloutBanner',
+      name: 'Callout banner',
+      group: 'Content',
+      usedOn: ['/tariffs/mobile/', '/tariffs/mobile/prepaid/archive/', '/tariffs/compare/'],
+      description: 'Full-width prompt for archive lookup, cross-sell, or help — inverse by default.',
+      props: {
+        eyebrow: 'Existing customer?',
+        title: 'Cannot find your tariff here?',
+        body: 'Legacy plans are no longer sold to new subscribers. If you are already on an archived tariff, you can still view its terms.',
+        actions: [{ label: 'Prepaid tariffs archive', href: href('/tariffs/mobile/prepaid/archive/'), variant: 'primary' }]
+      }
+    },
+    {
+      id: 'localSearchField',
+      name: 'Local search field',
+      group: 'Forms',
+      usedOn: ['/tariffs/mobile/prepaid/archive/'],
+      description: 'Filters items already on the page. Does not query a server.',
+      props: { id: 'demo-local-search', label: 'Search archive plans', placeholder: 'Search by plan name…' }
+    },
+    {
+      id: 'archivePlanCard',
+      name: 'Archive plan card',
+      group: 'Products',
+      usedOn: ['/tariffs/mobile/prepaid/archive/'],
+      description: 'Legacy tariff tile with archived badge and link to plan terms.',
+      props: {
+        name: 'SuperSən',
+        tagline: 'SuperSən, choose your tariff!',
+        href: href('/tariffs/mobile/prepaid/archive/supersen/')
+      }
+    },
+    {
+      id: 'pagination',
+      name: 'Pagination',
+      group: 'Navigation',
+      usedOn: ['/tariffs/mobile/prepaid/archive/'],
+      description: 'Page controls for long lists. Filled by archive list behaviour in app.js.',
+      props: { label: 'Archive pages' }
+    },
+    {
+      id: 'tariffCompareTool',
+      name: 'Tariff compare tool',
+      group: 'Products',
+      usedOn: ['/tariffs/compare/'],
+      description: 'Two-step compare: pick 2–4 mobile tariffs, then switch price tiers side by side.',
+      props: {
+        tariffs: [
+          {
+            id: 'digimax',
+            name: 'DigiMax',
+            type: 'Prepaid',
+            badge: 'Popular',
+            tiers: [
+              { price: '8 AZN', validity: 'Valid 14 days', internet: '3GB', calls: '200 min', sms: '100', extras: '—', activation: 'Send "D3" to 7575' },
+              { price: '12 AZN', validity: 'Valid 28 days', internet: '5GB', calls: '300 min', sms: '150', social: '1GB', extras: '—', activation: 'Send "D5" to 7575' }
+            ]
+          },
+          {
+            id: 'alfa',
+            name: 'Alfa Plan',
+            type: 'Postpaid',
+            badge: 'Contract',
+            discountNote: '10% off on a 12-month contract. 20% off on a 24-month contract.',
+            note: 'Postpaid contract. Signing takes place in an Azercell store.',
+            tiers: [
+              { price: '20 AZN', validity: 'Monthly billing', internet: '12GB', calls: '1200 min', sms: '—', extras: '—', activation: 'Send "A12" to 650' },
+              { price: '30 AZN', validity: 'Monthly billing', internet: '25GB', calls: '2500 min', sms: '—', extras: '—', activation: 'Send "A25" to 650' }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'tariffDetailHero',
+      name: 'Tariff detail hero',
+      group: 'Products',
+      usedOn: [],
+      description: 'Legacy sample only — live detail pages use sectionHead + pack carousel instead.',
+      props: {
+        eyebrow: 'Prepaid',
+        title: 'DigiMax',
+        body: 'With your rhythm! Prepaid packs with internet, countrywide calls and SMS.',
+        media: 'DigiMax',
+        badge: 'Popular'
+      }
+    },
+    {
+      id: 'tariffTierSelector',
+      name: 'Tariff tier selector',
+      group: 'Products',
+      usedOn: [],
+      description: 'Legacy sample only — live detail pages use pack carousel cards instead.',
+      props: {
+        title: 'Choose your pack',
+        body: 'Tap a chip to see what is included.',
+        activeId: 'd3',
+        tiers: [
+          { id: 'd1', label: 'DigiMax Daily', price: '1 AZN', validityGroup: '1 day' },
+          { id: 'd3', label: 'DigiMax 3GB', price: '8 AZN', validityGroup: '14 days' },
+          { id: 'd10', label: 'DigiMax 10GB', price: '18 AZN', validityGroup: '28 days' }
+        ]
+      }
+    },
+    {
+      id: 'tariffTierPanel',
+      name: 'Tariff tier panel',
+      group: 'Products',
+      usedOn: [],
+      description: 'Legacy sample only — live detail pages use tariffPackCard instead.',
+      props: {
+        tier: {
+          label: 'DigiMax 3GB',
+          price: '8 AZN',
+          validity: 'Usage period 14 days.',
+          internet: '3GB',
+          calls: '200 min countrywide',
+          sms: '100 countrywide',
+          keyword: 'D3',
+          ussd: '*750*4*203#YES',
+          activation: 'Send "D3" to 7575',
+          features: ['3GB internet', '200 min countrywide calls', '100 countrywide SMS']
+        },
+        actions: [
+          { label: 'Activate in Kabinetim', href: 'https://kabinetim.azercell.com/my/login', variant: 'primary' },
+          { label: 'Compare with other plans', href: href('/tariffs/compare/?add=digimax') }
+        ]
+      }
+    },
+    {
+      id: 'tariffActivationBlock',
+      name: 'Tariff activation block',
+      group: 'Products',
+      usedOn: [],
+      description: 'Legacy sample only — activation info lives on pack cards and FAQ now.',
+      props: {
+        title: 'How to activate',
+        activation: {
+          shortCode: '7575',
+          smsCost: '0.01 AZN per request',
+          intro: 'Send the keyword to 7575, dial USSD, or activate in Kabinetim.',
+          keywords: [{ keyword: 'D3', pack: 'DigiMax 3GB' }],
+          ussdCodes: [{ code: '*750*4*203#YES', pack: 'DigiMax 3GB' }],
+          bonusCheck: ['Send an empty SMS to 2112 (0.10 AZN per SMS)']
+        }
+      }
+    },
+    {
+      id: 'tariffFaq',
+      name: 'Tariff FAQ',
+      group: 'Content',
+      usedOn: MOBILE_TARIFF_DETAIL_PATHS.slice(),
+      description: 'Accordion FAQ with paragraphs and bullet lists.',
+      props: {
+        title: 'Questions and answers',
+        items: [
+          { question: 'Who can subscribe?', answer: 'Any prepaid line subscriber.' },
+          { question: 'How to activate?', paragraphs: ['Send the keyword to 7575.'], list: ['D3 — DigiMax 3GB'] }
+        ]
+      }
+    },
+    {
+      id: 'tariffFeatureList',
+      name: 'Tariff feature list',
+      group: 'Products',
+      usedOn: [],
+      description: 'Legacy sample only — specs live on tariffPackCard now.',
+      props: {
+        title: 'What is included in this pack',
+        features: ['3GB internet', '200 min countrywide calls', '100 countrywide SMS']
+      }
+    },
+    {
+      id: 'tariffAddonGrid',
+      name: 'Tariff internet add-ons',
+      group: 'Products',
+      usedOn: MOBILE_TARIFF_DETAIL_PATHS.slice(),
+      description: 'Grid of monthly internet pack upsells.',
+      props: {
+        title: 'Need more internet?',
+        body: 'Monthly add-on packs stack on your current tariff.',
+        items: [
+          { name: 'Monthly 3GB', price: '9 AZN', body: 'High-volume monthly add-on.', action: { label: 'Monthly packs', href: href('/tariffs/internet/monthly/') } }
+        ]
+      }
+    },
+    {
+      id: 'tariffOverageNote',
+      name: 'Tariff overage rates',
+      group: 'Content',
+      usedOn: MOBILE_TARIFF_DETAIL_PATHS.slice(),
+      description: 'Rates after bonuses are used up.',
+      props: {
+        overageRates: {
+          title: 'Rates after bonuses are used up',
+          intro: 'If bonuses within your pack are exhausted but the pack is still valid:',
+          items: [
+            { label: 'Countrywide calls', value: '0.08 AZN per minute' },
+            { label: 'Internet', value: '0.05 AZN per MB' }
+          ]
+        }
+      }
+    },
+    {
+      id: 'tariffDetailCrossLinks',
+      name: 'Tariff detail cross-links',
+      group: 'Navigation blocks',
+      usedOn: MOBILE_TARIFF_DETAIL_PATHS.slice(),
+      description: 'Compare and hub links plus de-emphasized legal line.',
+      props: {
+        links: [
+          { label: 'Compare DigiMax with other plans', href: href('/tariffs/compare/?add=digimax'), variant: 'primary' },
+          { label: 'All mobile tariffs', href: href('/tariffs/mobile/') }
+        ],
+        legal: 'All prices VAT inclusive. Tariff allowances are for personal use only.'
+      }
+    },
+    {
+      id: 'internetPackCard',
+      name: 'Internet pack card',
+      group: 'Products',
+      usedOn: ['/tariffs/internet/', '/tariffs/internet/monthly/', '/tariffs/internet/weekly/', '/tariffs/internet/daily/', '/tariffs/internet/unlimited/',
+        '/tariffs/roaming/', '/tariffs/roaming/internet-packs/', '/tariffs/roaming/travel-packs/'],
+      description: 'Priced data add-on with activation SMS, Kabinetim CTA, and expandable usage guide.',
+      props: {
+        id: 'monthly-3gb',
+        name: 'Monthly 3GB',
+        data: '3GB',
+        price: '9 AZN',
+        priceNum: 9,
+        sort: 1,
+        volumeBand: 'all',
+        validity: { prepaid: '28 days', postpaid: '30 days' },
+        keyword: '3',
+        shortCode: '2525',
+        usageHints: [{ activity: 'Video calls', duration: '~6 hours' }],
+        details: 'High-volume monthly data add-on.',
+        kabinetimHref: 'https://kabinetim.azercell.com/my/login'
+      }
+    },
+    {
+      id: 'internetCategoryNav',
+      name: 'Internet category nav',
+      group: 'Navigation blocks',
+      usedOn: ['/tariffs/internet/', '/tariffs/internet/monthly/', '/tariffs/internet/weekly/', '/tariffs/internet/daily/', '/tariffs/internet/unlimited/',
+        '/tariffs/roaming/', '/tariffs/roaming/internet-packs/', '/tariffs/roaming/travel-packs/', '/tariffs/roaming/countries-and-prices/'],
+      description: 'Links between internet pack hub and category pages, or roaming section tabs.',
+      props: {
+        active: 'monthly',
+        items: [
+          { id: 'hub', label: 'All internet packs', href: href('/tariffs/internet/') },
+          { id: 'monthly', label: 'High-volume / Monthly', href: href('/tariffs/internet/monthly/') }
+        ]
+      }
+    },
+    {
+      id: 'internetPackFilters',
+      name: 'Internet pack filters',
+      group: 'Navigation blocks',
+      usedOn: ['/tariffs/internet/monthly/', '/tariffs/internet/weekly/', '/tariffs/internet/daily/', '/tariffs/internet/unlimited/'],
+      description: 'Traffic band and price sort filters with shareable URL params.',
+      props: {
+        urlBase: href('/tariffs/internet/monthly/'),
+        groups: [
+          { key: 'volume', label: 'Traffic', syncUrl: true, urlParam: 'volume', options: [
+            { value: 'all', label: 'All offers' }, { value: '30-50', label: '30 – 50 GB' }] },
+          { key: 'sort', label: 'Price', syncUrl: true, urlParam: 'sort', options: [
+            { value: 'default', label: 'Recommended' }, { value: 'price-asc', label: 'Low to higher' }] }
+        ]
+      }
+    },
+    {
+      id: 'internetUpgradeBanner',
+      name: 'Internet upgrade banner',
+      group: 'Promotion',
+      usedOn: ['/tariffs/internet/', '/tariffs/internet/monthly/', '/tariffs/internet/weekly/', '/tariffs/internet/daily/', '/tariffs/internet/unlimited/',
+        '/tariffs/roaming/', '/tariffs/roaming/internet-packs/', '/tariffs/roaming/travel-packs/', '/tariffs/roaming/countries-and-prices/'],
+      description: 'Cross-sell banner suggesting a bigger mobile tariff instead of repeated add-ons.',
+      props: {
+        eyebrow: 'Smarter option',
+        title: 'Buying extra data every month?',
+        body: 'If you keep topping up with add-on packs, a bigger mobile plan may give you more data plus calls and SMS for similar money.',
+        actions: [
+          { label: 'Compare mobile plans', href: href('/tariffs/compare/'), variant: 'primary' },
+          { label: 'See data-heavy plans', href: tariffFilterHref('prepaid') }
+        ]
+      }
+    },
+    {
+      id: 'filterTabs',
+      name: 'Filter tabs',
+      group: 'Navigation blocks',
+      usedOn: ['/', '/business/', '/tariffs/mobile/'],
+      description: 'Filters items on the page. For shareable tab links set syncUrl: true + urlBase + urlParam; tabs render as href links and sync the address bar.',
+      props: {
+        urlBase: href('/tariffs/mobile/'),
+        groups: [
+          { key: 'category', label: 'Plan type', syncUrl: true, urlParam: 'type', options: [
+            { value: 'all', label: 'All' }, { value: 'prepaid', label: 'Prepaid' }, { value: 'postpaid', label: 'Postpaid' }] }
+        ]
+      }
+    },
+    {
+      id: 'deviceCard',
+      name: 'Device card',
+      group: 'Products',
+      usedOn: ['/'],
+      description: 'Device tile with price. Filterable by category and brand.',
+      props: {
+        name: 'iPhone 16 Pro',
+        category: 'phones',
+        brand: 'apple',
+        priceLabel: 'Starting from',
+        price: '2,949 AZN',
+        action: { label: 'Device details', href: href('/devices/') }
+      }
+    },
+    {
+      id: 'splitBanner',
+      name: 'Split banner',
+      group: 'Promotion',
+      usedOn: ['/', '/business/'],
+      description: 'Copy beside a visual. Supports an inverted variant and flipped order.',
+      props: {
+        eyebrow: 'Kinon Plus',
+        title: 'Dive into the world of cinema',
+        body: '240+ channels plus on-demand, up to 5 profiles and 3 devices.',
+        media: 'Kinon visual',
+        points: ['15.99 AZN per month', '7-day free trial and 5GB bonus data', 'Billed to your mobile balance'],
+        actions: [
+          { label: 'Kinon details', href: href('/apps/cinema-and-tv/kinon/'), variant: 'primary' },
+          { label: 'All Azercell apps', href: href('/apps/') }
+        ],
+        note: 'Subscription is activated in the Kabinetim app.'
+      }
+    },
+    {
+      id: 'linkCard',
+      name: 'Link card',
+      group: 'Navigation blocks',
+      usedOn: ['/', '/business/'],
+      description: 'Whole-card link used for service and reason tiles.',
+      props: {
+        media: 'Roaming',
+        title: 'International roaming',
+        body: 'Rates, packs and supported operators for around 190 countries.',
+        linkLabel: 'Learn more',
+        href: href('/tariffs/roaming/')
+      }
+    },
+    {
+      id: 'statBand',
+      name: 'Stat band',
+      group: 'Layout',
+      usedOn: ['/', '/business/'],
+      description: 'Row of figures. Four across on desktop, two on tablet, stacked on mobile.',
+      props: {
+        items: [
+          { value: '5G', label: 'Live test zone in Baku' },
+          { value: '190+', label: 'Roaming destinations' },
+          { value: '0 AZN', label: 'First eSIM issue' },
+          { value: '24/7', label: 'Aicell assistant' }
+        ]
+      }
+    },
+    {
+      id: 'appPromo',
+      name: 'App promo',
+      group: 'Promotion',
+      usedOn: ['/', '/business/'],
+      description: 'Store links beside a device visual.',
+      props: {
+        eyebrow: 'Kabinetim',
+        title: 'Manage your plan on the go',
+        body: 'Track usage, switch tariffs and activate packs in the Kabinetim app.',
+        media: 'App screens',
+        stores: [
+          { pre: 'Download on the', name: 'App Store', href: 'https://apps.apple.com/az/app/kabinetim/id1050654556' },
+          { pre: 'Get it on', name: 'Google Play', href: 'https://play.google.com/store/apps/details?id=com.azercell.kabinetim' }
+        ]
+      }
+    },
+    {
+      id: 'carousel',
+      name: 'Carousel',
+      group: 'Layout',
+      usedOn: ['/', '/business/'].concat(MOBILE_TARIFF_DETAIL_PATHS),
+      description: 'Horizontal scroller with arrow buttons and swipe hint. Arrows hide when everything fits.',
+      props: { label: 'Example row', content: '' }
+    },
+    {
+      id: 'accordion',
+      name: 'Accordion',
+      group: 'Layout',
+      usedOn: ['/business/'],
+      description: 'Expandable question and answer list for FAQ blocks.',
+      props: {
+        items: [
+          { question: 'How do I activate an internet pack?', answer: 'Packs are activated in the Kabinetim app or with the USSD code shown on each pack page.' },
+          { question: 'Are prices VAT inclusive?', answer: 'Yes. All prices shown on the site include VAT unless stated otherwise.' }
+        ]
+      }
+    },
+    {
+      id: 'roamingCountrySearch',
+      name: 'Roaming country search',
+      group: 'Products',
+      usedOn: ['/tariffs/roaming/', '/tariffs/roaming/countries-and-prices/'],
+      description: 'Client-side country lookup with optional URL sync via ?country= and quick destination chips.',
+      props: {
+        label: 'Search for a country',
+        syncUrl: true,
+        urlBase: href('/tariffs/roaming/countries-and-prices/'),
+        topCountries: [{ id: 'turkiye', name: 'Turkiye' }, { id: 'georgia', name: 'Georgia' }]
+      }
+    },
+    {
+      id: 'roamingCountryResults',
+      name: 'Roaming country results',
+      group: 'Products',
+      usedOn: ['/tariffs/roaming/', '/tariffs/roaming/countries-and-prices/'],
+      description: 'Operator cards with networks, pack support flag, and pay-as-you-go rates.',
+      props: { planType: 'prepaid', countries: [] }
+    },
+    {
+      id: 'roamingCountriesTable',
+      name: 'Roaming supported countries table',
+      group: 'Products',
+      usedOn: ['/tariffs/roaming/internet-packs/'],
+      description: 'Horizontally scrollable table of operators where roaming internet packs work.',
+      props: { rows: [], note: 'Sample list for prototype.' }
+    },
+    {
+      id: 'roamingPlanToggle',
+      name: 'Roaming plan type toggle',
+      group: 'Navigation blocks',
+      usedOn: ['/tariffs/roaming/', '/tariffs/roaming/countries-and-prices/'],
+      description: 'Prepaid / postpaid switch for rate display on country lookup.',
+      props: { current: 'prepaid' }
+    },
+    {
+      id: 'searchBar',
+      name: 'Search bar',
+      group: 'Global chrome',
+      usedOn: ['/', '/business/'],
+      description: 'Submits to the search results page. No results are faked here.',
+      props: { id: 'demo-search', label: 'Search Azercell', placeholder: 'Search anything...', action: href('/search/') }
+    },
+    {
+      id: 'offerCard',
+      name: 'Offer card',
+      group: 'Products',
+      usedOn: ['/business/'],
+      description: 'Priced pack or solution tile. Filterable by category. Handles "price on request" items.',
+      props: {
+        category: 'iot',
+        name: 'Mobile device management',
+        price: '11 AZN',
+        priceNote: 'Per device, per month',
+        body: 'Enterprise control and security over company devices, with dual-profile BYOD support.',
+        meta: ['600 AZN one-time setup and training'],
+        action: { label: 'Solution details', href: href('/business/iot/device-management/') }
+      }
+    },
+    {
+      id: 'leadForm',
+      name: 'Lead form',
+      group: 'Forms',
+      usedOn: ['/business/'],
+      description: 'Sales enquiry form with TAX ID. Validates its own fields, then shows the real contact handoff. Never confirms a submission.',
+      props: {
+        id: 'demo-lead-form',
+        eyebrow: 'Contact us',
+        title: 'Need a digital solution?',
+        body: 'Tell us about the company and a sales agent will get in touch.',
+        submitLabel: 'Send request',
+        note: 'Fields marked with * are required.',
+        fields: [
+          { name: 'name', label: 'First name and last name', type: 'text', required: true },
+          { name: 'email', label: 'Email', type: 'email', required: true },
+          { name: 'phone', label: 'Phone number', type: 'tel', required: true, inputmode: 'tel' },
+          { name: 'company', label: 'Company name', type: 'text', required: true },
+          { name: 'taxId', label: 'TAX ID', type: 'text', required: true, hint: 'Used to confirm this is a business enquiry.' },
+          { name: 'region', label: 'Region or city', type: 'select', required: true, placeholder: 'Select a region', options: ['Baku', 'Ganja', 'Sumgayit'] },
+          { name: 'contactMethod', label: 'Preferred contact method', type: 'radio', options: ['Call', 'Email'], wide: true }
+        ],
+        handoff: {
+          label: 'Prototype — this form is not connected',
+          body: 'The fields validate, but the prototype cannot send the request. Use one of these channels instead.',
+          links: [
+            { label: 'Call *6050', href: 'tel:*6050', variant: 'primary' },
+            { label: 'Contact page', href: href('/about/contact/') }
+          ]
+        }
+      }
+    }
+  ];
+
+  function headerProps(overrides) {
+    var branch = (overrides && overrides.branch) || 'personal';
+    var isBusiness = branch === 'business';
+    var base = {
+      branch: branch,
+      branches: SITE_CHROME.branches,
+      logo: 'Azercell',
+      logoHref: isBusiness ? href('/business/') : '/',
+      nav: isBusiness ? SITE_CHROME.businessNav : SITE_CHROME.nav,
+      search: SITE_CHROME.search,
+      secondaryAction: isBusiness
+        ? { label: 'Azercell Biznes', href: 'https://biznes.azercell.com' }
+        : { label: 'Kabinetim', href: 'https://kabinetim.azercell.com/my/login' },
+      primaryAction: isBusiness
+        ? { label: 'Contact us', href: href('/about/contact/') }
+        : { label: 'Join Azercell', href: href('/join-azercell/') }
+    };
+    if (!overrides) return base;
+    var key;
+    for (key in overrides) {
+      if (Object.prototype.hasOwnProperty.call(overrides, key)) base[key] = overrides[key];
+    }
+    return base;
+  }
+
+  global.SiteRegistry = {
+    BRANCHES: BRANCHES,
+    PAGE_REGISTRY: PAGE_REGISTRY,
+    COMPONENT_REGISTRY: COMPONENT_REGISTRY,
+    SITE_CHROME: SITE_CHROME,
+    href: href,
+    tariffFilterHref: tariffFilterHref,
+    internetFilterHref: internetFilterHref,
+    tariffCompareHref: tariffCompareHref,
+    tariffDetailHref: tariffDetailHref,
+    get: get,
+    childrenOf: childrenOf,
+    counts: counts,
+    isExternal: isExternal,
+    headerProps: headerProps
+  };
+})(window);

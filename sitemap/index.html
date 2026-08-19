@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sitemap — Azercell Prototype</title>
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<header class="tool-header">
+  <div class="wrap tool-header__inner">
+    <div class="section__title-group">
+      <p class="t-label">Internal tool — not linked from the site</p>
+      <h1 class="t-h1">Sitemap</h1>
+      <p class="t-lead t-muted">Every page in the prototype and how the pages relate. Built pages are live; planned pages come from the source sitemap and are not built yet.</p>
+    </div>
+    <div class="tool-header__tabs">
+      <a class="btn btn--small" href="/">B2C homepage</a>
+      <a class="btn btn--small" href="/components/">Components</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-block: var(--sp-6)">
+  <div class="map-stats" id="stats"></div>
+
+  <div class="map-legend">
+    <span class="map-legend__item"><span class="badge">Built</span><span class="t-small t-muted">Page exists and opens</span></span>
+    <span class="map-legend__item"><span class="badge badge--quiet">Planned</span><span class="t-small t-muted">In the source sitemap, not built</span></span>
+    <span class="map-legend__item"><span class="badge badge--quiet">External</span><span class="t-small t-muted">Separate domain</span></span>
+  </div>
+
+  <div id="tree"></div>
+
+  <section class="tool-group">
+    <div class="tool-group__head">
+      <h2 class="t-h2">Relationships</h2>
+      <span class="t-small t-muted">Links between built pages and their destinations</span>
+    </div>
+    <div class="map-table-wrap">
+      <table class="map-table" id="relations">
+        <thead>
+          <tr><th>From</th><th>Status</th><th>Links to</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(function () {
+  var esc = Components.esc;
+  var R = SiteRegistry;
+
+  /* Summary counts */
+  var counts = R.counts();
+  document.getElementById('stats').innerHTML = [
+    { value: counts.total, label: 'Pages in the sitemap' },
+    { value: counts.built, label: 'Built in the prototype' },
+    { value: counts.planned, label: 'Planned, not built' },
+    { value: counts.external, label: 'External destinations' }
+  ].map(function (s) {
+    return '<div class="map-stat"><span class="t-h2">' + esc(s.value) + '</span>' +
+      '<span class="t-small t-muted">' + esc(s.label) + '</span></div>';
+  }).join('');
+
+  /* Tree */
+  function badgeFor(page) {
+    if (page.status === 'built') return '<span class="badge">Built</span>';
+    if (page.status === 'external') return '<span class="badge badge--quiet">External</span>';
+    return '<span class="badge badge--quiet">Planned</span>';
+  }
+
+  function nodeHtml(page) {
+    var title = page.status === 'built' || page.status === 'external'
+      ? '<a class="t-h4 link-inline" href="' + esc(page.path) + '"' +
+        (R.isExternal(page.path) ? ' target="_blank" rel="noopener"' : '') + '>' + esc(page.title) + '</a>'
+      : '<span class="t-h4">' + esc(page.title) + '</span>';
+
+    return (
+      '<div class="map-node' + (page.status === 'built' ? ' map-node--built' : '') + '">' +
+        badgeFor(page) + title +
+        '<code class="t-small map-node__path">' + esc(page.path) + '</code>' +
+        (page.note ? '<span class="t-small map-node__links">' + esc(page.note) + '</span>' : '') +
+      '</div>'
+    );
+  }
+
+  function branchTree(branchId) {
+    function render(parentPath) {
+      var kids = R.childrenOf(parentPath, branchId);
+      if (!kids.length) return '';
+      return '<ul>' + kids.map(function (page) {
+        return '<li>' + nodeHtml(page) + render(page.path) + '</li>';
+      }).join('') + '</ul>';
+    }
+    return render(null);
+  }
+
+  document.getElementById('tree').innerHTML = R.BRANCHES.map(function (branch) {
+    var tree = branchTree(branch.id);
+    if (!tree) return '';
+    var total = R.PAGE_REGISTRY.filter(function (p) { return p.branch === branch.id; }).length;
+    return (
+      '<section class="tool-group">' +
+        '<div class="tool-group__head">' +
+          '<h2 class="t-h2">' + esc(branch.title) + '</h2>' +
+          '<span class="t-small t-muted">' + total + ' entries</span>' +
+        '</div>' +
+        '<div class="map-tree">' + tree + '</div>' +
+      '</section>'
+    );
+  }).join('');
+
+  /* Relationships — only pages that declare cross-links */
+  var rows = R.PAGE_REGISTRY.filter(function (p) { return p.links && p.links.length; });
+  document.querySelector('#relations tbody').innerHTML = rows.map(function (page) {
+    return (
+      '<tr>' +
+        '<td>' + esc(page.title) + '<br><code class="t-small t-muted">' + esc(page.path) + '</code></td>' +
+        '<td>' + (page.status === 'built' ? 'Built' : 'Planned') + '</td>' +
+        '<td>' + page.links.map(function (target) {
+          var dest = R.get(target);
+          return esc(dest ? dest.title : target) + ' <code class="t-small t-muted">' + esc(target) + '</code>';
+        }).join('<br>') + '</td>' +
+      '</tr>'
+    );
+  }).join('');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+---
+description: Every section must work at mobile, tablet, and desktop widths
+alwaysApply: true
+---
+
+# Three Resolutions, Always
+
+Every page and every component must be built for all three ranges at once. Resizing the browser
+window must show blocks reflowing, never breaking or overflowing horizontally.
+
+| Range   | Width          |
+|---------|----------------|
+| Mobile  | below 768px    |
+| Tablet  | 768px–1023px   |
+| Desktop | 1024px and up  |
+
+## Mobile-first CSS
+
+Write base styles for mobile, then layer the two breakpoints. Use only these two queries so the
+breakpoints stay consistent across the codebase:
+
+```css
+.c-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-4); }
+
+@media (min-width: 768px) {
+  .c-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .c-grid { grid-template-columns: repeat(4, 1fr); }
+}
+```
+
+## Rules
+
+- No fixed pixel widths on layout containers. Use `%`, `fr`, `minmax()`, or `max-width`.
+- Horizontal scroll on the page body is a bug. Long tables and card rows scroll inside their own
+  container with a visible scroll affordance.
+- Never hide content at a breakpoint to "fix" a layout. Reflow it instead.
+- A section is not done until it has been checked at roughly 375px, 834px, and 1440px.

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile tariffs — Azercell</title>
+<meta name="description" content="Browse Azercell prepaid and postpaid mobile tariffs. Compare plans and see how to activate via Kabinetim or in store.">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<div id="page-top"></div>
+<main id="page-main"></main>
+<div id="page-bottom"></div>
+<div id="page-chat"></div>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+/* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+ * INBOUND:  header → Mobile → All mobile tariffs; Prepaid/Postpaid (?type=);
+ *           homepage → Compare all plans, Change plan; footer → Tariffs; support chat
+ * OUTBOUND:
+ *   sectionHead → Compare plans — CONNECTED (/tariffs/compare/)
+ *   planCard → Compare — CONNECTED (/tariffs/compare/)
+ *   filter tabs — URL ?type=all|prepaid|postpaid|data-only — CONNECTED (synced)
+ *   calloutBanner → prepaid archive — CONNECTED
+ *   planCard → Plan details — CONNECTED (all 6 tariffs)
+ *   planCard → Kabinetim / Find store — CONNECTED
+ *   help linkCards — CONNECTED (Kabinetim) / PLANNED (stores)
+ *   internet upsell → internet sub-pages — CONNECTED
+ *   related services — PLANNED
+ *   legal → prepaid archive — CONNECTED
+ */
+(function () {
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+  var href = R.href;
+  var render = Components.render;
+
+  var KABINETIM = 'https://kabinetim.azercell.com/my/login';
+
+  Components.mount('#page-top', [
+    ['announcementBar', { messages: chrome.announcements }],
+    ['siteHeader', R.headerProps({ branch: 'personal' })]
+  ]);
+
+  Components.mount('#page-bottom', [['siteFooter', chrome.footer]]);
+  Components.mount('#page-chat', [['supportChat', chrome.supportChat]]);
+
+  /* Prices and specs from Azercell_Database_B2C.md */
+  var plans = [
+    {
+      compareId: 'digimax',
+      filterTags: 'prepaid',
+      name: 'DigiMax',
+      type: 'Prepaid',
+      badge: 'Popular',
+      tiers: [
+        { price: '1 AZN', validity: 'Valid 1 day. Send "D1" to 7575.', specs: [
+          { value: '300MB', label: 'Internet' }, { value: '30 min', label: 'Calls' }, { value: '15', label: 'SMS' }] },
+        { price: '4 AZN', validity: 'Valid 7 days. Send "D7" to 7575.', specs: [
+          { value: '1GB', label: 'Internet' }, { value: '100 min', label: 'Calls' }, { value: '50', label: 'SMS' }] },
+        { price: '8 AZN', validity: 'Valid 14 days. Send "D3" to 7575.', specs: [
+          { value: '3GB', label: 'Internet' }, { value: '200 min', label: 'Calls' }, { value: '100', label: 'SMS' }] },
+        { price: '12 AZN', validity: 'Valid 28 days. Send "D5" to 7575.', specs: [
+          { value: '5GB', label: 'Internet' }, { value: '300 min', label: 'Calls' }, { value: '150', label: 'SMS' }, { value: '1GB', label: 'Social media' }] },
+        { price: '18 AZN', validity: 'Valid 28 days. Send "D10" to 7575.', specs: [
+          { value: '10GB', label: 'Internet' }, { value: '600 min', label: 'Calls' }, { value: '300', label: 'SMS' }, { value: '1GB', label: 'Social media' }, { value: '1GB', label: 'WhatsApp' }] },
+        { price: '30 AZN', validity: 'Valid 28 days. Send "D25" to 7575.', specs: [
+          { value: '25GB', label: 'Internet' }, { value: '1500 min', label: 'Calls' }, { value: '500', label: 'SMS' }, { value: '3GB', label: 'Social media' }, { value: '3GB', label: 'WhatsApp' }] }
+      ],
+      note: 'All prices include VAT. Usage is for personal use only.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/digimax/'), variant: 'primary' },
+        { label: 'Activate in Kabinetim', href: KABINETIM }
+      ]
+    },
+    {
+      compareId: 'premium-plus',
+      filterTags: 'prepaid',
+      name: 'Premium+',
+      type: 'Prepaid',
+      tiers: [
+        { price: '60 AZN', validity: 'Valid 28 days. Send "PP60" to 7575.', specs: [
+          { value: '60GB', label: 'Internet' }, { value: '3000 min', label: 'Calls' }, { value: '1500', label: 'SMS' }, { value: '5GB', label: 'Social media' }, { value: '5GB', label: 'WhatsApp' }, { value: '1GB', label: 'Roaming data' }] },
+        { price: '90 AZN', validity: 'Valid 28 days. Send "PP100" to 7575.', specs: [
+          { value: '100GB', label: 'Internet' }, { value: '5000 min', label: 'Calls' }, { value: '2500', label: 'SMS' }, { value: '10GB', label: 'Social media' }, { value: '10GB', label: 'WhatsApp' }, { value: '3GB', label: 'Roaming data' }] }
+      ],
+      note: 'Roaming data is included in the pack. All prices include VAT.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/premium-plus/'), variant: 'primary' },
+        { label: 'Activate in Kabinetim', href: KABINETIM }
+      ]
+    },
+    {
+      compareId: 'data-plus',
+      filterTags: 'prepaid data-only',
+      name: '"Data+" tariff',
+      type: 'Prepaid · Data-only',
+      tiers: [
+        { price: '9 AZN', validity: 'Valid 28 days. No voice calls — video calls and SMS supported.', specs: [
+          { value: '3GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] },
+        { price: '12 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '6GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] },
+        { price: '19 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '12GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] },
+        { price: '29 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '30GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] },
+        { price: '39 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '60GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'SMS', label: 'Supported' }] }
+      ],
+      note: 'Overage: 0.05 AZN per MB and per SMS.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/data-plus/'), variant: 'primary' },
+        { label: 'Activate in Kabinetim', href: KABINETIM }
+      ]
+    },
+    {
+      compareId: 'data',
+      filterTags: 'prepaid data-only',
+      name: 'Data',
+      type: 'Prepaid · Data-only',
+      tiers: [
+        { price: '9 AZN', validity: 'Valid 28 days. For SimSim numbers. No standard voice calls.', specs: [
+          { value: '3GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] },
+        { price: '12 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '6GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] },
+        { price: '19 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '12GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] },
+        { price: '29 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '30GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] },
+        { price: '39 AZN', validity: 'Valid 28 days.', specs: [
+          { value: '56GB', label: 'Internet' }, { value: '—', label: 'Voice' }, { value: 'Video', label: 'Calls supported' }] }
+      ],
+      note: 'Overage: 0.04 AZN per MB on prepaid. All prices include VAT.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/data/'), variant: 'primary' },
+        { label: 'Activate in Kabinetim', href: KABINETIM }
+      ]
+    },
+    {
+      compareId: 'veteran',
+      filterTags: 'prepaid',
+      name: 'Veteran',
+      type: 'Prepaid',
+      badge: 'Eligibility',
+      tiers: [
+        { price: 'No monthly fee', validity: 'For certified war veterans. Enrolment in store only.', specs: [
+          { value: '0.03 AZN', label: 'On-net calls / min' }, { value: '0.04 AZN', label: 'Off-net calls / min' }, { value: '0.03 AZN', label: 'SMS and data' }] }
+      ],
+      note: 'Balance-linked validity from 5 to 120 days depending on top-up amount.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/prepaid/veteran/'), variant: 'primary' },
+        { label: 'Find a store', href: href('/stores/') }
+      ]
+    },
+    {
+      compareId: 'alfa',
+      filterTags: 'postpaid',
+      name: 'Alfa Plan',
+      type: 'Postpaid',
+      badge: 'Contract',
+      tiers: [
+        { price: '20 AZN', validity: 'Monthly. 10% off on a 12-month and 20% off on a 24-month contract.', specs: [
+          { value: '12GB', label: 'Internet' }, { value: '1200 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }] },
+        { price: '30 AZN', validity: 'Monthly. Same contract discounts apply.', specs: [
+          { value: '25GB', label: 'Internet' }, { value: '2500 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }] },
+        { price: '40 AZN', validity: 'Monthly. Adds priority call-centre requests.', specs: [
+          { value: '40GB', label: 'Internet' }, { value: '4000 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }] },
+        { price: '60 AZN', validity: 'Monthly. Personal curator and callback service.', specs: [
+          { value: '60GB', label: 'Internet' }, { value: '5000 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }, { value: '5GB', label: 'Social media' }, { value: '5GB', label: 'WhatsApp' }, { value: '1GB', label: 'Roaming data' }] },
+        { price: '90 AZN', validity: 'Monthly. Free mobile customer service.', specs: [
+          { value: '120GB', label: 'Internet' }, { value: '10000 min', label: 'Calls' }, { value: 'Monthly', label: 'Billing' }, { value: '10GB', label: 'Social media' }, { value: '10GB', label: 'WhatsApp' }, { value: '3GB', label: 'Roaming data' }] }
+      ],
+      note: 'Postpaid contract. Signing takes place in an Azercell store.',
+      actions: [
+        { label: 'Plan details', href: href('/tariffs/mobile/postpaid/alfa/'), variant: 'primary' },
+        { label: 'Find a store', href: href('/stores/') }
+      ]
+    }
+  ];
+
+  var internetUpsell = [
+    {
+      name: 'Monthly 12GB',
+      price: '19 AZN',
+      priceNote: '28 days prepaid / 30 days postpaid',
+      meta: ['High-volume monthly add-on', 'Stack on your current tariff'],
+      action: { label: 'Monthly packs', href: href('/tariffs/internet/monthly/') }
+    },
+    {
+      name: 'Weekly 2GB',
+      price: '4 AZN',
+      priceNote: 'Valid 7 days',
+      meta: ['Mid-commitment data add-on', 'One-time purchase'],
+      action: { label: 'Weekly packs', href: href('/tariffs/internet/weekly/') }
+    },
+    {
+      name: 'Daily 1.5GB',
+      price: '1.99 AZN',
+      priceNote: 'Valid 24 hours, auto-renews',
+      meta: ['Low-commitment data add-on', 'Activate in Kabinetim'],
+      action: { label: 'Daily packs', href: href('/tariffs/internet/daily/') }
+    },
+    {
+      name: 'Unlimited 1 hour',
+      price: '0.99 AZN',
+      priceNote: 'Valid 1 hour',
+      meta: ['Unlimited-speed burst', 'Short session add-on'],
+      action: { label: 'Unlimited packs', href: href('/tariffs/internet/unlimited/') }
+    }
+  ];
+
+  var faqItems = [
+    {
+      question: 'What is the difference between prepaid and postpaid?',
+      answer: 'Prepaid plans are paid upfront as packs with a fixed validity period. Postpaid Alfa Plan is a monthly contract billed each cycle, signed in an Azercell store, with optional 12- or 24-month discounts.'
+    },
+    {
+      question: 'How do I activate a prepaid pack?',
+      answer: 'Send the USSD code shown on each pack to 7575, or activate through Kabinetim. Activation always happens outside this website — we only show the instructions here.'
+    },
+    {
+      question: 'Can I use voice calls on Data and Data+ tariffs?',
+      answer: 'No standard voice calls are included on these tariffs. Data+ supports video calls and SMS. The Data tariff supports video calls on SimSim numbers but not regular voice calls.'
+    },
+    {
+      question: 'Are there discounts on Alfa Plan contracts?',
+      answer: 'Yes. Alfa Plan includes 10% off on a 12-month contract and 20% off on a 24-month contract. Contract signing is done in an Azercell store.'
+    },
+    {
+      question: 'Are tariffs for personal use only?',
+      answer: 'Yes. Azercell tariff allowances are for personal use. Using them for bulk messaging, reselling connectivity, or other commercial purposes is prohibited.'
+    }
+  ];
+
+  function section(inner, modifier) {
+    return '<section class="section' + (modifier ? ' ' + modifier : '') + '"><div class="wrap">' + inner + '</div></section>';
+  }
+
+  function planWrap(plan) {
+    var tags = plan.filterTags;
+    var data = Object.assign({}, plan);
+    delete data.filterTags;
+    return '<div data-filter-tags="' + tags + '">' + render('planCard', data) + '</div>';
+  }
+
+  var planGrid =
+    '<div data-filter-scope>' +
+      render('filterTabs', {
+        urlBase: href('/tariffs/mobile/'),
+        groups: [{
+          key: 'category',
+          label: 'Plan type',
+          syncUrl: true,
+          urlParam: 'type',
+          options: [
+            { value: 'all', label: 'All' },
+            { value: 'prepaid', label: 'Prepaid' },
+            { value: 'postpaid', label: 'Postpaid' },
+            { value: 'data-only', label: 'Data-only' }
+          ]
+        }]
+      }) +
+      render('carousel', {
+        label: 'All mobile plans',
+        filterable: true,
+        content: plans.map(planWrap).join('')
+      }) +
+      render('calloutBanner', {
+        eyebrow: 'Existing customer?',
+        title: 'Cannot find your tariff here?',
+        body: 'These are the plans we sell today. If you joined on an older tariff, it may live in the archive — still valid for existing subscribers, but not available for new sign-ups.',
+        actions: [
+          { label: 'Prepaid tariffs archive', href: href('/tariffs/mobile/prepaid/archive/'), variant: 'primary' },
+          { label: 'All mobile tariffs', href: href('/tariffs/mobile/') }
+        ]
+      }) +
+      '<p class="t-body t-muted" data-filter-empty hidden style="margin-top: var(--sp-4)">' +
+        'No plans match this filter. Choose another plan type.</p>' +
+    '</div>';
+
+  Components.mount('#page-main', [
+    section(
+      render('sectionHead', {
+        eyebrow: 'Mobile tariffs',
+        title: 'Pick a plan that fits how you use your phone',
+        body: 'Prepaid packs renew on your schedule. Postpaid Alfa Plan runs on a monthly contract. Choose a price tier on each card to see what is included.',
+        action: { label: 'Compare plans', href: href('/tariffs/compare/') }
+      })
+    ),
+
+    '<div class="wrap" style="padding-bottom: var(--sp-6)">' +
+      render('quickActions', {
+        items: [
+          { icon: '01', label: 'Activate in Kabinetim', href: KABINETIM },
+          { icon: '02', label: 'Join Azercell', href: href('/join-azercell/') },
+          { icon: '03', label: 'Switch to eSIM', href: href('/tariffs/esim/') },
+          { icon: '04', label: 'Roaming packs', href: href('/tariffs/roaming/internet-packs/') }
+        ]
+      }) +
+    '</div>',
+
+    section(planGrid),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Need help?',
+        title: 'How to activate or change your plan',
+        body: 'Tariff changes are not done on this website. Use one of the real channels below.'
+      }) +
+      '<div class="grid grid--2" style="margin-top: var(--sp-5)">' +
+        render('linkCard', {
+          media: 'Kabinetim',
+          title: 'Change plan in Kabinetim',
+          body: 'Switch prepaid packs, manage your line and activate add-ons in the Kabinetim app or web portal.',
+          href: KABINETIM,
+          linkLabel: 'Open Kabinetim'
+        }) +
+        render('linkCard', {
+          media: 'Store',
+          title: 'Change plan in an Azercell store',
+          body: 'Postpaid contracts and eligibility tariffs such as Veteran require an in-person visit to sign up or switch.',
+          href: href('/stores/'),
+          linkLabel: 'Find a store'
+        }) +
+      '</div>'
+    ),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Questions',
+        title: 'Frequently asked questions'
+      }) +
+      '<div style="margin-top: var(--sp-5)">' +
+        render('accordion', { items: faqItems }) +
+      '</div>'
+    ),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Add-on data',
+        title: 'Need extra data on your current plan?',
+        body: 'Internet packs stack on top of your active tariff. Activation happens in Kabinetim or via USSD — not on this page.',
+        action: { label: 'See all internet packs', href: href('/tariffs/internet/') }
+      }) +
+      '<div class="grid grid--4" style="margin-top: var(--sp-5)">' +
+        internetUpsell.map(function (pack) {
+          return render('offerCard', pack);
+        }).join('') +
+      '</div>'
+    ),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Also explore',
+        title: 'Related services'
+      }) +
+      '<div class="grid grid--4" style="margin-top: var(--sp-5)">' +
+        render('linkCard', {
+          media: 'Roaming',
+          title: 'International roaming',
+          body: 'Country rates and roaming internet packs for travel abroad.',
+          href: href('/tariffs/roaming/'),
+          linkLabel: 'Roaming overview'
+        }) +
+        render('linkCard', {
+          media: 'eSIM',
+          title: 'Switch to eSIM',
+          body: 'First issue and transfer are free. Order via azercellim.com.',
+          href: href('/tariffs/esim/'),
+          linkLabel: 'eSIM details'
+        }) +
+        render('linkCard', {
+          media: '5G',
+          title: 'Azercell 5G',
+          body: '5G test zone at Fountain Square in Baku, included in compatible tariffs.',
+          href: href('/tariffs/5g/'),
+          linkLabel: '5G details'
+        }) +
+        render('linkCard', {
+          media: 'Aicell',
+          title: 'Aicell assistant',
+          body: 'Free 24/7 help for balance, tariffs, roaming and troubleshooting.',
+          href: href('/tariffs/services/aicell/'),
+          linkLabel: 'Aicell details'
+        }) +
+      '</div>'
+    ),
+
+    section(
+      '<div class="section__title-group">' +
+        '<p class="t-label">Additional information</p>' +
+        '<h2 class="t-h2">For the attention of Azercell subscribers</h2>' +
+      '</div>' +
+      '<p class="t-body t-muted" style="margin-top: var(--sp-4); max-width: 72ch">' +
+        'The usage opportunities provided within Azercell tariffs are intended only for personal use. ' +
+        'Using them for advertising or spam messages, unauthorised devices, illegal telecom services, ' +
+        'or income beyond personal needs is prohibited. All prices on this page include VAT unless stated otherwise.' +
+      '</p>' +
+      '<p class="t-body" style="margin-top: var(--sp-4)">' +
+        '<a href="' + href('/tariffs/mobile/prepaid/archive/') + '">Prepaid tariffs archive</a>' +
+        ' — for subscribers on legacy plans that are no longer sold.' +
+      '</p>'
+    )
+  ]);
+
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>

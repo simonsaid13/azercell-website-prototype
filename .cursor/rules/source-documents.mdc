@@ -1,0 +1,28 @@
+---
+description: How to treat the Azercell source documents as sitemap and backlog
+alwaysApply: true
+---
+
+# Source Documents
+
+These files in the project root are the sitemap and to-do list for the prototype:
+
+- `Azercell_Sitemap.md` — full page tree for B2C, B2B, About Us, and external destinations
+- `Azercell_Database_B2C.md`, `Azercell_Database_B2B.md`, `Azercell_Database_Other.md` — real
+  product names, prices, and descriptions to use as content
+- `Azercell_B2C_Functionality_ToDo.md`, `Azercell_B2B_Functionality_ToDo.md` — required
+  functionality, including items marked deprioritized or undecided
+- `Azercell_Value_Propositions_*.md` — messaging
+
+## Always ask first
+
+Never build a page, section, or feature from these documents on your own initiative. Ask the
+user before implementing anything found in them, and name the document and item.
+
+Items marked with the future/deprioritized marker or the open-question marker in the to-do
+files must never be built without the user explicitly asking.
+
+## Use them for content
+
+When the user has approved a page, take names, prices, and descriptions from the database files
+rather than inventing content. Prices are in AZN. Keep the real product names.

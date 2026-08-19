@@ -1,0 +1,30 @@
+---
+description: Real UI interactions only, never fake backend behaviour
+alwaysApply: true
+---
+
+# No Simulated Functionality
+
+Real interface behaviour is expected: menus open, tabs switch, carousels move, filters filter
+the items already on the page, accordions expand, forms validate their own fields.
+
+Anything requiring a backend must not be faked. Never invent balances, order confirmations,
+login sessions, activation success messages, live network status, or search results from a
+server.
+
+```js
+// BAD — pretends the backend did something
+button.addEventListener('click', () => {
+  showToast('Plan activated successfully!');
+});
+
+// GOOD — states the real handoff
+<a class="btn" href="https://kabinetim.azercell.com/my/login">Activate in Kabinetim</a>
+```
+
+This matches the documented site model: the website is informational and redirect-only. For any
+"buy / change / activate" action, show the real handoff — a USSD code, an app deep link, or a
+link to the external portal.
+
+Empty and error states may be shown as static examples of that state, clearly labelled, not as
+the result of a fake request.

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Components — Azercell Prototype</title>
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<header class="tool-header">
+  <div class="wrap tool-header__inner">
+    <div class="section__title-group">
+      <p class="t-label">Internal tool — not linked from the site</p>
+      <h1 class="t-h1">Component library</h1>
+      <p class="t-lead t-muted">Every block the CMS can place on a page. Each one is built once here and reused across pages.</p>
+    </div>
+    <div class="tool-header__tabs">
+      <a class="btn btn--small" href="/">B2C homepage</a>
+      <a class="btn btn--small" href="/sitemap/">Sitemap</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tool-layout">
+    <nav class="tool-nav" aria-label="Component groups">
+      <ul class="tool-nav__list" id="tool-nav"></ul>
+    </nav>
+    <div id="library"></div>
+  </div>
+</main>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/tariff-data.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(function () {
+  var esc = Components.esc;
+  var registry = SiteRegistry.COMPONENT_REGISTRY;
+
+  function slug(text) {
+    return String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  // Group components in registry order.
+  var groups = [];
+  var index = {};
+  registry.forEach(function (entry) {
+    if (!index[entry.group]) {
+      index[entry.group] = { name: entry.group, id: slug(entry.group), items: [] };
+      groups.push(index[entry.group]);
+    }
+    index[entry.group].items.push(entry);
+  });
+
+  document.getElementById('tool-nav').innerHTML = groups.map(function (group) {
+    return '<li><a class="tool-nav__link" href="#' + group.id + '">' + esc(group.name) +
+      ' (' + group.items.length + ')</a></li>';
+  }).join('');
+
+  // The carousel sample needs child cards to demonstrate scrolling.
+  function sampleFor(entry) {
+    if (entry.id !== 'carousel') return entry.props;
+    var cards = [1, 2, 3, 4, 5].map(function (n) {
+      return Components.render('deviceCard', {
+        name: 'Device ' + n,
+        priceLabel: 'Starting from',
+        price: (900 + n * 100).toLocaleString('en-US') + ' AZN'
+      });
+    }).join('');
+    return { label: entry.props.label, content: cards };
+  }
+
+  var FILTER_DEMO = [
+    { name: 'iPhone 16 Pro', category: 'phones', brand: 'apple', price: '2,949 AZN' },
+    { name: 'Galaxy S24 Ultra', category: 'phones', brand: 'samsung', price: '2,899 AZN' },
+    { name: 'Mi-Fi hotspot', category: 'routers', brand: 'other', price: '40 AZN per month' }
+  ];
+
+  // Filter tabs only mean something with items to filter, so the sample ships with a few.
+  function stageFor(entry) {
+    var markup = Components.render(entry.id, sampleFor(entry));
+    if (entry.id !== 'filterTabs') return markup;
+
+    return (
+      '<div data-filter-scope>' + markup +
+        '<div class="grid grid--3" data-filter-target>' +
+          FILTER_DEMO.map(function (d) {
+            return Components.render('deviceCard', {
+              name: d.name, category: d.category, brand: d.brand,
+              priceLabel: 'Starting from', price: d.price
+            });
+          }).join('') +
+        '</div>' +
+        '<p class="t-body t-muted" data-filter-empty hidden style="margin-top: var(--sp-4)">' +
+          'No items match this combination.</p>' +
+      '</div>'
+    );
+  }
+
+  document.getElementById('library').innerHTML = groups.map(function (group) {
+    return (
+      '<section class="tool-group" id="' + group.id + '">' +
+        '<div class="tool-group__head">' +
+          '<h2 class="t-h2">' + esc(group.name) + '</h2>' +
+          '<span class="t-small t-muted">' + group.items.length + ' components</span>' +
+        '</div>' +
+        group.items.map(function (entry) {
+          var used = (entry.usedOn || []).length
+            ? 'Used on ' + entry.usedOn.join(', ')
+            : 'Not used on a page yet';
+          return (
+            '<article class="tool-item" id="cmp-' + esc(entry.id) + '">' +
+              '<div class="tool-item__head">' +
+                '<h3 class="t-h3">' + esc(entry.name) + '</h3>' +
+                '<code class="t-small t-muted">' + esc(entry.id) + '</code>' +
+                '<span class="badge badge--quiet">' + esc(used) + '</span>' +
+                '<p class="t-small tool-item__usage">' + esc(entry.description || '') + '</p>' +
+              '</div>' +
+              '<div class="tool-item__stage tool-item__stage--flush">' +
+                stageFor(entry) +
+              '</div>' +
+            '</article>'
+          );
+        }).join('') +
+      '</section>'
+    );
+  }).join('');
+
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+---
+description: Component-first construction and page/component registries
+alwaysApply: true
+---
+
+# Component-First
+
+This prototype represents the frontend of a CMS. Every block of every page is a component.
+
+## Order of work
+
+1. Define the component in `assets/js/components.js` as a function returning an HTML string.
+2. Register it in `COMPONENT_REGISTRY` (`assets/js/site-registry.js`) so it appears on `/components`.
+3. Only then assemble the page from those components.
+
+Never write one-off markup directly into a page for a block that renders content. Page files
+should read as a list of component calls plus their data.
+
+```js
+// components.js
+Components.heroBanner = ({ eyebrow, title, body, actions = [] }) => `
+  <section class="cmp cmp-hero">...</section>
+`;
+```
+
+## Registries are the source of truth
+
+- `PAGE_REGISTRY` drives `/sitemap`. Adding a page means adding an entry with its `path`,
+  `title`, `parent`, `branch`, and `status` (`built` or `planned`), plus any cross-links.
+- `COMPONENT_REGISTRY` drives `/components`. Adding a component means adding an entry with its
+  `id`, `name`, `group`, `usedOn`, and sample props.
+
+Both registry updates are part of the change — a page or component that is not registered is
+not finished.
+
+## Page connections
+
+When a page is marked `built`, wire it into the site and document links in `PAGE_CONNECTIONS.md`.
+See the `page-connections` rule. Ask the user what to connect when the target is unclear.
+
+**After building a page, run a separate connection-audit Task** (see `page-connections` skill) before
+setting `status: 'built'`. Update component `usedOn` arrays in the same pass.
+
+## Tab URLs
+
+Any page with tabs that change content must give each tab a shareable URL. Use `filterTabs` with
+`syncUrl: true`, `urlBase`, and matching nav helpers. See the `tab-urls` rule.
+
+## Hidden routes
+
+`/sitemap` and `/components` are internal tools. Never link them from the site header, footer,
+or any public navigation.

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azercell — Business</title>
+<meta name="description" content="Azercell B2B prototype homepage. Wireframe-level structure for the business website revamp.">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<div id="page-top"></div>
+<main id="page-main"></main>
+<div id="page-bottom"></div>
+<div id="page-chat"></div>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+/* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+ * INBOUND:  logo, branch switcher (from B2C)
+ * OUTBOUND:
+ *   tariff carousel → Plan details — PLANNED (/business/mobile/tariffs/)
+ *   internet packs / solutions / IoT — PLANNED (business sub-routes)
+ *   leadForm handoff — CONNECTED (contact, *6050)
+ *   header/footer nav — mostly PLANNED
+ */
+(function () {
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+  var href = R.href;
+  var render = Components.render;
+
+  var BIZNES = 'https://biznes.azercell.com';
+  var CONTACT = href('/about/contact/');
+
+  /* ---------------------------------------------------------------- Chrome */
+
+  Components.mount('#page-top', [
+    ['announcementBar', { messages: chrome.businessAnnouncements }],
+    ['siteHeader', R.headerProps({ branch: 'business' })]
+  ]);
+
+  Components.mount('#page-bottom', [['siteFooter', chrome.businessFooter]]);
+  Components.mount('#page-chat', [['supportChat', chrome.businessSupportChat]]);
+
+  /* ------------------------------------------------------------------ Data */
+
+  /* Slide count is not fixed — the hero renders whatever the CMS provides. */
+  var heroSlides = [
+    {
+      eyebrow: 'My Business tariff plans',
+      title: 'The corporate advantage',
+      body: 'Nation-wide coverage and predictable billing built around how your company actually operates.',
+      media: 'Corporate tariffs',
+      actions: [
+        { label: 'See tariff plans', href: href('/business/mobile/tariffs/'), variant: 'primary' },
+        { label: 'Talk to sales', href: '#contact-sales' }
+      ],
+      stats: [
+        { value: '15 AZN', label: 'Entry plan, per line' },
+        { value: '100GB', label: 'Largest plan' },
+        { value: '*6050', label: 'Business call centre' }
+      ]
+    },
+    {
+      eyebrow: 'Azercell Biznes',
+      title: 'Manage every corporate number from one centre',
+      body: 'Numbers, billing and packages for the whole company in a single portal.',
+      media: 'Azercell Biznes portal',
+      actions: [
+        { label: 'Open Azercell Biznes', href: BIZNES, variant: 'primary' },
+        { label: 'What it does', href: href('/business/mobile/special-services/azercell-biznes/') }
+      ]
+    },
+    {
+      eyebrow: 'YolDASH360',
+      title: 'Intelligent video surveillance for your fleet',
+      body: 'Smart dash-cams with cloud footage and alerts, for safety and dispute resolution.',
+      media: 'YolDASH360',
+      actions: [{ label: 'YolDASH360 details', href: href('/business/iot/yoldash-360/'), variant: 'primary' }]
+    },
+    {
+      eyebrow: 'InfoHUB',
+      title: 'Monitor and optimize',
+      body: 'Your business knowledge and answers in one centre for customer-service teams.',
+      media: 'InfoHUB',
+      actions: [{ label: 'InfoHUB details', href: href('/business/cloud/infohub/'), variant: 'primary' }]
+    },
+    {
+      eyebrow: 'Mobile team management',
+      title: 'See where your field team is working',
+      body: 'Task dispatch with GPS and photo reporting, from 200 AZN per month.',
+      media: 'Mobile team management',
+      actions: [{ label: 'Team management details', href: href('/business/iot/team-management/'), variant: 'primary' }]
+    }
+  ];
+
+  var tariffs = [
+    { name: 'My Business 4GB', price: '15 AZN', data: '4GB', badge: 'Entry' },
+    { name: 'My Business 8GB', price: '21 AZN', data: '8GB' },
+    { name: 'My Business 12GB', price: '26 AZN', data: '12GB' },
+    { name: 'My Business 20GB', price: '36 AZN', data: '20GB' },
+    { name: 'My Business 60GB', price: '56 AZN', data: '60GB' },
+    { name: 'My Business 100GB', price: '80 AZN', data: '100GB', badge: 'Flagship' },
+    { name: 'My Business 2', price: '2 AZN', data: 'Pay per use', badge: 'Baseline',
+      validity: 'Calls 0.07 AZN/min. SMS 0.10. Data 0.30 AZN/MB.' },
+    { name: 'My Business Region', price: '2 AZN', data: 'Pay per use',
+      validity: 'Regional rates. Calls 0.05–0.07 AZN/min. SMS 0.10 AZN.' }
+  ];
+
+  var internetPacks = [
+    { category: 'monthly', name: 'Monthly 2GB', price: '6 AZN', meta: ['30 days', 'One-time or auto-renewing'] },
+    { category: 'monthly', name: 'Monthly 7GB', price: '10 AZN', meta: ['30 days', 'One-time or auto-renewing'] },
+    { category: 'monthly', name: 'Monthly 14GB', price: '15 AZN', meta: ['30 days', 'One-time or auto-renewing'] },
+    { category: 'monthly', name: 'Monthly 35GB', price: '25 AZN', meta: ['30 days', 'Auto-renewing'] },
+    { category: 'monthly', name: 'Monthly 55GB', price: '30 AZN', meta: ['30 days', 'Auto-renewing'] },
+    { category: 'short-term', name: 'Unlimited 1 hour', price: '0.99 AZN', meta: ['Per session', 'Unlimited speed burst'] },
+    { category: 'short-term', name: 'Unlimited 3 hours', price: '1.99 AZN', meta: ['Per session', 'Unlimited speed burst'] },
+    { category: 'social', name: 'My Business Chat', price: '4 AZN', meta: ['5GB app-only data', 'WhatsApp, Messenger, Viber'] },
+    { category: 'social', name: 'My Business Social', price: '7 AZN', meta: ['10GB app-only data', 'Social apps'] },
+    { category: 'social', name: 'My Business Media', price: '16 AZN', meta: ['30GB app-only data', 'Social apps plus YouTube'] }
+  ];
+
+  var solutions = [
+    {
+      category: 'fixed',
+      name: 'My Business Internet Leased Line',
+      price: 'From 199 AZN',
+      priceNote: 'Per month, per point, VAT excluded',
+      body: 'Dedicated wireless internet from 5Mb/s to 100Mb/s for sites that cannot tolerate consumer-grade connections.',
+      meta: ['500 AZN one-time installation', '3-day install turnaround', '99.5% uptime SLA on 100Mb/s'],
+      href: href('/business/fixed/leased-line/')
+    },
+    {
+      category: 'fixed',
+      name: 'Unified service',
+      price: 'Price on request',
+      body: 'Mobile, fixed, cloud and contact centre delivered as one package instead of separate vendors.',
+      href: href('/business/unified/')
+    },
+    {
+      category: 'fixed',
+      name: 'My Business Wi-Fi',
+      price: 'From 40 AZN',
+      priceNote: 'Per month',
+      body: 'Portable Mi-Fi hotspots for up to 10 devices, or fixed WTTx units for up to 32 devices.',
+      meta: ['Mi-Fi 60GB — 40 AZN', 'WTTx 110GB — 50 AZN', 'WTTx 210GB — 70 AZN'],
+      href: href('/business/mobile/wifi/')
+    },
+    {
+      category: 'cloud',
+      name: 'Customer Experience Management Platform',
+      price: 'Price on request',
+      body: 'Build your own customer communications — calls, video, chat, SMS, email and chatbots — on Azercell infrastructure.',
+      href: href('/business/cloud/cpaas/')
+    },
+    {
+      category: 'cloud',
+      name: 'InfoHUB',
+      price: 'Price on request',
+      body: 'Cloud knowledge and collaboration tool that turns business data into an operations dashboard.',
+      href: href('/business/cloud/infohub/')
+    },
+    {
+      category: 'iot',
+      name: 'YolDASH360',
+      price: 'Price on request',
+      priceNote: 'Monthly subscription',
+      body: 'Smart dash-cam fleet video surveillance with cloud footage and driver alerts.',
+      href: href('/business/iot/yoldash-360/')
+    },
+    {
+      category: 'iot',
+      name: 'M2M',
+      price: 'Price on request',
+      body: 'Connectivity for mobile modules, GPS trackers, sensors and gateways across industries.',
+      href: href('/business/iot/m2m/')
+    },
+    {
+      category: 'iot',
+      name: 'Robotic Automation Solution (RPA)',
+      price: 'Price on request',
+      body: 'Custom bots that take over invoicing, onboarding, data entry and reporting.',
+      href: href('/business/iot/rpa/')
+    },
+    {
+      category: 'iot',
+      name: 'Mobile device management',
+      price: '11 AZN',
+      priceNote: 'Per device, per month',
+      body: 'Enterprise control and security over company devices, with dual-profile BYOD support.',
+      meta: ['600 AZN one-time setup and training'],
+      href: href('/business/iot/device-management/')
+    },
+    {
+      category: 'iot',
+      name: 'Mobile team management',
+      price: 'From 200 AZN',
+      priceNote: 'Per month, VAT excluded',
+      body: 'Task dispatch and GPS or photo reporting for field teams.',
+      meta: ['Lite — 200 AZN, 3 field users', 'Plus — 400 AZN, 6 field users', 'Pro — 700 AZN, 12 field users'],
+      href: href('/business/iot/team-management/')
+    },
+    {
+      category: 'iot',
+      name: 'My Business Fleet',
+      price: 'Price on request',
+      body: 'GPS telematics with harsh-braking, fuel-fraud and maintenance alerts.',
+      href: href('/business/iot/fleet/')
+    },
+    {
+      category: 'iot',
+      name: 'Irrigation Control System',
+      price: '30 AZN',
+      priceNote: 'Per month',
+      body: 'Remote irrigation monitoring and control with a dashboard and alerts.',
+      href: href('/business/iot/irrigation/')
+    }
+  ];
+
+  var campaigns = [
+    {
+      media: 'My Business Wi-Fi campaign',
+      eyebrow: 'Active campaign',
+      title: 'My Business Wi-Fi',
+      body: 'Portable and fixed hotspot offers for teams that need connectivity beyond the SIM.',
+      actions: [{ label: 'Campaign details', href: href('/business/mobile/campaigns/'), variant: 'primary' }]
+    },
+    {
+      media: 'Device and tariff bundle',
+      eyebrow: 'Active campaign',
+      title: 'Device and plan bundles',
+      body: 'A business smartphone bundled with a My Business plan over a commitment period.',
+      actions: [{ label: 'Campaign details', href: href('/business/mobile/campaigns/'), variant: 'primary' }]
+    }
+  ];
+
+  var reasons = [
+    {
+      title: 'One partner, fewer vendors',
+      body: 'Mobile, fixed, cloud and IoT under a single contract and a single account team.'
+    },
+    {
+      title: 'Nation-wide coverage',
+      body: 'A modern network that reaches your teams wherever the business operates.'
+    },
+    {
+      title: 'Predictable business billing',
+      body: 'Per-line pricing, itemized billing and spend visibility for finance and procurement.'
+    },
+    {
+      title: 'Solutions beyond connectivity',
+      body: 'Automation, fleet telematics and device management, not just SIM cards.'
+    }
+  ];
+
+  var faqs = [
+    {
+      question: 'Can we change our plan directly on this website?',
+      answer: 'No. The website is informational. Plan and package changes are made in the Azercell Biznes portal or through your account manager.'
+    },
+    {
+      question: 'Who in our company can log in?',
+      answer: 'The designated contact person manages the account in the Azercell Biznes portal. Anyone else on the team can send a request through the contact form on this page.'
+    },
+    {
+      question: 'How do we get pricing for IoT, cloud or automation?',
+      answer: 'Those are quoted per project. Send your company details and TAX ID through the contact form and a sales agent will scope it with you.'
+    },
+    {
+      question: 'Where do we see an itemized bill?',
+      answer: 'Online Itemized Bill gives a per-number breakdown for 1.59 AZN per bill. It requires a signed subscription.'
+    },
+    {
+      question: 'Do roaming packs work on business lines?',
+      answer: 'Yes. Roaming internet packs run from 500MB over 3 days at 10 AZN up to 10GB over 30 days at 75 AZN. Per-country pay-as-you-go rates are listed separately.'
+    }
+  ];
+
+  var regions = [
+    'Agjabedi', 'Aghdam', 'Aghdash', 'Aghdere', 'Aghstafa', 'Aghsu', 'Astara', 'Baku', 'Balaken',
+    'Barda', 'Beylagan', 'Bilasuvar', 'Dashkasan', 'Fizuli', 'Gabala', 'Gadabay', 'Gakh', 'Ganja',
+    'Gazakh', 'Gobustan', 'Goranboy', 'Goychay', 'Goygol', 'Guba', 'Gubadli', 'Gusar', 'Hajigabul',
+    'Horadiz', 'Imishli', 'Ismayilli', 'Jabrayil', 'Jalilabad', 'Kalbajar', 'Khachmaz', 'Khankendi',
+    'Khizi', 'Khojaly', 'Khojavend', 'Khudat', 'Khyrdalan', 'Kurdamir', 'Lachin', 'Lankaran', 'Lerik',
+    'Masalli', 'Mingechevir', 'Naftalan', 'Nakhchivan', 'Neftchala', 'Oghuz', 'Ordubad', 'Saatli',
+    'Sabirabad', 'Salyan', 'Samukh', 'Shabran', 'Shamakhi', 'Shamkir', 'Sheki', 'Shirvan', 'Shusha',
+    'Siyazan', 'Sumgayit', 'Terter', 'Tovuz', 'Ujar', 'Yardimli', 'Yevlakh', 'Zagatala', 'Zangilan',
+    'Zardab'
+  ];
+
+  /* -------------------------------------------------------------- Sections */
+
+  function section(inner, modifier) {
+    return '<section class="section' + (modifier ? ' ' + modifier : '') + '"><div class="wrap">' + inner + '</div></section>';
+  }
+
+  function take(list, max) {
+    return list.slice(0, max);
+  }
+
+  var tariffCards = tariffs.map(function (t) {
+    return render('planCard', {
+      name: t.name,
+      type: 'Per line, monthly',
+      badge: t.badge,
+      tiers: [{
+        price: t.price,
+        specs: [
+          { value: t.data, label: 'Data' },
+          { value: 'Unlimited', label: 'On-net calls' },
+          { value: 'Tiered', label: 'Cross-net minutes' }
+        ],
+        validity: t.validity || 'Billed monthly per line'
+      }],
+      actions: [{ label: 'Plan details', href: href('/business/mobile/tariffs/') }]
+    });
+  }).join('');
+
+  var packsSection =
+    render('sectionHead', {
+      eyebrow: 'Internet packs',
+      title: 'Match data spend to how the team works',
+      body: 'Steady monthly use, short bursts, or app-only bundles for field staff.',
+      action: { label: 'All internet packs', href: href('/business/mobile/internet/') }
+    }) +
+    '<div data-filter-scope>' +
+      render('filterTabs', {
+        groups: [
+          { key: 'category', label: 'Pack type', options: [
+            { value: 'all', label: 'All packs' },
+            { value: 'monthly', label: 'Monthly' },
+            { value: 'short-term', label: 'Short-term' },
+            { value: 'social', label: 'Social networks' }
+          ] }
+        ]
+      }) +
+      render('carousel', {
+        label: 'Business internet packs',
+        filterable: true,
+        content: internetPacks.map(function (p) {
+          return render('offerCard', {
+            category: p.category,
+            name: p.name,
+            price: p.price,
+            meta: p.meta,
+            action: { label: 'Pack details', href: href('/business/mobile/internet/') }
+          });
+        }).join('')
+      }) +
+      '<p class="t-body t-muted" data-filter-empty hidden style="margin-top: var(--sp-4)">' +
+        'No packs match this filter. Choose another pack type.</p>' +
+    '</div>';
+
+  var solutionsSection =
+    render('sectionHead', {
+      eyebrow: 'Business solutions',
+      title: 'Fixed, cloud and IoT in one place',
+      body: 'Everything beyond the mobile line — dedicated connectivity, cloud platforms, and connected-device solutions.',
+      action: { label: 'IoT solutions', href: href('/business/iot/') }
+    }) +
+    '<div data-filter-scope>' +
+      render('filterTabs', {
+        groups: [
+          { key: 'category', label: 'Solution type', options: [
+            { value: 'all', label: 'All solutions' },
+            { value: 'fixed', label: 'Fixed & connectivity' },
+            { value: 'cloud', label: 'Cloud' },
+            { value: 'iot', label: 'IoT & automation' }
+          ] }
+        ]
+      }) +
+      render('carousel', {
+        label: 'Fixed, cloud and IoT',
+        filterable: true,
+        content: solutions.map(function (s) {
+          return render('offerCard', {
+            category: s.category,
+            name: s.name,
+            price: s.price,
+            priceNote: s.priceNote,
+            body: s.body,
+            meta: s.meta,
+            action: { label: 'Solution details', href: s.href }
+          });
+        }).join('')
+      }) +
+      '<p class="t-body t-muted" data-filter-empty hidden style="margin-top: var(--sp-4)">' +
+        'No solutions match this filter. Choose another solution type.</p>' +
+    '</div>';
+
+  Components.mount('#page-main', [
+    ['heroBanner', { slides: heroSlides }],
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Mobile service',
+        title: 'My Business tariff plans',
+        body: 'Corporate lines with unlimited on-net calling. Prices are per line, per month.',
+        action: { label: 'Compare all plans', href: href('/business/mobile/tariffs/') }
+      }) +
+      render('carousel', { label: 'Corporate tariffs', content: tariffCards })
+    ),
+
+    section(packsSection),
+
+    section(
+      render('splitBanner', {
+        eyebrow: 'Roaming',
+        title: 'Stay connected anywhere in the world',
+        body: 'Keep travelling employees reachable and productive without bill shock.',
+        media: 'Roaming',
+        points: [
+          'Roaming internet packs from 10 AZN for 500MB over 3 days',
+          'Per-country and per-operator rates for 100+ destinations',
+          'Roaming support line — first 45 minutes free on postpaid'
+        ],
+        actions: [
+          { label: 'Roaming internet packs', href: href('/business/mobile/roaming/internet-packs/'), variant: 'primary' },
+          { label: 'Countries and prices', href: href('/business/mobile/roaming/countries-and-prices/') }
+        ]
+      })
+    ),
+
+    section(solutionsSection),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Campaigns',
+        title: 'Current business campaigns',
+        body: 'Active offers for corporate customers.',
+        action: { label: 'All campaigns', href: href('/business/mobile/campaigns/') }
+      }) +
+      '<div class="grid grid--3">' +
+        campaigns.map(function (c) { return render('promoCard', c); }).join('') +
+      '</div>'
+    ),
+
+    section(
+      render('appPromo', {
+        eyebrow: 'Azercell Business',
+        title: 'Run the account from the app or the portal',
+        body: 'The contact person manages corporate numbers, billing and packages in the Azercell Business app or the Azercell Biznes web portal.',
+        media: 'Azercell Business app screens',
+        stores: [
+          { pre: 'Download on the', name: 'App Store', href: 'https://apps.apple.com/az/app/azercell-business/id1489133380' },
+          { pre: 'Get it on', name: 'Google Play', href: 'https://play.google.com/store/apps/details?id=com.azercell.business' },
+          { pre: 'Open in browser', name: 'Azercell Biznes', href: BIZNES }
+        ]
+      })
+    ),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Why Azercell Business',
+        title: 'Benefits of partnership with Azercell Business',
+        body: 'A reliable network and a product range that grows with the company.'
+      }) +
+      '<div class="grid grid--4" style="margin-bottom: var(--sp-5)">' +
+        reasons.map(function (r) { return render('linkCard', r); }).join('') +
+      '</div>' +
+      render('statBand', {
+        items: [
+          { value: '99.5%', label: 'Uptime SLA on 100Mb/s leased line' },
+          { value: '3 days', label: 'Leased line install turnaround' },
+          { value: '100+', label: 'Roaming destinations' },
+          { value: '*6050', label: 'Business call centre' }
+        ]
+      })
+    ),
+
+    section(
+      render('sectionHead', {
+        eyebrow: 'Help',
+        title: 'Questions we get most often',
+        body: 'What this site can do, who can log in, and how pricing works.'
+      }) +
+      render('accordion', { items: take(faqs, 4) })
+    ),
+
+    section(
+      '<div id="contact-sales">' +
+        render('leadForm', {
+          id: 'contact-sales-form',
+          eyebrow: 'Contact us',
+          title: 'Need a digital solution? Azercell Business can help',
+          body: 'Tell us about the company and a sales agent will get in touch with a tailored offer.',
+          submitLabel: 'Send request',
+          note: 'Fields marked with * are required. TAX ID helps us route genuine business enquiries.',
+          fields: [
+            { name: 'name', label: 'First name and last name', type: 'text', required: true, autocomplete: 'name' },
+            { name: 'email', label: 'Email', type: 'email', required: true, autocomplete: 'email' },
+            { name: 'phone', label: 'Phone number', type: 'tel', required: true, inputmode: 'tel', autocomplete: 'tel' },
+            { name: 'company', label: 'Company name', type: 'text', required: true, autocomplete: 'organization' },
+            { name: 'taxId', label: 'TAX ID', type: 'text', required: true, hint: 'Used to confirm this is a business enquiry.' },
+            { name: 'region', label: 'Region or city', type: 'select', required: true, placeholder: 'Select a region', options: regions },
+            { name: 'contactMethod', label: 'Preferred contact method', type: 'radio', options: ['Call', 'Email'], wide: true }
+          ],
+          handoff: {
+            label: 'Prototype — this form is not connected',
+            body: 'The fields above validate, but this prototype cannot send your request. On the live site it goes to the sales pool. To reach the business team now, use one of these channels.',
+            links: [
+              { label: 'Call *6050', href: 'tel:*6050', variant: 'primary' },
+              { label: 'Contact page', href: CONTACT },
+              { label: 'Azercell Biznes portal', href: BIZNES }
+            ]
+          }
+        }) +
+      '</div>'
+    )
+  ]);
+
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>

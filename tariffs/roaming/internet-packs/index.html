@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roaming internet packs — Azercell</title>
+<meta name="description" content="Roaming data packs from 500MB to 10GB for use abroad. Activate via Kabinetim or SMS to 2525.">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+
+<div id="page-top"></div>
+<main id="page-main"></main>
+<div id="page-bottom"></div>
+<div id="page-chat"></div>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/roaming-data.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/roaming-page.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+/* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+ * INBOUND: header → Internet → Roaming internet packs; footer → Roaming packs;
+ *           /tariffs/roaming/ hub; /tariffs/mobile/; support chat — CONNECTED
+ * OUTBOUND:
+ *   pack cards → Kabinetim — CONNECTED (external)
+ *   supported countries table — CONNECTED (sample data)
+ *   cross-sell → Premium+, compare — CONNECTED
+ *   related → hub, countries, travel-packs, internet, mobile — CONNECTED
+ */
+(function () {
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+
+  Components.mount('#page-top', [
+    ['announcementBar', { messages: chrome.announcements }],
+    ['siteHeader', R.headerProps({ branch: 'personal' })]
+  ]);
+
+  Components.mount('#page-bottom', [['siteFooter', chrome.footer]]);
+  Components.mount('#page-chat', [['supportChat', chrome.supportChat]]);
+
+  RoamingPage.mount('internet-packs');
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>

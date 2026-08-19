@@ -1,0 +1,47 @@
+---
+description: Wireframe-style UI constraints for the Azercell HTML prototype
+alwaysApply: true
+---
+
+# Prototype UI Constraints
+
+This project is a wireframe-level HTML prototype. The client should focus on structure and
+content, not visual design. Visual design comes in a later phase.
+
+## No colour
+
+Only black, white, and greys. Every colour value must come from the greyscale tokens in
+`assets/css/styles.css`.
+
+```css
+/* BAD */
+background: #6f2da8;
+border-color: rgb(0 120 255);
+
+/* GOOD */
+background: var(--c-surface);
+border-color: var(--c-line);
+```
+
+All images, logos, and video posters must render greyscale:
+
+```css
+img, svg, video { filter: grayscale(100%); }
+```
+
+## Everything square
+
+No rounded corners anywhere: buttons, cards, inputs, modals, avatars, badges, images.
+`border-radius` must always be `0`. No drop shadows — use 1px borders (`var(--c-line)`) for
+separation.
+
+## Minimal type scale
+
+Use only the text classes defined in `assets/css/styles.css` (8–12 total, e.g. `.t-display`,
+`.t-h1`, `.t-h2`, `.t-h3`, `.t-lead`, `.t-body`, `.t-small`, `.t-label`). Do not introduce new
+`font-size`, `font-weight`, or `line-height` declarations in page or component CSS — extend the
+scale in `styles.css` instead, and only if nothing existing fits.
+
+## Placeholders over assets
+
+Real photos are not needed. Use the `.ph` placeholder block (grey box with a label) for imagery.
