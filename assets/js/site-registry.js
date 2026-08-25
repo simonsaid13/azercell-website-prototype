@@ -37,6 +37,8 @@
       note: 'Hidden route. Component library for the CMS block set.' },
     { path: '/planned/', title: 'Planned page placeholder', parent: null, branch: 'internal', status: 'built',
       note: 'Shown when a link points at a page that is not built yet.' },
+    { path: '/nav-lab/', title: 'Desktop navigation probe', parent: null, branch: 'internal', status: 'built',
+      note: 'Hidden route. Isolated working probe; not linked from public navigation.' },
 
     /* ---------------- B2C ---------------- */
     { path: '/', title: 'B2C Homepage', parent: null, branch: 'b2c', status: 'built',

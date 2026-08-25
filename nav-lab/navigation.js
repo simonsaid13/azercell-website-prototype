@@ -1,0 +1,523 @@
+(function () {
+  'use strict';
+
+  var C = window.Components;
+  var mount = document.getElementById('navigation-probe');
+  var footerMount = document.getElementById('footer-probe');
+  if (!C || !mount || !footerMount) return;
+
+  var NAVIGATION = [
+    {
+      label: 'Company',
+      mode: 'list',
+      items: [
+        'About us',
+        'Media & press',
+        'Corporate Social Responsibility',
+        'Sustainability',
+        'Careers',
+        'Azercell Academy',
+        'Azercell Life',
+        'Contact us',
+        'Awards'
+      ]
+    },
+    {
+      label: 'Mobile',
+      mode: 'detail-links',
+      items: [
+        { label: 'Tariffs', detail: ['Prepaid', 'Postpaid', 'Tariffs archive'] },
+        { label: 'Internet', detail: ['High volume', 'Weekly', 'Daily', 'Unlimited'] },
+        { label: 'Roaming', detail: ['Roaming internet packs', 'Countries & prices', 'Travel packs'] },
+        { label: 'Services', detail: ['Payment and balance', 'Call management', '0 balance options', 'Aicell'] },
+        { label: 'e-Sim', detail: ['About e-Sim', 'Buy e-Sim', 'Move number to e-SIM'] },
+        { label: 'Network', detail: ['5G', 'VoLTE', 'Network support'] }
+      ]
+    },
+    {
+      label: 'TV',
+      mode: 'detail-card',
+      items: [{ label: 'Kinon' }]
+    },
+    {
+      label: 'Apps',
+      mode: 'detail-card',
+      items: [
+        { label: 'Azercell App' },
+        { label: 'Kinon' },
+        { label: 'aKart' },
+        { label: 'Yandex Plus' },
+        { label: 'Busuu' },
+        { label: 'Litres' },
+        { label: 'Azercell Kids' },
+        { label: 'Wingz' },
+        { label: 'AzParking' },
+        { label: 'NaviMax' },
+        { label: 'SMSRadar' },
+        { label: 'All apps' }
+      ]
+    },
+    {
+      label: 'Devices',
+      mode: 'list',
+      items: ['Catalog', 'Link to the shop', 'Other informational links']
+    },
+    {
+      label: 'Campaigns',
+      mode: 'list',
+      items: ['All campaigns', 'Special offers', 'Voice', 'Internet', 'Bonus programs', 'Contests', 'Devices']
+    },
+    {
+      label: 'Support',
+      mode: 'list',
+      items: ['Help', 'Talk to Support', 'Browse all FAQs', 'Locations']
+    }
+  ];
+
+  var headerVariant = 'v1';
+  var APP_CATEGORIES = [
+    'Self-service',
+    'Yandex Plus',
+    'aKart',
+    'Self-development',
+    'Online cinema & TV',
+    'Micromobility',
+    'Other',
+    'All apps'
+  ];
+  var APP_CATEGORY_ITEMS = {
+    'All apps': [
+      'Azercell App',
+      'Kinon',
+      'aKart',
+      'Yandex Plus',
+      'Busuu',
+      'Litres',
+      'Azercell Kids',
+      'Wingz',
+      'AzParking',
+      'NaviMax',
+      'SMSRadar'
+    ],
+    'Self-service': ['Azercell App'],
+    'Yandex Plus': ['Yandex Plus'],
+    'aKart': ['aKart'],
+    'Self-development': ['Busuu', 'Litres', 'Azercell Kids'],
+    'Online cinema & TV': ['Kinon'],
+    'Micromobility': ['Wingz'],
+    'Other': ['AzParking', 'NaviMax', 'SMSRadar']
+  };
+
+  var FOOTER = {
+    about: ['About us', 'Media & press', 'Corporate Social Responsibility', 'Sustainability', 'Careers', 'Azercell Academy', 'Azercell Life', 'Awards'],
+    mobile: ['Tariffs', 'Internet', 'Roaming', 'Services', 'e-Sim', 'Network'],
+    devices: ['Catalog', 'Link to the shop', 'Other informational links'],
+    campaigns: ['All campaigns', 'Special offers', 'Voice', 'Internet', 'Bonus programs', 'Contests', 'Devices'],
+    support: ['Help', 'Browse all FAQs', 'Contact us', 'Talk to Support', 'Locations', 'Call center *1111'],
+    audience: ['Personal', 'Business'],
+    legal: ['Privacy Policy', 'Cookie Policy', 'Terms and Conditions', 'Accessibility', 'Sitemap'],
+    social: ['Facebook', 'X', 'YouTube', 'Instagram'],
+    v1Apps: ['Kinon', 'aKart', 'All apps'],
+    v2Apps: ['Yandex Plus', 'aKart', 'Self-development', 'Online cinema & TV', 'Micromobility', 'Other', 'All apps']
+  };
+
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function simpleButton(label, className) {
+    return '<button type="button" class="' + className + '">' + esc(label) + '</button>';
+  }
+
+  function renderListPanel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__panel-list">' +
+            item.items.map(function (label) {
+              return simpleButton(label, 't-body nav-probe__text-link');
+            }).join('') +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderDetailContent(item, activeIndex) {
+    var active = item.items[activeIndex] || item.items[0];
+    if (item.mode === 'detail-links') {
+      return (
+        '<div>' +
+          '<p class="t-label">' + esc(active.label) + '</p>' +
+          '<div class="nav-probe__detail-links">' +
+            (active.detail || []).map(function (label) {
+              return simpleButton(label, 't-body nav-probe__text-link');
+            }).join('') +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    return (
+      '<div class="nav-probe__detail-card">' +
+        C.promoCard({
+          title: active.label,
+          media: active.label
+        }) +
+      '</div>'
+    );
+  }
+
+  function renderDetailPanel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__detail" data-detail-menu="' + index + '" data-active-index="0">' +
+            '<div class="nav-probe__rail" role="listbox" aria-label="' + esc(item.label) + '">' +
+              item.items.map(function (entry, itemIndex) {
+                return (
+                  '<button type="button" class="nav-probe__rail-button"' +
+                    ' data-detail-trigger="' + itemIndex + '"' +
+                    ' aria-selected="' + (itemIndex === 0 ? 'true' : 'false') + '">' +
+                    esc(entry.label) +
+                  '</button>'
+                );
+              }).join('') +
+            '</div>' +
+            '<div class="nav-probe__detail-content" data-detail-content aria-live="polite">' +
+              renderDetailContent(item, 0) +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderWidePromoPanel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__wide-promo">' +
+            C.promoCard({
+              title: 'Kinon',
+              media: 'Kinon'
+            }) +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderAppsPromo(label) {
+    var isAllApps = label === 'All apps';
+    if (isAllApps) return '<div class="nav-probe__apps-promo" data-app-promo aria-hidden="true"><div class="ph ph--wide" aria-hidden="true"></div></div>';
+    return '<div class="nav-probe__apps-promo" data-app-promo>' +
+      C.promoCard({
+        title: label,
+        media: label
+      }) +
+      '</div>';
+  }
+
+  function renderAppsV1Panel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__apps-variant nav-probe__apps-v1" data-apps-variant="v1">' +
+            '<div class="nav-probe__apps-list" role="list" aria-label="Apps">' +
+              item.items.map(function (entry) {
+                return '<button type="button" class="t-body nav-probe__text-link" data-app-trigger="' + esc(entry.label) + '">' + esc(entry.label) + '</button>';
+              }).join('') +
+            '</div>' +
+            renderAppsPromo('All apps') +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderAppsVariantPanel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__apps-variant nav-probe__apps-v2" data-apps-variant="v2">' +
+            '<div class="nav-probe__rail nav-probe__apps-categories" role="tablist" aria-label="App categories">' +
+              APP_CATEGORIES.map(function (category, categoryIndex) {
+                return (
+                  '<button type="button" class="nav-probe__rail-button" role="tab"' +
+                    ' data-app-category-trigger="' + categoryIndex + '"' +
+                    ' aria-selected="' + (categoryIndex === APP_CATEGORIES.length - 1 ? 'true' : 'false') + '">' +
+                    esc(category) +
+                  '</button>'
+                );
+              }).join('') +
+            '</div>' +
+            '<div class="nav-probe__apps-grid" role="tabpanel" data-app-category-content aria-live="polite">' +
+              renderAppTiles(APP_CATEGORY_ITEMS['All apps']) +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderAppTiles(labels) {
+    return labels.map(function (label) {
+      return (
+        '<button type="button" class="nav-probe__app-tile" data-app-label="' + esc(label) + '"' +
+          ' aria-label="Open ' + esc(label) + '">' +
+          '<span class="ph ph--square nav-probe__app-icon" aria-hidden="true"></span>' +
+          '<span class="nav-probe__app-label">' + esc(label) + '</span>' +
+        '</button>'
+      );
+    }).join('');
+  }
+
+  function renderFooterGroup(title, labels, modifier) {
+    return '<section class="nav-probe__footer-group' + (modifier ? ' ' + modifier : '') + '">' +
+      '<h3 class="t-h4">' + esc(title) + '</h3>' +
+      '<div class="nav-probe__footer-links" role="list">' +
+        labels.map(function (label) {
+          return '<button type="button" class="nav-probe__footer-link t-body" role="listitem">' + esc(label) + '</button>';
+        }).join('') +
+      '</div>' +
+    '</section>';
+  }
+
+  function renderFooter() {
+    var apps = headerVariant === 'v2' ? FOOTER.v2Apps : FOOTER.v1Apps;
+    return (
+      '<footer class="nav-probe__footer" aria-label="Footer preview">' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__footer-top">' +
+            '<div class="nav-probe__footer-brand">' +
+              '<p class="t-h2">Azercell</p>' +
+              '<p class="t-body t-muted">Every connection opens a possibility</p>' +
+            '</div>' +
+            '<form class="nav-probe__footer-subscribe" data-footer-subscribe>' +
+              '<label class="t-label" for="footer-email">Subscribe for updates</label>' +
+              '<div class="nav-probe__footer-subscribe-row">' +
+                '<input class="input" id="footer-email" type="email" placeholder="Your email" aria-label="Your email">' +
+                '<button type="submit" class="btn btn--small btn--quiet" aria-label="Subscribe">→</button>' +
+              '</div>' +
+            '</form>' +
+          '</div>' +
+          '<div class="nav-probe__footer-main">' +
+            '<div class="nav-probe__footer-groups">' +
+              renderFooterGroup('ABOUT AZERCELL', FOOTER.about) +
+              renderFooterGroup('MOBILE', FOOTER.mobile) +
+              renderFooterGroup('APPS', apps) +
+              renderFooterGroup('DEVICES', FOOTER.devices) +
+              renderFooterGroup('CAMPAIGNS', FOOTER.campaigns) +
+              renderFooterGroup('SUPPORT', FOOTER.support) +
+            '</div>' +
+            '<article class="cmp-card nav-probe__footer-app-card">' +
+              '<div class="ph ph--wide" aria-hidden="true"></div>' +
+              '<div class="cmp-card__body">' +
+                '<h3 class="t-h3">Download Azercell App</h3>' +
+                '<div class="nav-probe__footer-app-actions">' +
+                  simpleButton('App Store', 'btn btn--small btn--quiet') +
+                  simpleButton('Google Play', 'btn btn--small btn--quiet') +
+                '</div>' +
+              '</div>' +
+            '</article>' +
+          '</div>' +
+          '<div class="nav-probe__footer-bottom">' +
+            '<div class="nav-probe__footer-audience">' +
+              FOOTER.audience.map(function (label) { return simpleButton(label, 'btn btn--small btn--quiet'); }).join('') +
+            '</div>' +
+            '<div class="nav-probe__footer-legal">' +
+              FOOTER.legal.map(function (label) { return simpleButton(label, 't-small nav-probe__footer-link'); }).join('') +
+            '</div>' +
+            '<div class="nav-probe__footer-social">' +
+              FOOTER.social.map(function (label) { return simpleButton(label, 'btn btn--small btn--quiet'); }).join('') +
+            '</div>' +
+            '<button type="button" class="t-small nav-probe__footer-language">English</button>' +
+            '<p class="t-small t-muted nav-probe__footer-copyright">© 2026 Azercell Telecom LLC</p>' +
+          '</div>' +
+        '</div>' +
+      '</footer>'
+    );
+  }
+
+  function renderPanel(item, index) {
+    if (item.label === 'TV') return renderWidePromoPanel(item, index);
+    if (item.label === 'Apps') {
+      return headerVariant === 'v2'
+        ? renderAppsVariantPanel(item, index)
+        : renderAppsV1Panel(item, index);
+    }
+    return item.mode === 'list'
+      ? renderListPanel(item, index)
+      : renderDetailPanel(item, index);
+  }
+
+  function updateVariantControl() {
+    var header = mount.querySelector('[data-header]');
+    var button = mount.querySelector('[data-header-variant-toggle]');
+    if (!header || !button) return;
+
+    var variantLabel = headerVariant === 'v1' ? 'EN' : 'AZ';
+    header.setAttribute('data-header-variant', headerVariant);
+    button.setAttribute('data-variant', headerVariant);
+    button.setAttribute('aria-label', 'Header variant ' + headerVariant.toUpperCase() + '. Activate to switch variant');
+    button.setAttribute('aria-pressed', headerVariant === 'v2' ? 'true' : 'false');
+    button.textContent = variantLabel;
+  }
+
+  function toggleHeaderVariant() {
+    var appsPanel = mount.querySelector('[data-menu-panel="3"]');
+    var wasOpen = appsPanel && appsPanel.getAttribute('data-open') === 'true';
+    headerVariant = headerVariant === 'v1' ? 'v2' : 'v1';
+    updateVariantControl();
+
+    if (appsPanel) {
+      var replacement = document.createElement('div');
+      replacement.innerHTML = renderPanel(NAVIGATION[3], 3);
+      var nextPanel = replacement.firstElementChild;
+      nextPanel.setAttribute('data-open', wasOpen ? 'true' : 'false');
+      appsPanel.replaceWith(nextPanel);
+    }
+    footerMount.innerHTML = renderFooter();
+  }
+
+  function activateAppCategory(trigger) {
+    var variant = trigger.closest('[data-apps-variant]');
+    if (!variant) return;
+    var categoryIndex = Number(trigger.getAttribute('data-app-category-trigger'));
+    var category = APP_CATEGORIES[categoryIndex];
+    var content = variant.querySelector('[data-app-category-content]');
+    if (!category || !content) return;
+
+    variant.querySelectorAll('[data-app-category-trigger]').forEach(function (button) {
+      button.setAttribute(
+        'aria-selected',
+        button.getAttribute('data-app-category-trigger') === String(categoryIndex) ? 'true' : 'false'
+      );
+    });
+    content.innerHTML = renderAppTiles(APP_CATEGORY_ITEMS[category]);
+  }
+
+  function activateAppPromo(trigger) {
+    var panel = trigger.closest('[data-apps-variant]');
+    var promo = panel && panel.querySelector('[data-app-promo]');
+    if (!promo) return;
+    var label = trigger.getAttribute('data-app-trigger');
+    if (!label) return;
+    promo.removeAttribute('aria-hidden');
+    promo.innerHTML = label === 'All apps'
+      ? '<div class="ph ph--wide" aria-hidden="true"></div>'
+      : C.promoCard({ title: label, media: label });
+  }
+
+  function renderHeader() {
+    return (
+      '<div class="nav-probe__desktop-note">' +
+        '<div class="wrap"><p class="t-body">Desktop navigation probe. Mobile behaviour is deferred.</p></div>' +
+      '</div>' +
+      '<header class="cmp-header nav-probe" data-header data-nav-probe data-header-variant="v1">' +
+        '<div class="nav-probe__utility">' +
+          '<div class="wrap nav-probe__utility-inner">' +
+            '<div class="nav-probe__utility-group" aria-label="Personal or Business">' +
+              '<button type="button" class="nav-probe__utility-button" aria-current="page">Personal</button>' +
+              '<button type="button" class="nav-probe__utility-button">Business</button>' +
+            '</div>' +
+            '<div class="nav-probe__utility-group">' +
+              '<button type="button" class="nav-probe__utility-button">Locations</button>' +
+              '<button type="button" class="nav-probe__utility-button" data-header-variant-toggle data-variant="v1" aria-pressed="false" aria-label="Header variant V1. Activate to switch variant">EN</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__main">' +
+            '<a class="cmp-header__logo" href="../">Azercell</a>' +
+            '<nav class="cmp-header__nav" aria-label="Main">' +
+              '<ul class="cmp-header__nav-list">' +
+                NAVIGATION.map(function (item, index) {
+                  return (
+                    '<li>' +
+                      '<button type="button" class="cmp-header__nav-btn"' +
+                        ' data-menu-toggle="' + index + '"' +
+                        ' aria-expanded="false" aria-controls="nav-panel-' + index + '">' +
+                        esc(item.label) + '<span aria-hidden="true">▾</span>' +
+                      '</button>' +
+                    '</li>'
+                  );
+                }).join('') +
+              '</ul>' +
+            '</nav>' +
+            '<div class="nav-probe__actions">' +
+              '<button type="button" class="btn btn--small btn--quiet">Log in</button>' +
+              '<button type="button" class="btn btn--small btn--primary">Join Azercell</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        NAVIGATION.map(renderPanel).join('') +
+      '</header>'
+    );
+  }
+
+  function activateDetail(trigger) {
+    var menu = trigger.closest('[data-detail-menu]');
+    if (!menu) return;
+    var menuIndex = Number(menu.getAttribute('data-detail-menu'));
+    var activeIndex = Number(trigger.getAttribute('data-detail-trigger'));
+    var item = NAVIGATION[menuIndex];
+    var content = menu.querySelector('[data-detail-content]');
+    if (!item || !content || !Number.isFinite(activeIndex)) return;
+
+    menu.setAttribute('data-active-index', String(activeIndex));
+    menu.querySelectorAll('[data-detail-trigger]').forEach(function (button) {
+      button.setAttribute(
+        'aria-selected',
+        button.getAttribute('data-detail-trigger') === String(activeIndex) ? 'true' : 'false'
+      );
+    });
+    content.innerHTML = renderDetailContent(item, activeIndex);
+  }
+
+  mount.innerHTML = renderHeader();
+  footerMount.innerHTML = renderFooter();
+
+  mount.addEventListener('pointerover', function (event) {
+    var trigger = event.target.closest('[data-detail-trigger]');
+    if (trigger) activateDetail(trigger);
+    var appTrigger = event.target.closest('[data-app-trigger]');
+    if (appTrigger) activateAppPromo(appTrigger);
+  });
+
+  mount.addEventListener('focusin', function (event) {
+    var trigger = event.target.closest('[data-detail-trigger]');
+    if (trigger) activateDetail(trigger);
+    var appTrigger = event.target.closest('[data-app-trigger]');
+    if (appTrigger) activateAppPromo(appTrigger);
+
+    var categoryTrigger = event.target.closest('[data-app-category-trigger]');
+    if (categoryTrigger) activateAppCategory(categoryTrigger);
+  });
+
+  mount.addEventListener('click', function (event) {
+    var variantToggle = event.target.closest('[data-header-variant-toggle]');
+    if (variantToggle) {
+      toggleHeaderVariant();
+      return;
+    }
+
+    var trigger = event.target.closest('[data-detail-trigger]');
+    if (trigger) activateDetail(trigger);
+    var appTrigger = event.target.closest('[data-app-trigger]');
+    if (appTrigger) activateAppPromo(appTrigger);
+
+    var categoryTrigger = event.target.closest('[data-app-category-trigger]');
+    if (categoryTrigger) activateAppCategory(categoryTrigger);
+  });
+
+  footerMount.addEventListener('submit', function (event) {
+    if (event.target.closest('[data-footer-subscribe]')) event.preventDefault();
+  });
+})();

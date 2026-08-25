@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Azercell — Desktop navigation probe</title>
+<meta name="description" content="Isolated desktop navigation probe for internal review.">
+<link rel="stylesheet" href="../assets/css/styles.css">
+<link rel="stylesheet" href="./navigation.css">
+</head>
+<body>
+
+<div id="page-top">
+  <div id="navigation-probe"></div>
+</div>
+
+<main id="page-main" class="nav-probe__page">
+  <section class="nav-probe__placeholder" aria-label="Placeholder page content">
+    <div class="wrap">
+      <div class="ph ph--wide nav-probe__placeholder-hero" aria-hidden="true"></div>
+    </div>
+  </section>
+  <section class="nav-probe__acquisition" aria-labelledby="nav-probe-acquisition-title">
+    <div class="wrap">
+      <h2 id="nav-probe-acquisition-title" class="t-h1">Acquisition block</h2>
+      <div class="nav-probe__acquisition-grid" role="list" aria-label="Acquisition actions">
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Get a number</span>
+        </button>
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Transfer your number</span>
+        </button>
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Choose a tariff</span>
+        </button>
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Switch to e-SIM</span>
+        </button>
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Get an Internet</span>
+        </button>
+      </div>
+    </div>
+  </section>
+  <section class="nav-probe__content-placeholder" aria-label="Placeholder content section">
+    <div class="wrap">
+      <div class="ph ph--wide nav-probe__content-placeholder-media" aria-hidden="true"></div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-probe"></div>
+
+<script src="../assets/js/components.js"></script>
+<script src="./navigation.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>
