@@ -29,10 +29,10 @@
           <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
           <span class="t-body">Get a number</span>
         </button>
-        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+        <a class="nav-probe__acquisition-card cmp-quick__item" data-transfer-link href="transfer-number/?variant=v1" role="listitem">
           <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
           <span class="t-body">Transfer your number</span>
-        </button>
+        </a>
         <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
           <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
           <span class="t-body">Choose a tariff</span>
@@ -54,6 +54,19 @@
     </div>
   </section>
 </main>
+
+<div class="nav-probe__floating-bar" aria-label="Floating navigation preview">
+  <div class="nav-probe__floating-main" data-floating-main role="group" aria-label="Customer shortcuts">
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Internet" aria-controls="floating-popover" aria-expanded="false">Internet</button>
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Tariffs" aria-controls="floating-popover" aria-expanded="false">Tariffs</button>
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Roaming" aria-controls="floating-popover" aria-expanded="false">Roaming</button>
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Kinon" aria-controls="floating-popover" aria-expanded="false">Kinon</button>
+    <div class="nav-probe__floating-popover" id="floating-popover" data-floating-popover role="dialog" aria-label="Floating navigation details" hidden>
+      <div data-floating-popover-content></div>
+    </div>
+  </div>
+  <button type="button" class="nav-probe__floating-search" data-floating-search aria-label="Search preview is inactive">Search</button>
+</div>
 
 <div id="footer-probe"></div>
 

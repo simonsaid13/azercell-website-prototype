@@ -4,7 +4,16 @@
   var C = window.Components;
   var mount = document.getElementById('navigation-probe');
   var footerMount = document.getElementById('footer-probe');
+  var floatingBar = document.querySelector('.nav-probe__floating-bar');
+  var floatingPopover = document.querySelector('[data-floating-popover]');
+  var floatingDockRaf = 0;
   if (!C || !mount || !footerMount) return;
+
+  var FLOATING_POPOVERS = {
+    Internet: ['High volume', 'Weekly', 'Daily', 'Unlimited'],
+    Tariffs: ['Prepaid', 'Postpaid', 'Tariffs archive'],
+    Roaming: ['Roaming internet packs', 'Countries & prices', 'Travel packs']
+  };
 
   var NAVIGATION = [
     {
@@ -74,7 +83,8 @@
     }
   ];
 
-  var headerVariant = 'v1';
+  var variantParam = new URLSearchParams(window.location.search).get('variant');
+  var headerVariant = variantParam === 'v2' ? 'v2' : 'v1';
   var APP_CATEGORIES = [
     'Self-service',
     'Yandex Plus',
@@ -114,7 +124,6 @@
     devices: ['Catalog', 'Link to the shop', 'Other informational links'],
     campaigns: ['All campaigns', 'Special offers', 'Voice', 'Internet', 'Bonus programs', 'Contests', 'Devices'],
     support: ['Help', 'Browse all FAQs', 'Contact us', 'Talk to Support', 'Locations', 'Call center *1111'],
-    audience: ['Personal', 'Business'],
     legal: ['Privacy Policy', 'Cookie Policy', 'Terms and Conditions', 'Accessibility', 'Sitemap'],
     social: ['Facebook', 'X', 'YouTube', 'Instagram'],
     v1Apps: ['Kinon', 'aKart', 'All apps'],
@@ -132,6 +141,82 @@
 
   function simpleButton(label, className) {
     return '<button type="button" class="' + className + '">' + esc(label) + '</button>';
+  }
+
+  function renderFloatingPopover(label) {
+    if (label === 'Kinon') {
+      return '<div class="nav-probe__floating-kinon">' +
+        '<div class="nav-probe__floating-copy"><p class="t-label">Kinon</p><h2 class="t-h3">Kinon</h2></div>' +
+        '<div class="ph ph--wide" aria-hidden="true"></div>' +
+      '</div>';
+    }
+    return '<div class="nav-probe__floating-detail">' +
+      '<div class="nav-probe__floating-copy"><p class="t-label">' + esc(label) + '</p>' +
+        '<div class="nav-probe__floating-links" role="list">' +
+          FLOATING_POPOVERS[label].map(function (item) {
+            return '<button type="button" class="t-body nav-probe__text-link" role="listitem">' + esc(item) + '</button>';
+          }).join('') +
+        '</div>' +
+      '</div>' +
+      '<div class="ph ph--wide" aria-hidden="true"></div>' +
+    '</div>';
+  }
+
+  function closeFloatingPopover() {
+    if (!floatingBar || !floatingPopover) return;
+    floatingPopover.hidden = true;
+    floatingBar.querySelectorAll('[data-floating-trigger]').forEach(function (button) {
+      button.setAttribute('aria-expanded', 'false');
+      button.removeAttribute('data-floating-active');
+    });
+  }
+
+  function openFloatingPopover(trigger) {
+    if (!floatingBar || !floatingPopover) return;
+    var label = trigger.getAttribute('data-floating-trigger');
+    var isOpen = !floatingPopover.hidden && trigger.getAttribute('aria-expanded') === 'true';
+    if (isOpen) {
+      closeFloatingPopover();
+      return;
+    }
+    floatingPopover.querySelector('[data-floating-popover-content]').innerHTML = renderFloatingPopover(label);
+    floatingPopover.hidden = false;
+    floatingBar.querySelectorAll('[data-floating-trigger]').forEach(function (button) {
+      var active = button === trigger;
+      button.setAttribute('aria-expanded', active ? 'true' : 'false');
+      if (active) button.setAttribute('data-floating-active', 'true');
+      else button.removeAttribute('data-floating-active');
+    });
+    floatingPopover.style.setProperty('--floating-pointer-left', (trigger.offsetLeft + (trigger.offsetWidth / 2)) + 'px');
+  }
+
+  function syncFloatingDocking() {
+    if (!floatingBar) return;
+    if (window.innerWidth < 768) {
+      floatingBar.removeAttribute('data-floating-docked');
+      floatingBar.style.removeProperty('--floating-dock-top');
+      return;
+    }
+    var footer = footerMount.querySelector('.nav-probe__footer');
+    if (!footer) return;
+    var footerRect = footer.getBoundingClientRect();
+    var bottomGap = 16;
+    if (footerRect.top <= window.innerHeight - bottomGap) {
+      var dockTop = footerRect.top + window.scrollY - floatingBar.offsetHeight - bottomGap;
+      floatingBar.setAttribute('data-floating-docked', 'true');
+      floatingBar.style.setProperty('--floating-dock-top', dockTop + 'px');
+    } else {
+      floatingBar.removeAttribute('data-floating-docked');
+      floatingBar.style.removeProperty('--floating-dock-top');
+    }
+  }
+
+  function scheduleFloatingDocking() {
+    if (floatingDockRaf) return;
+    floatingDockRaf = window.requestAnimationFrame(function () {
+      floatingDockRaf = 0;
+      syncFloatingDocking();
+    });
   }
 
   function renderListPanel(item, index) {
@@ -328,17 +413,16 @@
             '</article>' +
           '</div>' +
           '<div class="nav-probe__footer-bottom">' +
-            '<div class="nav-probe__footer-audience">' +
-              FOOTER.audience.map(function (label) { return simpleButton(label, 'btn btn--small btn--quiet'); }).join('') +
-            '</div>' +
             '<div class="nav-probe__footer-legal">' +
               FOOTER.legal.map(function (label) { return simpleButton(label, 't-small nav-probe__footer-link'); }).join('') +
             '</div>' +
             '<div class="nav-probe__footer-social">' +
               FOOTER.social.map(function (label) { return simpleButton(label, 'btn btn--small btn--quiet'); }).join('') +
             '</div>' +
-            '<button type="button" class="t-small nav-probe__footer-language">English</button>' +
-            '<p class="t-small t-muted nav-probe__footer-copyright">© 2026 Azercell Telecom LLC</p>' +
+            '<div class="nav-probe__footer-meta">' +
+              '<button type="button" class="t-small nav-probe__footer-language">English</button>' +
+              '<p class="t-small t-muted nav-probe__footer-copyright">© 2026 Azercell Telecom LLC</p>' +
+            '</div>' +
           '</div>' +
         '</div>' +
       '</footer>'
@@ -374,7 +458,11 @@
     var appsPanel = mount.querySelector('[data-menu-panel="3"]');
     var wasOpen = appsPanel && appsPanel.getAttribute('data-open') === 'true';
     headerVariant = headerVariant === 'v1' ? 'v2' : 'v1';
+    var variantUrl = new URL(window.location.href);
+    variantUrl.searchParams.set('variant', headerVariant);
+    window.history.replaceState({}, '', variantUrl.href);
     updateVariantControl();
+    updateTransferLink();
 
     if (appsPanel) {
       var replacement = document.createElement('div');
@@ -384,6 +472,13 @@
       appsPanel.replaceWith(nextPanel);
     }
     footerMount.innerHTML = renderFooter();
+    scheduleFloatingDocking();
+  }
+
+  function updateTransferLink() {
+    var link = document.querySelector('[data-transfer-link]');
+    if (!link) return;
+    link.setAttribute('href', 'transfer-number/?variant=' + headerVariant);
   }
 
   function activateAppCategory(trigger) {
@@ -483,6 +578,8 @@
 
   mount.innerHTML = renderHeader();
   footerMount.innerHTML = renderFooter();
+  updateVariantControl();
+  updateTransferLink();
 
   mount.addEventListener('pointerover', function (event) {
     var trigger = event.target.closest('[data-detail-trigger]');
@@ -520,4 +617,23 @@
   footerMount.addEventListener('submit', function (event) {
     if (event.target.closest('[data-footer-subscribe]')) event.preventDefault();
   });
+
+  if (floatingBar) {
+    if (floatingPopover) {
+    floatingBar.addEventListener('click', function (event) {
+      var trigger = event.target.closest('[data-floating-trigger]');
+      if (trigger) openFloatingPopover(trigger);
+    });
+    document.addEventListener('click', function (event) {
+      if (event.target.closest('[data-floating-search]')) return;
+      if (!event.target.closest('[data-floating-main]')) closeFloatingPopover();
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeFloatingPopover();
+    });
+    }
+    window.addEventListener('scroll', scheduleFloatingDocking, { passive: true });
+    window.addEventListener('resize', scheduleFloatingDocking);
+    syncFloatingDocking();
+  }
 })();
