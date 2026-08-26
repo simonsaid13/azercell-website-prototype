@@ -1,2 +1,5 @@
 .vercel
 .env*
+
+# Per-feature plans (local context dumps — not committed)
+.claude/prompts/

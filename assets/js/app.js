@@ -52,8 +52,14 @@
 
     if (announce) height += announce.offsetHeight;
     if (header) {
+      var utility = header.querySelector('.cmp-nav__utility');
+      var main = header.querySelector('.cmp-nav__main');
       var bar = header.querySelector('.cmp-header__bar');
-      if (bar) height += bar.offsetHeight;
+      if (utility && window.getComputedStyle(utility).display !== 'none') {
+        height += utility.offsetHeight;
+      }
+      if (main) height += main.offsetHeight;
+      else if (bar) height += bar.offsetHeight;
 
       var searchRow = header.querySelector('[data-search-row][data-open="true"]');
       if (searchRow) height += searchRow.offsetHeight;
@@ -791,97 +797,238 @@
   }
 
   /* ----------------------------------------------------------------------
-     Support chat — open panel, suggested answers, honest fallback
+     Personal header — Apps layout switch, mega-menu rails, mobile drawer
      ---------------------------------------------------------------------- */
 
-  function appendChatMessage(log, text, role, link) {
-    var msg = document.createElement('div');
-    msg.className = 'cmp-chat__msg cmp-chat__msg--' + role;
-    var p = document.createElement('p');
-    p.className = 't-body';
-    p.textContent = text;
-    msg.appendChild(p);
-    if (link && link.href) {
-      var a = document.createElement('a');
-      a.className = 't-small';
-      a.href = link.href;
-      a.textContent = link.label || link.href;
-      if (/^https?:/.test(link.href)) {
-        a.target = '_blank';
-        a.rel = 'noopener';
+  function navVariant() {
+    return document.documentElement.getAttribute('data-nav-variant') === 'v2' ? 'v2' : 'v1';
+  }
+
+  function setNavVariant(next) {
+    var variant = next === 'v2' ? 'v2' : 'v1';
+    document.documentElement.setAttribute('data-nav-variant', variant);
+    all(document, '[data-header]').forEach(function (header) {
+      header.setAttribute('data-header-variant', variant);
+    });
+    all(document, '[data-header-variant-toggle], [data-mobile-variant-toggle]').forEach(function (btn) {
+      btn.setAttribute('data-variant', variant);
+      btn.setAttribute('aria-pressed', variant === 'v2' ? 'true' : 'false');
+      if (btn.matches('[data-header-variant-toggle]') && btn.classList.contains('cmp-nav__utility-button')) {
+        btn.textContent = variant === 'v1' ? 'EN' : 'AZ';
       }
-      msg.appendChild(document.createElement('br'));
-      msg.appendChild(a);
-    }
-    log.appendChild(msg);
-    log.scrollTop = log.scrollHeight;
+      if (btn.matches('[data-mobile-variant-toggle]')) {
+        btn.textContent = variant === 'v1' ? 'EN' : 'AZ';
+      }
+      if (btn.classList.contains('cmp-nav__footer-language')) {
+        btn.textContent = variant === 'v1' ? 'English' : 'Azərbaycan';
+      }
+    });
+    var url = new URL(window.location.href);
+    if (variant === 'v1') url.searchParams.delete('variant');
+    else url.searchParams.set('variant', variant);
+    window.history.replaceState({}, '', url.href);
   }
 
-  function setChatOpen(chat, open) {
-    var panel = chat.querySelector('[data-chat-panel]');
-    var toggle = chat.querySelector('[data-chat-toggle]');
-    var label = chat.querySelector('.cmp-chat__toggle-label');
-    if (!panel || !toggle) return;
-
-    panel.hidden = !open;
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    chat.classList.toggle('cmp-chat--open', open);
-    if (label) {
-      label.textContent = open ? 'Close' : (chat.getAttribute('data-button-label') || 'Chat');
-    }
-    if (open) {
-      var input = chat.querySelector('[data-chat-input]');
-      if (input) input.focus();
-    }
+  function activateDetail(trigger) {
+    var menu = trigger.closest('[data-detail-menu]');
+    if (!menu) return;
+    var index = trigger.getAttribute('data-detail-trigger');
+    menu.querySelectorAll('[data-detail-trigger]').forEach(function (btn) {
+      btn.setAttribute('aria-selected', btn === trigger ? 'true' : 'false');
+    });
+    menu.querySelectorAll('[data-detail-pane]').forEach(function (pane) {
+      pane.hidden = pane.getAttribute('data-detail-pane') !== index;
+    });
   }
 
-  function toggleChat(chat) {
-    var panel = chat.querySelector('[data-chat-panel]');
+  function activateAppCategory(trigger) {
+    var panel = trigger.closest('[data-menu-panel], [data-apps-v2]');
+    if (!panel) panel = trigger.closest('[data-apps-v2]');
+    var wrap = trigger.closest('[data-apps-v2]') || panel;
+    if (!wrap) return;
+    var index = trigger.getAttribute('data-app-category-trigger');
+    wrap.querySelectorAll('[data-app-category-trigger]').forEach(function (btn) {
+      btn.setAttribute('aria-selected', btn === trigger ? 'true' : 'false');
+    });
+    wrap.querySelectorAll('[data-app-category-pane]').forEach(function (pane) {
+      pane.hidden = pane.getAttribute('data-app-category-pane') !== index;
+    });
+  }
+
+  function activateAppPromo(trigger) {
+    var panel = trigger.closest('[data-apps-v1]');
     if (!panel) return;
-    setChatOpen(chat, panel.hidden);
+    var label = trigger.getAttribute('data-app-trigger');
+    panel.querySelectorAll('[data-app-promo]').forEach(function (promo) {
+      promo.hidden = promo.getAttribute('data-app-promo') !== label;
+    });
   }
 
-  function readChatSuggestions(chat) {
-    var data = chat.querySelector('[data-chat-suggest-data]');
-    if (!data) return [];
-    try {
-      return JSON.parse(data.textContent);
-    } catch (err) {
-      return [];
+  function closeMobileGroups(header, except) {
+    all(header, '[data-mobile-group-toggle]').forEach(function (btn) {
+      if (btn.getAttribute('data-mobile-group-toggle') === except) return;
+      btn.setAttribute('aria-expanded', 'false');
+      var sign = btn.querySelector('span[aria-hidden]');
+      if (sign) sign.textContent = '+';
+    });
+    all(header, '[data-mobile-group-body]').forEach(function (body) {
+      if (body.getAttribute('data-mobile-group-body') !== except) body.setAttribute('data-open', 'false');
+    });
+  }
+
+  function toggleMobileGroup(header, key) {
+    var btn = header.querySelector('[data-mobile-group-toggle="' + key + '"]');
+    var body = header.querySelector('[data-mobile-group-body="' + key + '"]');
+    if (!btn || !body) return;
+    var open = btn.getAttribute('aria-expanded') === 'true';
+    closeMobileGroups(header, key);
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    body.setAttribute('data-open', open ? 'false' : 'true');
+    var sign = btn.querySelector('span[aria-hidden]');
+    if (sign) sign.textContent = open ? '+' : '\u2212';
+  }
+
+  function closeMobileDrawer(header) {
+    var btn = header.querySelector('[data-mobile-menu-btn]');
+    var drawer = header.querySelector('[data-mobile-drawer]');
+    if (!btn || !drawer) return;
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'Open menu');
+    var icon = btn.querySelector('[data-mobile-menu-icon]');
+    if (icon) icon.textContent = '☰';
+    drawer.hidden = true;
+    drawer.setAttribute('aria-hidden', 'true');
+    closeMobileGroups(header, null);
+  }
+
+  function toggleMobileDrawer(header) {
+    var btn = header.querySelector('[data-mobile-menu-btn]');
+    var drawer = header.querySelector('[data-mobile-drawer]');
+    if (!btn || !drawer) return;
+    var open = btn.getAttribute('aria-expanded') === 'true';
+    if (open) {
+      closeMobileDrawer(header);
+      return;
+    }
+    closeMenus(header, null);
+    btn.setAttribute('aria-expanded', 'true');
+    btn.setAttribute('aria-label', 'Close menu');
+    var icon = btn.querySelector('[data-mobile-menu-icon]');
+    if (icon) icon.textContent = '✕';
+    drawer.hidden = false;
+    drawer.setAttribute('aria-hidden', 'false');
+    scheduleSiteChromeHeight();
+  }
+
+  function closeFloatingPopover() {
+    all(document, '[data-floating-bar]').forEach(function (bar) {
+      var pop = bar.querySelector('[data-floating-popover]');
+      if (pop) pop.hidden = true;
+      all(bar, '[data-floating-trigger]').forEach(function (btn) {
+        btn.setAttribute('aria-expanded', 'false');
+        btn.removeAttribute('data-floating-active');
+      });
+      all(bar, '[data-floating-pane]').forEach(function (pane) { pane.hidden = true; });
+    });
+  }
+
+  function openFloatingPopover(trigger) {
+    var bar = closest(trigger, '[data-floating-bar]');
+    if (!bar) return;
+    var pop = bar.querySelector('[data-floating-popover]');
+    if (!pop) return;
+    var index = trigger.getAttribute('data-floating-trigger');
+    var already = trigger.getAttribute('aria-expanded') === 'true';
+    closeFloatingPopover();
+    if (already) return;
+    pop.hidden = false;
+    trigger.setAttribute('aria-expanded', 'true');
+    trigger.setAttribute('data-floating-active', 'true');
+    all(bar, '[data-floating-pane]').forEach(function (pane) {
+      pane.hidden = pane.getAttribute('data-floating-pane') !== index;
+    });
+    pop.style.setProperty('--floating-pointer-left', (trigger.offsetLeft + (trigger.offsetWidth / 2)) + 'px');
+  }
+
+  var floatingDockRaf = 0;
+
+  function syncFloatingDocking() {
+    var bar = document.querySelector('[data-floating-bar]');
+    if (!bar) return;
+    var footer = document.querySelector('.cmp-nav__footer, .cmp-footer');
+    if (!footer) return;
+    var footerRect = footer.getBoundingClientRect();
+    var bottomGap = 16;
+    if (footerRect.top <= window.innerHeight - bottomGap) {
+      var dockTop = footerRect.top + window.scrollY - bar.offsetHeight - bottomGap;
+      bar.setAttribute('data-floating-docked', 'true');
+      bar.style.setProperty('--floating-dock-top', dockTop + 'px');
+    } else {
+      bar.removeAttribute('data-floating-docked');
+      bar.style.removeProperty('--floating-dock-top');
     }
   }
 
-  function replyFromSuggestion(chat, index) {
-    var suggestions = readChatSuggestions(chat);
-    var item = suggestions[index];
-    if (!item) return;
-
-    var log = chat.querySelector('[data-chat-log]');
-    if (!log) return;
-
-    appendChatMessage(log, item.label, 'user');
-    appendChatMessage(log, item.answer, 'bot', item.link || null);
+  function scheduleFloatingDocking() {
+    if (floatingDockRaf) return;
+    floatingDockRaf = window.requestAnimationFrame(function () {
+      floatingDockRaf = 0;
+      syncFloatingDocking();
+    });
   }
 
-  function replyToFreeText(chat, text) {
-    var log = chat.querySelector('[data-chat-log]');
-    if (!log) return;
+  function initTransferFloatingCta() {
+    var heroCta = document.querySelector('[data-transfer-hero-cta]');
+    var floatingCta = document.querySelector('[data-transfer-floating-cta]');
+    if (!heroCta || !floatingCta) return;
 
-    appendChatMessage(log, text, 'user');
-    appendChatMessage(
-      log,
-      'This prototype shows the chat layout only. Live answers come from Aicell on the real site.',
-      'bot'
-    );
-    appendChatMessage(
-      log,
-      'For help now, open Support or Kabinetim.',
-      'bot',
-      {
-        label: 'Support overview',
-        href: chat.getAttribute('data-support-href') || '/planned/?path=%2Fsupport%2F'
+    function headerHeight() {
+      var header = document.querySelector('[data-header]');
+      if (!header) return window.innerWidth < 768 ? 64 : 98;
+      var utility = header.querySelector('.cmp-nav__utility');
+      var main = header.querySelector('.cmp-nav__main');
+      var height = 1;
+      if (utility && window.getComputedStyle(utility).display !== 'none') {
+        height += utility.getBoundingClientRect().height;
       }
-    );
+      if (main) height += main.getBoundingClientRect().height;
+      return height;
+    }
+
+    function setVisible(visible) {
+      floatingCta.hidden = !visible;
+      floatingCta.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      floatingCta.tabIndex = visible ? 0 : -1;
+    }
+
+    function update() {
+      setVisible(heroCta.getBoundingClientRect().bottom <= headerHeight());
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
+  function toggleFooterGroup(footer, key) {
+    var btn = footer.querySelector('[data-footer-group-toggle="' + key + '"]');
+    var body = footer.querySelector('[data-footer-group-body="' + key + '"]');
+    if (!btn || !body) return;
+    var open = btn.getAttribute('aria-expanded') === 'true';
+    all(footer, '[data-footer-group-toggle]').forEach(function (other) {
+      if (other === btn) return;
+      other.setAttribute('aria-expanded', 'false');
+      var sign = other.querySelector('span[aria-hidden]');
+      if (sign) sign.textContent = '+';
+    });
+    all(footer, '[data-footer-group-body]').forEach(function (other) {
+      if (other === body) return;
+      other.setAttribute('data-open', 'false');
+    });
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    body.setAttribute('data-open', open ? 'false' : 'true');
+    var mark = btn.querySelector('span[aria-hidden]');
+    if (mark) mark.textContent = open ? '+' : '\u2212';
   }
 
   /* ----------------------------------------------------------------------
@@ -966,21 +1113,83 @@
       return;
     }
 
-    var chatToggle = closest(el, '[data-chat-toggle]');
-    if (chatToggle) {
-      toggleChat(closest(chatToggle, '[data-chat]'));
+    var variantToggle = closest(el, '[data-header-variant-toggle], [data-mobile-variant-toggle]');
+    if (variantToggle) {
+      event.preventDefault();
+      setNavVariant(navVariant() === 'v1' ? 'v2' : 'v1');
       return;
     }
 
-    var chatClose = closest(el, '[data-chat-close]');
-    if (chatClose) {
-      setChatOpen(closest(chatClose, '[data-chat]'), false);
+    var detailTrigger = closest(el, '[data-detail-trigger]');
+    if (detailTrigger) {
+      activateDetail(detailTrigger);
       return;
     }
 
-    var chatSuggest = closest(el, '[data-chat-suggest]');
-    if (chatSuggest) {
-      replyFromSuggestion(closest(chatSuggest, '[data-chat]'), chatSuggest.getAttribute('data-chat-suggest'));
+    var appCat = closest(el, '[data-app-category-trigger]');
+    if (appCat) {
+      activateAppCategory(appCat);
+      return;
+    }
+
+    var appTrigger = closest(el, '[data-app-trigger]');
+    if (appTrigger) {
+      activateAppPromo(appTrigger);
+    }
+
+    var mobileMenuBtn = closest(el, '[data-mobile-menu-btn]');
+    if (mobileMenuBtn) {
+      toggleMobileDrawer(closest(mobileMenuBtn, '[data-header]'));
+      return;
+    }
+
+    var mobileGroup = closest(el, '[data-mobile-group-toggle]');
+    if (mobileGroup) {
+      toggleMobileGroup(closest(mobileGroup, '[data-header]'), mobileGroup.getAttribute('data-mobile-group-toggle'));
+      return;
+    }
+
+    var mobileInner = closest(el, '[data-mobile-inner-toggle]');
+    if (mobileInner) {
+      var header = closest(mobileInner, '[data-header]');
+      var innerKey = mobileInner.getAttribute('data-mobile-inner-toggle');
+      var innerBtn = header.querySelector('[data-mobile-inner-toggle="' + innerKey + '"]');
+      var innerBody = header.querySelector('[data-mobile-inner-body="' + innerKey + '"]');
+      if (innerBtn && innerBody) {
+        var innerOpen = innerBtn.getAttribute('aria-expanded') === 'true';
+        innerBtn.setAttribute('aria-expanded', innerOpen ? 'false' : 'true');
+        innerBody.setAttribute('data-open', innerOpen ? 'false' : 'true');
+        var innerSign = innerBtn.querySelector('span[aria-hidden]');
+        if (innerSign) innerSign.textContent = innerOpen ? '+' : '\u2212';
+      }
+      return;
+    }
+
+    var mobileAppCat = closest(el, '[data-mobile-app-category-toggle]');
+    if (mobileAppCat) {
+      var appHeader = closest(mobileAppCat, '[data-header]');
+      var catKey = mobileAppCat.getAttribute('data-mobile-app-category-toggle');
+      var catBtn = appHeader.querySelector('[data-mobile-app-category-toggle="' + catKey + '"]');
+      var catBody = appHeader.querySelector('[data-mobile-app-category-body="' + catKey + '"]');
+      if (catBtn && catBody) {
+        var catOpen = catBtn.getAttribute('aria-expanded') === 'true';
+        catBtn.setAttribute('aria-expanded', catOpen ? 'false' : 'true');
+        catBody.setAttribute('data-open', catOpen ? 'false' : 'true');
+        var catSign = catBtn.querySelector('span[aria-hidden]');
+        if (catSign) catSign.textContent = catOpen ? '+' : '\u2212';
+      }
+      return;
+    }
+
+    var floatTrigger = closest(el, '[data-floating-trigger]');
+    if (floatTrigger) {
+      openFloatingPopover(floatTrigger);
+      return;
+    }
+
+    var footerToggle = closest(el, '[data-footer-group-toggle]');
+    if (footerToggle) {
+      toggleFooterGroup(closest(footerToggle, 'footer'), footerToggle.getAttribute('data-footer-group-toggle'));
       return;
     }
 
@@ -1026,36 +1235,26 @@
     if (header && !closest(el, '[data-header]')) {
       closeMenus(header, null);
       closeHeaderSearch(header);
+      closeMobileDrawer(header);
     }
 
-    if (!closest(el, '[data-chat]')) {
-      all(document, '[data-chat]').forEach(function (chat) { setChatOpen(chat, false); });
-    }
+    if (!closest(el, '[data-floating-bar]')) closeFloatingPopover();
   });
 
   document.addEventListener('submit', function (event) {
     var form = event.target;
     if (!form) return;
 
-    if (form.matches('[data-lead-form]')) {
+    if (form.matches('[data-footer-subscribe]')) {
       event.preventDefault();
-      validateLeadForm(form);
+      form.reportValidity();
       return;
     }
 
-    if (!form.matches('[data-chat-form]')) return;
-    event.preventDefault();
-
-    var chat = closest(form, '[data-chat]');
-    var input = form.querySelector('[data-chat-input]');
-    if (!chat || !input) return;
-
-    var text = input.value.trim();
-    if (!text) return;
-
-    input.value = '';
-    replyToFreeText(chat, text);
-    setChatOpen(chat, true);
+    if (form.matches('[data-lead-form]')) {
+      event.preventDefault();
+      validateLeadForm(form);
+    }
   });
 
   // Clearing an error as soon as the field becomes valid again
@@ -1071,8 +1270,9 @@
     if (header) {
       closeMenus(header, null);
       closeHeaderSearch(header);
+      closeMobileDrawer(header);
     }
-    all(document, '[data-chat]').forEach(function (chat) { setChatOpen(chat, false); });
+    closeFloatingPopover();
   });
 
   /* ----------------------------------------------------------------------
@@ -1232,20 +1432,26 @@
     all(document, '[data-carousel]').forEach(initCarousel);
     all(document, '[data-roam-search-wrap]').forEach(initRoamingCountrySearch);
 
+    document.addEventListener('mouseover', function (event) {
+      var appTrigger = closest(event.target, '[data-app-trigger]');
+      if (appTrigger) activateAppPromo(appTrigger);
+    });
+
     window.addEventListener('resize', function () {
       syncSiteChromeHeight();
       all(document, '[data-carousel]').forEach(syncCarouselNav);
       var header = document.querySelector('[data-header]');
       if (header && window.innerWidth >= 1024) closeHeaderSearch(header);
+      if (header && window.innerWidth >= 768) closeMobileDrawer(header);
+      scheduleFloatingDocking();
     });
 
-    all(document, '[data-chat]').forEach(function (chat) {
-      var toggle = chat.querySelector('[data-chat-toggle]');
-      var label = toggle && toggle.querySelector('.cmp-chat__toggle-label');
-      if (label && !chat.getAttribute('data-button-label')) {
-        chat.setAttribute('data-button-label', label.textContent.trim());
-      }
-    });
+    window.addEventListener('scroll', scheduleFloatingDocking, { passive: true });
+    scheduleFloatingDocking();
+    initTransferFloatingCta();
+
+    var variantParam = new URLSearchParams(window.location.search).get('variant');
+    setNavVariant(variantParam === 'v2' ? 'v2' : 'v1');
   }
 
   window.PrototypeApp = {
