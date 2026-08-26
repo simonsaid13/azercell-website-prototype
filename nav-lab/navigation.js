@@ -118,6 +118,22 @@
     'Other': ['AzParking', 'NaviMax', 'SMSRadar']
   };
 
+  /* Only destinations already present in the prototype registry are linked. */
+  var APP_DESTINATIONS = {
+    'Azercell App': '/apps/',
+    'Kinon': '/apps/cinema-and-tv/kinon/',
+    'aKart': 'https://akart.az',
+    'Yandex Plus': '/apps/yandex-plus/',
+    'Busuu': '/apps/self-development/busuu/',
+    'Litres': '/apps/self-development/litres/',
+    'Azercell Kids': '/apps/self-development/kids/',
+    'Wingz': '/apps/micromobility/',
+    'AzParking': '/apps/other/azparking/',
+    'NaviMax': '/apps/other/navimax/',
+    'SMSRadar': '/apps/other/smsradar/',
+    'All apps': '/apps/'
+  };
+
   var FOOTER = {
     about: ['About us', 'Media & press', 'Corporate Social Responsibility', 'Sustainability', 'Careers', 'Azercell Academy', 'Azercell Life', 'Awards'],
     mobile: ['Tariffs', 'Internet', 'Roaming', 'Services', 'e-Sim', 'Network'],
@@ -141,6 +157,104 @@
 
   function simpleButton(label, className) {
     return '<button type="button" class="' + className + '">' + esc(label) + '</button>';
+  }
+
+  function resolveAppDestination(label) {
+    var path = APP_DESTINATIONS[label];
+    if (!path) return null;
+    if (/^https?:\/\//.test(path)) return path;
+    if (!window.SiteRegistry || typeof window.SiteRegistry.href !== 'function') return null;
+    return window.SiteRegistry.href(path);
+  }
+
+  function mobileAppItem(label) {
+    var destination = resolveAppDestination(label);
+    var external = destination && /^https?:\/\//.test(destination);
+    var tag = destination ? 'a' : 'button';
+    var attrs = destination
+      ? ' href="' + esc(destination) + '"' + (external ? ' target="_blank" rel="noopener"' : '')
+      : ' type="button"';
+    return '<' + tag + ' class="nav-probe__mobile-app-item"' + attrs + '>' +
+      '<span class="ph ph--square nav-probe__mobile-app-icon" aria-hidden="true"></span>' +
+      '<span class="t-body">' + esc(label) + '</span>' +
+      '</' + tag + '>';
+  }
+
+  function renderMobileApps() {
+    if (headerVariant === 'v1') {
+      return '<div class="nav-probe__mobile-apps" data-mobile-apps="v1" aria-label="Apps">' +
+        NAVIGATION[3].items.map(function (entry) { return mobileAppItem(entry.label); }).join('') +
+        '</div>';
+    }
+    return '<div class="nav-probe__mobile-apps" data-mobile-apps="v2" aria-label="Apps">' +
+      APP_CATEGORIES.map(function (category, categoryIndex) {
+        return '<section class="nav-probe__mobile-app-category">' +
+          '<button type="button" class="t-h4 nav-probe__mobile-app-category-toggle" data-mobile-app-category-toggle="' + categoryIndex + '"' +
+            ' aria-expanded="false" aria-controls="nav-probe-mobile-app-category-' + categoryIndex + '">' +
+            '<span>' + esc(category) + '</span><span aria-hidden="true">+</span>' +
+          '</button>' +
+          '<div class="nav-probe__mobile-app-category-items" id="nav-probe-mobile-app-category-' + categoryIndex + '"' +
+            ' data-mobile-app-category-body="' + categoryIndex + '" data-open="false">' +
+            APP_CATEGORY_ITEMS[category].map(mobileAppItem).join('') +
+          '</div>' +
+        '</section>';
+      }).join('') +
+      '</div>';
+  }
+
+  function renderMobilePanel(item, index) {
+    if (item.label === 'Mobile') {
+      return '<div class="nav-probe__mobile-panel-body nav-probe__mobile-inner-groups">' +
+        item.items.map(function (entry, entryIndex) {
+          return '<section class="nav-probe__mobile-inner-group">' +
+            '<button type="button" class="t-h4 nav-probe__mobile-inner-toggle" data-mobile-inner-toggle="' + index + '-' + entryIndex + '" aria-expanded="false">' +
+              '<span>' + esc(entry.label) + '</span><span aria-hidden="true">+</span>' +
+            '</button>' +
+            '<div class="nav-probe__mobile-inner-body" data-mobile-inner-body="' + index + '-' + entryIndex + '" data-open="false">' +
+              (entry.detail || []).map(function (label) { return simpleButton(label, 't-body nav-probe__mobile-link'); }).join('') +
+            '</div>' +
+          '</section>';
+        }).join('') +
+      '</div>';
+    }
+    if (item.label === 'TV') {
+      return '<div class="nav-probe__mobile-tv">' +
+        '<div class="nav-probe__mobile-tv-copy"><p class="t-label">TV</p><h3 class="t-h3">Kinon</h3></div>' +
+        '<div class="ph ph--wide" aria-hidden="true"></div>' +
+      '</div>';
+    }
+    if (item.label === 'Apps') return renderMobileApps();
+    return '<div class="nav-probe__mobile-simple-list">' +
+      item.items.map(function (label) { return simpleButton(label, 't-body nav-probe__mobile-link'); }).join('') +
+      '</div>';
+  }
+
+  function renderMobileDrawer() {
+    return '<div class="nav-probe__mobile-drawer" id="nav-probe-mobile-drawer" data-mobile-drawer hidden aria-hidden="true">' +
+      '<div class="wrap">' +
+        '<div class="nav-probe__mobile-utility-row">' +
+          '<div class="nav-probe__mobile-audience" aria-label="Audience">' +
+            '<div class="nav-probe__mobile-audience-segment">' +
+              '<button type="button" class="t-small nav-probe__mobile-audience-tab" aria-pressed="true" aria-current="page">Personal</button>' +
+              '<button type="button" class="t-small nav-probe__mobile-audience-tab" aria-pressed="false" aria-disabled="true" disabled>Business</button>' +
+            '</div>' +
+          '</div>' +
+          '<button type="button" class="t-small nav-probe__mobile-variant-toggle" data-mobile-variant-toggle data-variant="v1" aria-label="Header variant V1. Activate to switch variant">EN</button>' +
+        '</div>' +
+        '<div class="nav-probe__mobile-groups">' +
+          NAVIGATION.map(function (item, index) {
+            return '<section class="nav-probe__mobile-group">' +
+              '<button type="button" class="t-h4 nav-probe__mobile-group-toggle" data-mobile-group-toggle="' + index + '" aria-expanded="false" aria-controls="nav-probe-mobile-panel-' + index + '">' +
+                '<span>' + esc(item.label) + '</span><span aria-hidden="true">+</span>' +
+              '</button>' +
+              '<div class="nav-probe__mobile-group-body" id="nav-probe-mobile-panel-' + index + '" data-mobile-group-body="' + index + '" data-open="false">' +
+                renderMobilePanel(item, index) +
+              '</div>' +
+            '</section>';
+          }).join('') +
+        '</div>' +
+      '</div>' +
+    '</div>';
   }
 
   function renderFloatingPopover(label) {
@@ -192,11 +306,6 @@
 
   function syncFloatingDocking() {
     if (!floatingBar) return;
-    if (window.innerWidth < 768) {
-      floatingBar.removeAttribute('data-floating-docked');
-      floatingBar.style.removeProperty('--floating-dock-top');
-      return;
-    }
     var footer = footerMount.querySelector('.nav-probe__footer');
     if (!footer) return;
     var footerRect = footer.getBoundingClientRect();
@@ -364,9 +473,13 @@
   }
 
   function renderFooterGroup(title, labels, modifier) {
+    var key = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     return '<section class="nav-probe__footer-group' + (modifier ? ' ' + modifier : '') + '">' +
-      '<h3 class="t-h4">' + esc(title) + '</h3>' +
-      '<div class="nav-probe__footer-links" role="list">' +
+      '<h3 class="t-h4 nav-probe__footer-group-heading">' + esc(title) + '</h3>' +
+      '<button type="button" class="t-h4 nav-probe__footer-group-toggle" data-footer-group-toggle="' + key + '" aria-expanded="false">' +
+        '<span>' + esc(title) + '</span><span aria-hidden="true">+</span>' +
+      '</button>' +
+      '<div class="nav-probe__footer-links nav-probe__footer-group-body" data-footer-group-body="' + key + '" data-open="false" role="list">' +
         labels.map(function (label) {
           return '<button type="button" class="nav-probe__footer-link t-body" role="listitem">' + esc(label) + '</button>';
         }).join('') +
@@ -452,6 +565,16 @@
     button.setAttribute('aria-label', 'Header variant ' + headerVariant.toUpperCase() + '. Activate to switch variant');
     button.setAttribute('aria-pressed', headerVariant === 'v2' ? 'true' : 'false');
     button.textContent = variantLabel;
+
+    var mobileButton = mount.querySelector('[data-mobile-variant-toggle]');
+    if (mobileButton) {
+      mobileButton.setAttribute('data-variant', headerVariant);
+      mobileButton.setAttribute('aria-label', 'Header variant ' + headerVariant.toUpperCase() + '. Activate to switch variant');
+      mobileButton.textContent = variantLabel;
+    }
+
+    var mobileApps = mount.querySelector('[data-mobile-apps]');
+    if (mobileApps) mobileApps.outerHTML = renderMobileApps();
   }
 
   function toggleHeaderVariant() {
@@ -549,10 +672,14 @@
             '<div class="nav-probe__actions">' +
               '<button type="button" class="btn btn--small btn--quiet">Log in</button>' +
               '<button type="button" class="btn btn--small btn--primary">Join Azercell</button>' +
+              '<button type="button" class="btn btn--small nav-probe__mobile-menu-btn" data-mobile-menu-btn aria-expanded="false" aria-label="Open menu" aria-controls="nav-probe-mobile-drawer">' +
+                '<span class="t-h4 nav-probe__mobile-menu-icon" data-mobile-menu-icon aria-hidden="true">☰</span>' +
+              '</button>' +
             '</div>' +
           '</div>' +
         '</div>' +
         NAVIGATION.map(renderPanel).join('') +
+        renderMobileDrawer() +
       '</header>'
     );
   }
@@ -574,6 +701,118 @@
       );
     });
     content.innerHTML = renderDetailContent(item, activeIndex);
+  }
+
+  function closeMobileInnerGroups(except) {
+    mount.querySelectorAll('[data-mobile-inner-toggle]').forEach(function (button) {
+      var key = button.getAttribute('data-mobile-inner-toggle');
+      if (key !== except) {
+        button.setAttribute('aria-expanded', 'false');
+        var sign = button.querySelector('span[aria-hidden]');
+        if (sign) sign.textContent = '+';
+      }
+    });
+    mount.querySelectorAll('[data-mobile-inner-body]').forEach(function (body) {
+      if (body.getAttribute('data-mobile-inner-body') !== except) body.setAttribute('data-open', 'false');
+    });
+  }
+
+  function toggleMobileInnerGroup(button) {
+    var key = button.getAttribute('data-mobile-inner-toggle');
+    var body = mount.querySelector('[data-mobile-inner-body="' + key + '"]');
+    if (!body) return;
+    var open = button.getAttribute('aria-expanded') === 'true';
+    closeMobileInnerGroups(key);
+    button.setAttribute('aria-expanded', open ? 'false' : 'true');
+    body.setAttribute('data-open', open ? 'false' : 'true');
+    var sign = button.querySelector('span[aria-hidden]');
+    if (sign) sign.textContent = open ? '+' : '\u2212';
+  }
+
+  function closeMobileAppCategories(except) {
+    mount.querySelectorAll('[data-mobile-app-category-toggle]').forEach(function (button) {
+      var key = button.getAttribute('data-mobile-app-category-toggle');
+      if (key !== except) {
+        button.setAttribute('aria-expanded', 'false');
+        var sign = button.querySelector('span[aria-hidden]');
+        if (sign) sign.textContent = '+';
+      }
+    });
+    mount.querySelectorAll('[data-mobile-app-category-body]').forEach(function (body) {
+      if (body.getAttribute('data-mobile-app-category-body') !== except) body.setAttribute('data-open', 'false');
+    });
+  }
+
+  function toggleMobileAppCategory(button) {
+    var key = button.getAttribute('data-mobile-app-category-toggle');
+    var body = mount.querySelector('[data-mobile-app-category-body="' + key + '"]');
+    if (!body) return;
+    var open = button.getAttribute('aria-expanded') === 'true';
+    closeMobileAppCategories(key);
+    button.setAttribute('aria-expanded', open ? 'false' : 'true');
+    body.setAttribute('data-open', open ? 'false' : 'true');
+    var sign = button.querySelector('span[aria-hidden]');
+    if (sign) sign.textContent = open ? '+' : '\u2212';
+  }
+
+  function closeMobileGroups(except) {
+    mount.querySelectorAll('[data-mobile-group-toggle]').forEach(function (button) {
+      var key = button.getAttribute('data-mobile-group-toggle');
+      if (key !== except) {
+        button.setAttribute('aria-expanded', 'false');
+        var sign = button.querySelector('span[aria-hidden]');
+        if (sign) sign.textContent = '+';
+      }
+    });
+    mount.querySelectorAll('[data-mobile-group-body]').forEach(function (body) {
+      if (body.getAttribute('data-mobile-group-body') !== except) body.setAttribute('data-open', 'false');
+    });
+  }
+
+  function toggleMobileGroup(button) {
+    var key = button.getAttribute('data-mobile-group-toggle');
+    var body = mount.querySelector('[data-mobile-group-body="' + key + '"]');
+    if (!body) return;
+    var open = button.getAttribute('aria-expanded') === 'true';
+    closeMobileGroups(key);
+    button.setAttribute('aria-expanded', open ? 'false' : 'true');
+    body.setAttribute('data-open', open ? 'false' : 'true');
+    var sign = button.querySelector('span[aria-hidden]');
+    if (sign) sign.textContent = open ? '+' : '\u2212';
+    if (open || key !== '1') closeMobileInnerGroups(null);
+    if (open || key !== '3') closeMobileAppCategories(null);
+  }
+
+  function closeMobileDrawer() {
+    var button = mount.querySelector('[data-mobile-menu-btn]');
+    var drawer = mount.querySelector('[data-mobile-drawer]');
+    if (!button || !drawer) return;
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-label', 'Open menu');
+    var closedIcon = button.querySelector('[data-mobile-menu-icon]');
+    if (closedIcon) closedIcon.textContent = '☰';
+    drawer.hidden = true;
+    drawer.setAttribute('aria-hidden', 'true');
+    closeMobileGroups(null);
+    closeMobileInnerGroups(null);
+    closeMobileAppCategories(null);
+  }
+
+  function toggleMobileDrawer() {
+    var button = mount.querySelector('[data-mobile-menu-btn]');
+    var drawer = mount.querySelector('[data-mobile-drawer]');
+    if (!button || !drawer) return;
+    var open = button.getAttribute('aria-expanded') === 'true';
+    if (open) {
+      closeMobileDrawer();
+      return;
+    }
+    button.setAttribute('aria-expanded', 'true');
+    button.setAttribute('aria-label', 'Close menu');
+    var openIcon = button.querySelector('[data-mobile-menu-icon]');
+    if (openIcon) openIcon.textContent = '×';
+    drawer.hidden = false;
+    drawer.setAttribute('aria-hidden', 'false');
   }
 
   mount.innerHTML = renderHeader();
@@ -599,6 +838,46 @@
   });
 
   mount.addEventListener('click', function (event) {
+    var mobileMenuButton = event.target.closest('[data-mobile-menu-btn]');
+    if (mobileMenuButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMobileDrawer();
+      return;
+    }
+
+    var mobileGroup = event.target.closest('[data-mobile-group-toggle]');
+    if (mobileGroup) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMobileGroup(mobileGroup);
+      return;
+    }
+
+    var mobileVariantToggle = event.target.closest('[data-mobile-variant-toggle]');
+    if (mobileVariantToggle) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleHeaderVariant();
+      return;
+    }
+
+    var mobileInnerGroup = event.target.closest('[data-mobile-inner-toggle]');
+    if (mobileInnerGroup) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMobileInnerGroup(mobileInnerGroup);
+      return;
+    }
+
+    var mobileAppCategory = event.target.closest('[data-mobile-app-category-toggle]');
+    if (mobileAppCategory) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMobileAppCategory(mobileAppCategory);
+      return;
+    }
+
     var variantToggle = event.target.closest('[data-header-variant-toggle]');
     if (variantToggle) {
       toggleHeaderVariant();
@@ -616,6 +895,58 @@
 
   footerMount.addEventListener('submit', function (event) {
     if (event.target.closest('[data-footer-subscribe]')) event.preventDefault();
+  });
+
+  footerMount.addEventListener('click', function (event) {
+    var footerToggle = event.target.closest('[data-footer-group-toggle]');
+    if (!footerToggle) return;
+    event.preventDefault();
+    event.stopPropagation();
+    var key = footerToggle.getAttribute('data-footer-group-toggle');
+    var body = footerMount.querySelector('[data-footer-group-body="' + key + '"]');
+    if (!body) return;
+    var open = footerToggle.getAttribute('aria-expanded') === 'true';
+    footerMount.querySelectorAll('[data-footer-group-toggle]').forEach(function (button) {
+      var other = button.getAttribute('data-footer-group-toggle');
+      if (other !== key) {
+        button.setAttribute('aria-expanded', 'false');
+        var otherSign = button.querySelector('span[aria-hidden]');
+        if (otherSign) otherSign.textContent = '+';
+      }
+    });
+    footerMount.querySelectorAll('[data-footer-group-body]').forEach(function (groupBody) {
+      if (groupBody.getAttribute('data-footer-group-body') !== key) groupBody.setAttribute('data-open', 'false');
+    });
+    footerToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    body.setAttribute('data-open', open ? 'false' : 'true');
+    var sign = footerToggle.querySelector('span[aria-hidden]');
+    if (sign) sign.textContent = open ? '+' : '\u2212';
+  });
+
+  document.addEventListener('click', function (event) {
+    var drawer = mount.querySelector('[data-mobile-drawer]');
+    if (drawer && !drawer.hidden &&
+        !event.target.closest('[data-mobile-drawer]') &&
+        !event.target.closest('[data-mobile-menu-btn]')) {
+      closeMobileDrawer();
+    }
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape') return;
+    closeMobileDrawer();
+    footerMount.querySelectorAll('[data-footer-group-toggle]').forEach(function (button) {
+      button.setAttribute('aria-expanded', 'false');
+      var sign = button.querySelector('span[aria-hidden]');
+      if (sign) sign.textContent = '+';
+    });
+    footerMount.querySelectorAll('[data-footer-group-body]').forEach(function (body) {
+      body.setAttribute('data-open', 'false');
+    });
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth >= 768) closeMobileDrawer();
   });
 
   if (floatingBar) {

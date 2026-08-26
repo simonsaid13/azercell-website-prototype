@@ -66,6 +66,7 @@
 }
 
 .nav-probe__floating-bar--product[data-floating-docked="true"] {
+  width: auto;
   right: auto;
   left: 50%;
   transform: translateX(-50%);
@@ -80,6 +81,6 @@
 
 @media (max-width: 767px) {
   .nav-probe__transfer-page {
-    padding-top: var(--sp-6);
+    padding-top: calc(64px + var(--sp-6));
   }
 }
