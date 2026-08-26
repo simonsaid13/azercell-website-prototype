@@ -31,6 +31,16 @@ Default pattern: query param on the page path — `/path/?type=value`. "All" = n
 
 ---
 
+## Internal review probes
+
+| Page | Inbound | Outbound | Status |
+|------|---------|----------|--------|
+| `/tariff-compare-lab/` | `nav-lab` Header → Mobile → Tariffs → Compare tariffs on desktop and mobile | `?billing=prepaid`, `?billing=postpaid`, Header `EN`/`AZ` version control, contained comparison controls, and colleague-provided official Azercell tariff URLs | CONNECTED inside the review probe; not integrated into stable site chrome |
+
+**Tariff comparison lab tab URLs:** `/tariff-compare-lab/?billing=prepaid` and `/tariff-compare-lab/?billing=postpaid`. Header `EN` maps to Compact through `lang=en&variant=v1`; Header `AZ` maps to Detailed through `lang=az&variant=v2`; `RU` preserves the current variant. The retired page-level `?view=` tabs are removed.
+
+---
+
 ## Built pages — inbound (how users get there)
 
 | Page | Connected from | Status |
@@ -333,6 +343,10 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 
 | Date | Change |
 |------|--------|
+| 2026-08-26 | Connected the accepted tariff comparison from desktop/mobile `nav-lab` Header in the exact order Prepaid, Postpaid, Compare tariffs, Tariffs archive; current language/variant carries into the destination. |
+| 2026-08-26 | Replaced the tariff lab's page-level Compact/Detailed tabs with the existing Header version convention: `EN` = Compact, `AZ` = Detailed, and `RU` preserves the current version. |
+| 2026-08-26 | Removed the page-level Compact/Detailed control and `?view=` query from the hidden tariff-comparison lab; Header `EN`/`AZ` controls Compact/Detailed while `?billing=` remains shareable. |
+| 2026-08-26 | Added hidden internal `/tariff-compare-lab/` connection record. Public inbound wiring is intentionally excluded while the isolated comparison probe is under Vlad review. |
 | 2026-08-04 | Built B2C roaming section — hub, internet-packs, travel-packs, countries-and-prices. Country search with ?country= URL sync, ~35 sample destinations, header/footer/homepage/mobile/chat links CONNECTED. |
 | 2026-08-04 | Built B2C mobile internet packs — hub + monthly/weekly/daily/unlimited. 10 packs, filters, cross-sell banner, header/footer/tariff upsell links CONNECTED. |
 | 2026-08-03 | Built `/tariffs/mobile/prepaid/archive/` — 20 legacy plans, working search + pagination (8/page), promo section for current plans. |

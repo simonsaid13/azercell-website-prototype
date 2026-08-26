@@ -41,6 +41,8 @@
       note: 'Hidden route. Isolated working probe; not linked from public navigation.' },
     { path: '/nav-lab/transfer-number/', title: 'Transfer your number probe', parent: '/nav-lab/', branch: 'internal', status: 'built',
       note: 'Hidden route. Isolated product-page scenario; not linked from public navigation.' },
+    { path: '/tariff-compare-lab/', title: 'Tariff comparison probe', parent: null, branch: 'internal', status: 'built',
+      note: 'Accepted review route. Linked from the nav-lab Header only; not integrated into stable site chrome.' },
 
     /* ---------------- B2C ---------------- */
     { path: '/', title: 'B2C Homepage', parent: null, branch: 'b2c', status: 'built',

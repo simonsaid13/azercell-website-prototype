@@ -1,6 +1,10 @@
 /* Isolated desktop navigation probe.
    All visual tokens and base controls come from the stable prototype. */
 
+#page-top {
+  z-index: 50;
+}
+
 .nav-probe {
   display: block;
 }
@@ -296,23 +300,16 @@
     background: var(--c-surface);
   }
 
+  .nav-probe__floating-popover::before,
   .nav-probe__floating-popover::after {
-    position: absolute;
-    bottom: -7px;
-    left: calc(var(--floating-pointer-left, 50%) - 6px);
-    width: 12px;
-    height: 12px;
-    border-right: 1px solid var(--c-line-strong);
-    border-bottom: 1px solid var(--c-line-strong);
-    background: var(--c-surface);
-    content: '';
-    transform: rotate(45deg);
+    display: none;
+    content: none;
   }
 
   .nav-probe__floating-detail,
   .nav-probe__floating-kinon {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: var(--sp-4);
     min-height: 196px;
   }
@@ -328,9 +325,23 @@
     margin-top: var(--sp-3);
   }
 
+  .nav-probe__floating-media {
+    display: grid;
+    min-width: 0;
+  }
+
   .nav-probe__floating-popover .ph {
+    grid-area: 1 / 1;
     width: 100%;
     min-height: 196px;
+  }
+
+  .nav-probe__floating-cta {
+    grid-area: 1 / 1;
+    align-self: end;
+    justify-self: start;
+    z-index: 1;
+    margin: var(--sp-3);
   }
 
 }
@@ -407,6 +418,42 @@
   display: flex;
   align-items: center;
   gap: var(--sp-1);
+}
+
+.nav-probe__language-control,
+.nav-probe__mobile-language-control {
+  position: relative;
+}
+
+.nav-probe__language-menu {
+  position: absolute;
+  top: calc(100% + var(--sp-1));
+  right: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  min-width: 5rem;
+  padding: var(--sp-1);
+  border: 1px solid var(--c-line-strong);
+  background: var(--c-surface);
+}
+
+.nav-probe__language-option {
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  padding: var(--sp-2) var(--sp-3);
+  text-align: left;
+}
+
+.nav-probe__language-option:hover,
+.nav-probe__language-option:focus-visible,
+.nav-probe__language-option[aria-checked="true"] {
+  background: var(--c-fill-soft);
+}
+
+.nav-probe__language-option[aria-checked="true"] {
+  font-weight: 700;
 }
 
 .nav-probe__utility-button {
@@ -741,6 +788,10 @@
     padding: var(--sp-2) var(--sp-3);
     border: 1px solid var(--c-line-strong);
     font-weight: 700;
+  }
+
+  .nav-probe__mobile-language-control {
+    flex: 0 0 auto;
   }
 
   .nav-probe__mobile-audience-tab[aria-current="page"] {

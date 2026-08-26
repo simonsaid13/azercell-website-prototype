@@ -11,7 +11,7 @@
 
   var FLOATING_POPOVERS = {
     Internet: ['High volume', 'Weekly', 'Daily', 'Unlimited'],
-    Tariffs: ['Prepaid', 'Postpaid', 'Tariffs archive'],
+    Tariffs: ['Prepaid', 'Postpaid', 'Compare tariffs', 'Tariffs archive'],
     Roaming: ['Roaming internet packs', 'Countries & prices', 'Travel packs']
   };
 
@@ -35,7 +35,7 @@
       label: 'Mobile',
       mode: 'detail-links',
       items: [
-        { label: 'Tariffs', detail: ['Prepaid', 'Postpaid', 'Tariffs archive'] },
+        { label: 'Tariffs', detail: ['Prepaid', 'Postpaid', 'Compare tariffs', 'Tariffs archive'] },
         { label: 'Internet', detail: ['High volume', 'Weekly', 'Daily', 'Unlimited'] },
         { label: 'Roaming', detail: ['Roaming internet packs', 'Countries & prices', 'Travel packs'] },
         { label: 'Services', detail: ['Payment and balance', 'Call management', '0 balance options', 'Aicell'] },
@@ -83,8 +83,15 @@
     }
   ];
 
-  var variantParam = new URLSearchParams(window.location.search).get('variant');
+  var queryParams = new URLSearchParams(window.location.search);
+  var variantParam = queryParams.get('variant');
+  var languageParam = (queryParams.get('lang') || '').toLowerCase();
+  var explicitLanguage = ['az', 'en', 'ru'].indexOf(languageParam) !== -1;
+  var selectedLanguage = explicitLanguage
+    ? languageParam.toUpperCase()
+    : (variantParam === 'v2' ? 'AZ' : 'EN');
   var headerVariant = variantParam === 'v2' ? 'v2' : 'v1';
+  if (!variantParam && selectedLanguage === 'AZ') headerVariant = 'v2';
   var APP_CATEGORIES = [
     'Self-service',
     'Yandex Plus',
@@ -159,6 +166,29 @@
     return '<button type="button" class="' + className + '">' + esc(label) + '</button>';
   }
 
+  function tariffComparisonHref() {
+    return '/tariff-compare-lab/?billing=prepaid&lang=' + selectedLanguage.toLowerCase() + '&variant=' + headerVariant;
+  }
+
+  function navigationDetailItem(label, className) {
+    if (label !== 'Compare tariffs') return simpleButton(label, className);
+    return '<a class="' + className + '" data-tariff-compare-link href="' + esc(tariffComparisonHref()) + '">' + esc(label) + '</a>';
+  }
+
+  function updateTariffCompareLinks() {
+    mount.querySelectorAll('[data-tariff-compare-link]').forEach(function (link) {
+      link.setAttribute('href', tariffComparisonHref());
+    });
+  }
+
+  function renderLanguageMenu(scope, id, triggerId) {
+    return '<div class="nav-probe__language-menu" id="' + id + '" data-language-menu data-language-scope="' + scope + '" role="menu" aria-labelledby="' + triggerId + '" hidden>' +
+      ['AZ', 'EN', 'RU'].map(function (language) {
+        return '<button type="button" class="t-small nav-probe__language-option" data-language-option="' + language + '" role="menuitemradio" aria-checked="' + (selectedLanguage === language ? 'true' : 'false') + '">' + language + '</button>';
+      }).join('') +
+      '</div>';
+  }
+
   function resolveAppDestination(label) {
     var path = APP_DESTINATIONS[label];
     if (!path) return null;
@@ -211,7 +241,7 @@
               '<span>' + esc(entry.label) + '</span><span aria-hidden="true">+</span>' +
             '</button>' +
             '<div class="nav-probe__mobile-inner-body" data-mobile-inner-body="' + index + '-' + entryIndex + '" data-open="false">' +
-              (entry.detail || []).map(function (label) { return simpleButton(label, 't-body nav-probe__mobile-link'); }).join('') +
+              (entry.detail || []).map(function (label) { return navigationDetailItem(label, 't-body nav-probe__mobile-link'); }).join('') +
             '</div>' +
           '</section>';
         }).join('') +
@@ -239,7 +269,10 @@
               '<button type="button" class="t-small nav-probe__mobile-audience-tab" aria-pressed="false" aria-disabled="true" disabled>Business</button>' +
             '</div>' +
           '</div>' +
-          '<button type="button" class="t-small nav-probe__mobile-variant-toggle" data-mobile-variant-toggle data-variant="v1" aria-label="Header variant V1. Activate to switch variant">EN</button>' +
+          '<div class="nav-probe__mobile-language-control" data-language-control>' +
+            '<button type="button" class="t-small nav-probe__mobile-variant-toggle" id="nav-probe-language-trigger-mobile" data-mobile-variant-toggle data-language-trigger data-variant="v1" aria-haspopup="menu" aria-expanded="false" aria-controls="nav-probe-language-menu-mobile" aria-label="Open language menu">EN</button>' +
+            renderLanguageMenu('mobile', 'nav-probe-language-menu-mobile', 'nav-probe-language-trigger-mobile') +
+          '</div>' +
         '</div>' +
         '<div class="nav-probe__mobile-groups">' +
           NAVIGATION.map(function (item, index) {
@@ -261,18 +294,18 @@
     if (label === 'Kinon') {
       return '<div class="nav-probe__floating-kinon">' +
         '<div class="nav-probe__floating-copy"><p class="t-label">Kinon</p><h2 class="t-h3">Kinon</h2></div>' +
-        '<div class="ph ph--wide" aria-hidden="true"></div>' +
+        '<div class="nav-probe__floating-media"><div class="ph ph--wide" aria-hidden="true"></div><button type="button" class="btn btn--small btn--primary nav-probe__floating-cta">Try it</button></div>' +
       '</div>';
     }
     return '<div class="nav-probe__floating-detail">' +
       '<div class="nav-probe__floating-copy"><p class="t-label">' + esc(label) + '</p>' +
         '<div class="nav-probe__floating-links" role="list">' +
           FLOATING_POPOVERS[label].map(function (item) {
-            return '<button type="button" class="t-body nav-probe__text-link" role="listitem">' + esc(item) + '</button>';
+            return '<div role="listitem">' + navigationDetailItem(item, 't-body nav-probe__text-link') + '</div>';
           }).join('') +
         '</div>' +
       '</div>' +
-      '<div class="ph ph--wide" aria-hidden="true"></div>' +
+      '<div class="nav-probe__floating-media"><div class="ph ph--wide" aria-hidden="true"></div><button type="button" class="btn btn--small btn--primary nav-probe__floating-cta">Try it</button></div>' +
     '</div>';
   }
 
@@ -301,7 +334,6 @@
       if (active) button.setAttribute('data-floating-active', 'true');
       else button.removeAttribute('data-floating-active');
     });
-    floatingPopover.style.setProperty('--floating-pointer-left', (trigger.offsetLeft + (trigger.offsetWidth / 2)) + 'px');
   }
 
   function syncFloatingDocking() {
@@ -350,7 +382,7 @@
           '<p class="t-label">' + esc(active.label) + '</p>' +
           '<div class="nav-probe__detail-links">' +
             (active.detail || []).map(function (label) {
-              return simpleButton(label, 't-body nav-probe__text-link');
+              return navigationDetailItem(label, 't-body nav-probe__text-link');
             }).join('') +
           '</div>' +
         '</div>'
@@ -559,33 +591,33 @@
     var button = mount.querySelector('[data-header-variant-toggle]');
     if (!header || !button) return;
 
-    var variantLabel = headerVariant === 'v1' ? 'EN' : 'AZ';
+    var languageLabel = selectedLanguage;
     header.setAttribute('data-header-variant', headerVariant);
     button.setAttribute('data-variant', headerVariant);
-    button.setAttribute('aria-label', 'Header variant ' + headerVariant.toUpperCase() + '. Activate to switch variant');
-    button.setAttribute('aria-pressed', headerVariant === 'v2' ? 'true' : 'false');
-    button.textContent = variantLabel;
+    button.setAttribute('aria-label', 'Selected language ' + languageLabel + '. Open language menu');
+    button.textContent = languageLabel;
 
     var mobileButton = mount.querySelector('[data-mobile-variant-toggle]');
     if (mobileButton) {
       mobileButton.setAttribute('data-variant', headerVariant);
-      mobileButton.setAttribute('aria-label', 'Header variant ' + headerVariant.toUpperCase() + '. Activate to switch variant');
-      mobileButton.textContent = variantLabel;
+      mobileButton.setAttribute('aria-label', 'Selected language ' + languageLabel + '. Open language menu');
+      mobileButton.textContent = languageLabel;
     }
+
+    mount.querySelectorAll('[data-language-option]').forEach(function (option) {
+      option.setAttribute('aria-checked', option.getAttribute('data-language-option') === selectedLanguage ? 'true' : 'false');
+    });
 
     var mobileApps = mount.querySelector('[data-mobile-apps]');
     if (mobileApps) mobileApps.outerHTML = renderMobileApps();
   }
 
-  function toggleHeaderVariant() {
+  function refreshVariantDependentUI() {
     var appsPanel = mount.querySelector('[data-menu-panel="3"]');
     var wasOpen = appsPanel && appsPanel.getAttribute('data-open') === 'true';
-    headerVariant = headerVariant === 'v1' ? 'v2' : 'v1';
-    var variantUrl = new URL(window.location.href);
-    variantUrl.searchParams.set('variant', headerVariant);
-    window.history.replaceState({}, '', variantUrl.href);
     updateVariantControl();
     updateTransferLink();
+    updateTariffCompareLinks();
 
     if (appsPanel) {
       var replacement = document.createElement('div');
@@ -598,10 +630,43 @@
     scheduleFloatingDocking();
   }
 
+  function selectLanguage(language) {
+    if (['AZ', 'EN', 'RU'].indexOf(language) === -1) return;
+    selectedLanguage = language;
+    if (language === 'AZ') headerVariant = 'v2';
+    if (language === 'EN') headerVariant = 'v1';
+    var languageUrl = new URL(window.location.href);
+    languageUrl.searchParams.set('lang', language.toLowerCase());
+    languageUrl.searchParams.set('variant', headerVariant);
+    window.history.replaceState({}, '', languageUrl.href);
+    refreshVariantDependentUI();
+    closeLanguageMenus();
+  }
+
   function updateTransferLink() {
     var link = document.querySelector('[data-transfer-link]');
     if (!link) return;
-    link.setAttribute('href', 'transfer-number/?variant=' + headerVariant);
+    link.setAttribute('href', 'transfer-number/?variant=' + headerVariant + '&lang=' + selectedLanguage.toLowerCase());
+  }
+
+  function closeLanguageMenus() {
+    mount.querySelectorAll('[data-language-menu]').forEach(function (menu) {
+      menu.hidden = true;
+    });
+    mount.querySelectorAll('[data-language-trigger]').forEach(function (trigger) {
+      trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function toggleLanguageMenu(trigger) {
+    var menu = document.getElementById(trigger.getAttribute('aria-controls'));
+    if (!menu) return;
+    var open = !menu.hidden;
+    closeLanguageMenus();
+    if (!open) {
+      menu.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+    }
   }
 
   function activateAppCategory(trigger) {
@@ -647,7 +712,10 @@
             '</div>' +
             '<div class="nav-probe__utility-group">' +
               '<button type="button" class="nav-probe__utility-button">Locations</button>' +
-              '<button type="button" class="nav-probe__utility-button" data-header-variant-toggle data-variant="v1" aria-pressed="false" aria-label="Header variant V1. Activate to switch variant">EN</button>' +
+              '<div class="nav-probe__language-control" data-language-control>' +
+                '<button type="button" class="nav-probe__utility-button" id="nav-probe-language-trigger-desktop" data-header-variant-toggle data-language-trigger data-variant="v1" aria-haspopup="menu" aria-expanded="false" aria-controls="nav-probe-language-menu-desktop" aria-label="Open language menu">EN</button>' +
+                renderLanguageMenu('desktop', 'nav-probe-language-menu-desktop', 'nav-probe-language-trigger-desktop') +
+              '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -819,6 +887,7 @@
   footerMount.innerHTML = renderFooter();
   updateVariantControl();
   updateTransferLink();
+  updateTariffCompareLinks();
 
   mount.addEventListener('pointerover', function (event) {
     var trigger = event.target.closest('[data-detail-trigger]');
@@ -838,8 +907,25 @@
   });
 
   mount.addEventListener('click', function (event) {
+    var languageOption = event.target.closest('[data-language-option]');
+    if (languageOption) {
+      event.preventDefault();
+      event.stopPropagation();
+      selectLanguage(languageOption.getAttribute('data-language-option'));
+      return;
+    }
+
+    var languageTrigger = event.target.closest('[data-language-trigger]');
+    if (languageTrigger) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleLanguageMenu(languageTrigger);
+      return;
+    }
+
     var mobileMenuButton = event.target.closest('[data-mobile-menu-btn]');
     if (mobileMenuButton) {
+      closeLanguageMenus();
       event.preventDefault();
       event.stopPropagation();
       toggleMobileDrawer();
@@ -848,22 +934,16 @@
 
     var mobileGroup = event.target.closest('[data-mobile-group-toggle]');
     if (mobileGroup) {
+      closeLanguageMenus();
       event.preventDefault();
       event.stopPropagation();
       toggleMobileGroup(mobileGroup);
       return;
     }
 
-    var mobileVariantToggle = event.target.closest('[data-mobile-variant-toggle]');
-    if (mobileVariantToggle) {
-      event.preventDefault();
-      event.stopPropagation();
-      toggleHeaderVariant();
-      return;
-    }
-
     var mobileInnerGroup = event.target.closest('[data-mobile-inner-toggle]');
     if (mobileInnerGroup) {
+      closeLanguageMenus();
       event.preventDefault();
       event.stopPropagation();
       toggleMobileInnerGroup(mobileInnerGroup);
@@ -872,15 +952,10 @@
 
     var mobileAppCategory = event.target.closest('[data-mobile-app-category-toggle]');
     if (mobileAppCategory) {
+      closeLanguageMenus();
       event.preventDefault();
       event.stopPropagation();
       toggleMobileAppCategory(mobileAppCategory);
-      return;
-    }
-
-    var variantToggle = event.target.closest('[data-header-variant-toggle]');
-    if (variantToggle) {
-      toggleHeaderVariant();
       return;
     }
 
@@ -924,6 +999,7 @@
   });
 
   document.addEventListener('click', function (event) {
+    if (!event.target.closest('[data-language-control]')) closeLanguageMenus();
     var drawer = mount.querySelector('[data-mobile-drawer]');
     if (drawer && !drawer.hidden &&
         !event.target.closest('[data-mobile-drawer]') &&
@@ -934,6 +1010,7 @@
 
   document.addEventListener('keydown', function (event) {
     if (event.key !== 'Escape') return;
+    closeLanguageMenus();
     closeMobileDrawer();
     footerMount.querySelectorAll('[data-footer-group-toggle]').forEach(function (button) {
       button.setAttribute('aria-expanded', 'false');
