@@ -1,0 +1,44 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel) || {
+  printf '%s\n' 'pre-push: unable to locate the repository root.' >&2
+  exit 1
+}
+
+cd "$repo_root"
+
+stale=''
+
+# Branch-level handoff note. Present on feature branches; absent on a branch
+# that has not adopted the approach yet.
+if [ -f scripts/sync-integration-handoff-history.mjs ] && [ -f INTEGRATION_HANDOFF.md ]; then
+  if ! node scripts/sync-integration-handoff-history.mjs; then
+    printf '%s\n' 'pre-push: integration handoff history sync failed; push aborted.' >&2
+    exit 1
+  fi
+  if ! git diff-index --quiet HEAD -- INTEGRATION_HANDOFF.md; then
+    stale="$stale INTEGRATION_HANDOFF.md"
+  fi
+fi
+
+# Repository-level branch index. Lives on the integration target.
+if [ -f scripts/sync-branch-status.mjs ] && [ -f BRANCH_STATUS.md ]; then
+  if ! node scripts/sync-branch-status.mjs; then
+    printf '%s\n' 'pre-push: branch status sync failed; push aborted.' >&2
+    exit 1
+  fi
+  if ! git diff-index --quiet HEAD -- BRANCH_STATUS.md; then
+    stale="$stale BRANCH_STATUS.md"
+  fi
+fi
+
+if [ -n "$stale" ]; then
+  printf 'pre-push: these notes differ from HEAD after the sync:%s\n' "$stale" >&2
+  printf '%s\n' 'Review the generated change, then stage and commit it before pushing.' >&2
+  printf '%s\n' 'The hook does not stage, commit, amend, or push changes automatically.' >&2
+  exit 1
+fi
+
+exit 0

@@ -22,7 +22,7 @@
 /* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
  * INBOUND:  logo, branch switcher (from B2B)
  * OUTBOUND:
- *   hero → Compare all tariffs — CONNECTED (/tariffs/compare/)
+ *   hero → Compare all tariffs — CONNECTED (/compare/)
  *   hero → See DigiMax — CONNECTED (/tariffs/mobile/prepaid/digimax/)
  *   hero → travel packs — PLANNED
  *   acquisitionBlock → Get a number — CONNECTED (azercellim.com)
@@ -30,8 +30,8 @@
  *   acquisitionBlock → Choose a tariff — CONNECTED (/tariffs/mobile/)
  *   acquisitionBlock → Switch to e-SIM — PLANNED
  *   acquisitionBlock → Get an Internet — CONNECTED (/tariffs/internet/)
- *   tariffs section → Compare all plans — CONNECTED (/tariffs/compare/)
- *   planCard → Compare — CONNECTED (/tariffs/compare/)
+ *   tariffs section → Compare all plans — CONNECTED (/compare/)
+ *   planCard → Compare — CONNECTED (/compare/?billing=prepaid|postpaid)
  *   planCard → Plan details — CONNECTED (all 6 tariffs)
  *   planCard → Kabinetim — CONNECTED (external)
  *   devices / services / reasons sections — PLANNED (mostly)
@@ -66,7 +66,7 @@
       media: 'Hero visual — DigiMax',
       actions: [
         { label: 'See DigiMax packs', href: href('/tariffs/mobile/prepaid/digimax/'), variant: 'primary' },
-        { label: 'Compare all tariffs', href: href('/tariffs/compare/') }
+        { label: 'Compare all tariffs', href: R.compareLabHref() }
       ],
       stats: [
         { value: '25GB', label: 'Internet' },
@@ -337,7 +337,7 @@
         eyebrow: 'Tariffs',
         title: 'Pick your perfect plan',
         body: 'Flexible plans built around how you actually use your phone. Choose a price to see what it includes.',
-        action: { label: 'Compare all plans', href: href('/tariffs/compare/') }
+        action: { label: 'Compare all plans', href: R.compareLabHref() }
       }) +
       render('carousel', {
         label: 'Prepaid and postpaid',

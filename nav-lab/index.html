@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Azercell — Desktop navigation probe</title>
+<meta name="description" content="Isolated desktop navigation probe for internal review.">
+<link rel="stylesheet" href="../assets/css/styles.css">
+<link rel="stylesheet" href="./navigation.css?v=20260826-1516">
+</head>
+<body>
+<!-- PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+     INBOUND: /sitemap (internal) — CONNECTED. No public header/footer.
+     OUTBOUND: Transfer your number → /nav-lab/transfer-number/ — CONNECTED
+               Compare tariffs → /compare/ — CONNECTED
+     Language/version: ?lang=en|az|ru and ?variant=v1|v2
+-->
+
+<div id="page-top">
+  <div id="navigation-probe"></div>
+</div>
+
+<main id="page-main" class="nav-probe__page">
+  <section class="nav-probe__placeholder" aria-label="Placeholder page content">
+    <div class="wrap">
+      <div class="ph ph--wide nav-probe__placeholder-hero" aria-hidden="true"></div>
+    </div>
+  </section>
+  <section class="nav-probe__acquisition" aria-labelledby="nav-probe-acquisition-title">
+    <div class="wrap">
+      <h2 id="nav-probe-acquisition-title" class="t-h1">Acquisition block</h2>
+      <div class="nav-probe__acquisition-grid" role="list" aria-label="Acquisition actions">
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Get a number</span>
+        </button>
+        <a class="nav-probe__acquisition-card cmp-quick__item" data-transfer-link href="transfer-number/?variant=v1" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Transfer your number</span>
+        </a>
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Choose a tariff</span>
+        </button>
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Switch to e-SIM</span>
+        </button>
+        <button type="button" class="nav-probe__acquisition-card cmp-quick__item" role="listitem">
+          <span class="ph ph--square nav-probe__acquisition-icon" aria-hidden="true"></span>
+          <span class="t-body">Get an Internet</span>
+        </button>
+      </div>
+    </div>
+  </section>
+  <section class="nav-probe__content-placeholder" aria-label="Placeholder content section">
+    <div class="wrap">
+      <div class="ph ph--wide nav-probe__content-placeholder-media" aria-hidden="true"></div>
+    </div>
+  </section>
+</main>
+
+<div class="nav-probe__floating-bar" aria-label="Floating navigation preview">
+  <div class="nav-probe__floating-main" data-floating-main role="group" aria-label="Customer shortcuts">
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Internet" aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Internet</span></button>
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Tariffs" aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Tariffs</span></button>
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Roaming" aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Roaming</span></button>
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Kinon" aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Kinon</span></button>
+    <div class="nav-probe__floating-popover" id="floating-popover" data-floating-popover role="dialog" aria-label="Floating navigation details" hidden>
+      <div data-floating-popover-content></div>
+    </div>
+  </div>
+  <button type="button" class="nav-probe__floating-search" data-floating-search aria-label="Search preview is inactive"><span class="t-small nav-probe__floating-label">Search</span></button>
+</div>
+
+<div id="footer-probe"></div>
+
+<script src="../assets/js/site-registry.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="./navigation.js?v=20260826-1516"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

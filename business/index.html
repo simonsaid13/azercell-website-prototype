@@ -20,12 +20,14 @@
 <script src="/assets/js/app.js"></script>
 <script>
 /* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
- * INBOUND:  logo, branch switcher (from B2C)
+ * INBOUND:  logo, branch switcher (from B2C), B2C homepage “Azercell Business”
  * OUTBOUND:
  *   tariff carousel → Plan details — PLANNED (/business/mobile/tariffs/)
  *   internet packs / solutions / IoT — PLANNED (business sub-routes)
  *   leadForm handoff — CONNECTED (contact, *6050)
- *   header/footer nav — mostly PLANNED
+ *   header/footer nav — mostly PLANNED (Vadym business chrome)
+ *   solutions block → IoT / fleet / automation / engagement — PLANNED
+ *   floating bar → internet / tariffs / roaming / Azercell Biznes — PLANNED / CONNECTED
  */
 (function () {
   var R = SiteRegistry;
@@ -35,6 +37,16 @@
 
   var BIZNES = 'https://biznes.azercell.com';
   var CONTACT = href('/about/contact/');
+  var businessSolutions = {
+    title: 'Solution block',
+    variant: 'solutions',
+    items: [
+      { label: 'IoT & M2M', body: 'Connect devices and automate data exchange', href: href('/business/iot/') },
+      { label: 'Fleet & field operations', body: 'Track vehicles, teams and field work', href: href('/business/fleet-field-operations/') },
+      { label: 'Automation & management', body: 'Streamline workflows and manage devices', href: href('/business/automation-management/') },
+      { label: 'Customer engagement', body: 'Reach customers across every channel', href: href('/business/customer-engagement/') }
+    ]
+  };
 
   /* ---------------------------------------------------------------- Chrome */
 
@@ -44,7 +56,7 @@
   ]);
 
   Components.mount('#page-bottom', [['siteFooter', chrome.businessFooter]]);
-  /* Chat removed. Business keeps classic chrome only. */
+  Components.mount('#page-chat', [['floatingBar', chrome.businessFloatingBar]]);
 
   /* ------------------------------------------------------------------ Data */
 
@@ -394,6 +406,8 @@
 
   Components.mount('#page-main', [
     ['heroBanner', { slides: heroSlides }],
+
+    render('acquisitionBlock', businessSolutions),
 
     section(
       render('sectionHead', {

@@ -1,0 +1,86 @@
+.nav-probe__transfer-page {
+  padding-top: calc(98px + var(--sp-6));
+}
+
+.nav-probe__transfer-hero {
+  border-bottom: 1px solid var(--c-line);
+}
+
+.nav-probe__transfer-hero-grid {
+  display: grid;
+  gap: var(--sp-6);
+  min-height: 520px;
+  padding-block: var(--sp-8);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.nav-probe__transfer-hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--sp-5);
+  min-width: 0;
+}
+
+.nav-probe__transfer-hero-copy .t-display {
+  max-width: 12ch;
+}
+
+.nav-probe__transfer-placeholder {
+  padding-block: var(--sp-6);
+}
+
+.nav-probe__transfer-placeholder .ph {
+  min-height: 260px;
+}
+
+/* Elevate the owning chrome stacking context so the Header can occlude the
+   product floating controls when their fixed/docked rectangles overlap. */
+.nav-probe-transfer-page #page-top {
+  z-index: 50;
+}
+
+.nav-probe-transfer-page .nav-probe__floating-bar--product {
+  z-index: 40;
+}
+
+.nav-probe__floating-bar--product {
+  width: auto;
+  right: auto;
+  left: 50%;
+  margin-inline: 0;
+  transform: translateX(-50%);
+}
+
+.nav-probe__floating-bar--product .nav-probe__floating-main {
+  display: flex;
+  flex: 0 0 auto;
+}
+
+.nav-probe__floating-transfer {
+  min-height: 40px;
+  padding: var(--sp-2) var(--sp-3);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nav-probe__floating-bar--product[data-floating-docked="true"] {
+  width: auto;
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (min-width: 1024px) {
+  .nav-probe__transfer-hero-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 767px) {
+  .nav-probe__transfer-page {
+    padding-top: calc(64px + var(--sp-6));
+  }
+}

@@ -8,7 +8,7 @@
 
   var cross = function (id, title) {
     return [
-      { label: 'Compare ' + title + ' with other plans', href: '/tariffs/compare/?add=' + id, variant: 'primary' },
+      { label: 'Compare ' + title + ' with other plans', href: '/compare/?billing=' + (id === 'alfa' ? 'postpaid' : 'prepaid'), variant: 'primary' },
       { label: 'All mobile tariffs', href: '/tariffs/mobile/' }
     ];
   };

@@ -296,7 +296,7 @@
     ],
     legal: 'All prices VAT inclusive. Tariff allowances are for personal use only.',
     crossLinks: [
-      { label: 'Compare DigiMax with other plans', href: '/tariffs/compare/?add=digimax', variant: 'primary' },
+      { label: 'Compare DigiMax with other plans', href: '/compare/?billing=prepaid', variant: 'primary' },
       { label: 'All mobile tariffs', href: '/tariffs/mobile/' }
     ]
   };

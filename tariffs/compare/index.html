@@ -21,8 +21,8 @@
 <script src="/assets/js/app.js"></script>
 <script>
 /* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
- * INBOUND:  homepage → Compare all plans, Compare all tariffs;
- *           /tariffs/mobile/ → Compare plans; plan cards → Compare (via ?add=)
+ * INBOUND:  internet packs still send Compare here; /sitemap
+ *           (personal prepaid/postpaid Compare buttons now go to /compare/)
  * OUTBOUND:
  *   compare tool → plan details — CONNECTED (all 6 tariffs)
  *   compare tool → Kabinetim / Find store — CONNECTED
@@ -63,7 +63,7 @@
       render('calloutBanner', {
         eyebrow: 'Need the full list?',
         title: 'Browse every mobile tariff',
-        body: 'Filter prepaid, postpaid and data-only plans on the tariffs page. Use Compare on any card to add it here.',
+        body: 'Filter prepaid, postpaid and data-only plans on the tariffs page.',
         actions: [
           { label: 'All mobile tariffs', href: href('/tariffs/mobile/'), variant: 'primary' }
         ]

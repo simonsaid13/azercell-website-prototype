@@ -3,6 +3,30 @@
 A wireframe-level HTML prototype of the Azercell website revamp. It stands in for wireframes:
 plain HTML, CSS and JavaScript, no build step, no framework, no dependencies.
 
+## Working across branches
+
+Several branches build in parallel and merge back here. [`BRANCH_STATUS.md`](BRANCH_STATUS.md) is
+the index: what each branch contains, how ready it is, and which files two branches are about to
+fight over. Each feature branch carries its own [`INTEGRATION_HANDOFF.md`](INTEGRATION_HANDOFF.template.md)
+with the detail. Agents are required to read both by [`AGENTS.md`](AGENTS.md).
+
+Enable the safe pre-push check once per checkout:
+
+```bash
+node scripts/install-integration-hooks.mjs
+```
+
+Refresh the notes manually, or check them without writing:
+
+```bash
+node scripts/sync-branch-status.mjs --fetch
+node scripts/sync-branch-status.mjs --check
+```
+
+The hook refreshes both notes before a push and stops if either still needs a commit. It never
+stages, commits, amends, or pushes automatically. Only committed history is included, so an
+unfinished local experiment is never published as branch truth.
+
 ## Run it
 
 ```bash
@@ -10,6 +34,8 @@ python3 -m http.server 4173
 ```
 
 Then open http://localhost:4173/
+
+Live preview: https://azercell-prototype.vercel.app
 
 A local server is required — the pages use absolute paths such as `/assets/css/styles.css`.
 
@@ -30,6 +56,7 @@ assets/js/components.js    The component library — one function per block
 assets/js/site-registry.js Page registry, component registry, shared header/footer content
 assets/js/app.js           Shared interactions (menus, tabs, carousels, filters)
 scripts/audit.mjs          Rule checker
+scripts/sync-*.mjs         Branch note generators (see Working across branches)
 ```
 
 Pages contain almost no markup. They import the three scripts, describe their content as data,

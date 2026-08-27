@@ -63,7 +63,7 @@
     var R = global.SiteRegistry;
     var compareHref = tariff.compareId && R && R.tariffCompareHref
       ? R.tariffCompareHref(tariff.compareId, tierIndex)
-      : href('/tariffs/compare/?add=' + (tariff.compareId || tariff.id));
+      : href('/compare/?billing=' + (tariff.compareId === 'alfa' ? 'postpaid' : 'prepaid'));
     return {
       tierId: tier.id,
       name: tier.label,
@@ -128,11 +128,12 @@
     }).join('');
 
     var crossLinks = (tariff.crossLinks || []).map(function (link) {
+      var isCompare = link.href.indexOf('/tariffs/compare/') === 0 || link.href.indexOf('/compare/') === 0;
       return {
         label: link.label,
-        href: href(link.href.indexOf('/tariffs/compare/') === 0 && tariff.compareId && R && R.tariffCompareHref
-          ? R.tariffCompareHref(tariff.compareId, 0)
-          : link.href),
+        href: isCompare && tariff.compareId && R && R.tariffCompareHref
+          ? R.tariffCompareHref(tariff.compareId)
+          : href(link.href),
         variant: link.variant
       };
     });

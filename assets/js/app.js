@@ -15,6 +15,10 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(selector));
   }
 
+  function isNavProbePage() {
+    return !!document.querySelector('[data-nav-probe]');
+  }
+
   /* ----------------------------------------------------------------------
      Announcement bar
      ---------------------------------------------------------------------- */
@@ -82,11 +86,28 @@
         btn.setAttribute('aria-expanded', 'false');
       }
     });
+    all(header, '[data-menu-link]').forEach(function (link) {
+      if (link.getAttribute('data-menu-link') !== except) {
+        link.setAttribute('aria-expanded', 'false');
+      }
+    });
     all(header, '[data-menu-panel]').forEach(function (panel) {
       if (panel.getAttribute('data-menu-panel') !== except) {
         panel.setAttribute('data-open', 'false');
       }
     });
+  }
+
+  function openMenu(header, key) {
+    var btn = header && header.querySelector('[data-menu-toggle="' + key + '"]');
+    var link = header && header.querySelector('[data-menu-link="' + key + '"]');
+    var panel = header && header.querySelector('[data-menu-panel="' + key + '"]');
+    if (!panel) return;
+    closeMenus(header, key);
+    closeHeaderSearch(header);
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+    if (link) link.setAttribute('aria-expanded', 'true');
+    panel.setAttribute('data-open', 'true');
   }
 
   function toggleMenu(header, key) {
@@ -98,6 +119,8 @@
     closeMenus(header, key);
     closeHeaderSearch(header);
     btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    var link = header.querySelector('[data-menu-link="' + key + '"]');
+    if (link) link.setAttribute('aria-expanded', open ? 'false' : 'true');
     panel.setAttribute('data-open', open ? 'false' : 'true');
   }
 
@@ -1115,6 +1138,7 @@
 
     var variantToggle = closest(el, '[data-header-variant-toggle], [data-mobile-variant-toggle]');
     if (variantToggle) {
+      if (isNavProbePage()) return;
       event.preventDefault();
       setNavVariant(navVariant() === 'v1' ? 'v2' : 'v1');
       return;
@@ -1433,8 +1457,32 @@
     all(document, '[data-roam-search-wrap]').forEach(initRoamingCountrySearch);
 
     document.addEventListener('mouseover', function (event) {
+      var menuHover = closest(event.target, '[data-menu-hover]');
+      if (menuHover) {
+        var businessHeader = closest(menuHover, '[data-header][data-branch="business"]');
+        if (businessHeader) openMenu(businessHeader, menuHover.getAttribute('data-menu-hover'));
+      }
       var appTrigger = closest(event.target, '[data-app-trigger]');
       if (appTrigger) activateAppPromo(appTrigger);
+      var detailTrigger = closest(event.target, '[data-detail-trigger]');
+      if (detailTrigger && closest(detailTrigger, '[data-detail-hover="true"]')) activateDetail(detailTrigger);
+    });
+
+    document.addEventListener('mouseout', function (event) {
+      var businessHeader = closest(event.target, '[data-header][data-branch="business"]');
+      if (businessHeader && (!event.relatedTarget || !businessHeader.contains(event.relatedTarget))) {
+        closeMenus(businessHeader, null);
+      }
+    });
+
+    document.addEventListener('focusin', function (event) {
+      var detailTrigger = closest(event.target, '[data-detail-trigger]');
+      if (detailTrigger && closest(detailTrigger, '[data-detail-hover="true"]')) activateDetail(detailTrigger);
+      var menuControl = closest(event.target, '[data-menu-link], [data-menu-toggle]');
+      var businessHeader = closest(menuControl, '[data-header][data-branch="business"]');
+      if (!businessHeader || !menuControl) return;
+      var key = menuControl.getAttribute('data-menu-link') || menuControl.getAttribute('data-menu-toggle');
+      openMenu(businessHeader, key);
     });
 
     window.addEventListener('resize', function () {
@@ -1448,10 +1496,11 @@
 
     window.addEventListener('scroll', scheduleFloatingDocking, { passive: true });
     scheduleFloatingDocking();
-    initTransferFloatingCta();
-
-    var variantParam = new URLSearchParams(window.location.search).get('variant');
-    setNavVariant(variantParam === 'v2' ? 'v2' : 'v1');
+    if (!isNavProbePage()) {
+      initTransferFloatingCta();
+      var variantParam = new URLSearchParams(window.location.search).get('variant');
+      setNavVariant(variantParam === 'v2' ? 'v2' : 'v1');
+    }
   }
 
   window.PrototypeApp = {

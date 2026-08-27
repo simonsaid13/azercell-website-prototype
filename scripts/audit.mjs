@@ -4,8 +4,9 @@
  * Usage: node scripts/audit.mjs
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, extname } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
@@ -146,6 +147,30 @@ const chromeBlock = registryText.slice(
 for (const hidden of ['/sitemap/', '/components/']) {
   if (chromeBlock.includes(hidden)) {
     fail('assets/js/site-registry.js', 0, `Hidden route ${hidden} is linked from public navigation`);
+  }
+}
+
+/* ------------------------------------------------- Branch handoff freshness */
+
+/* Each entry is skipped when the branch has not adopted that note yet. */
+const HANDOFF_CHECKS = [
+  { note: 'BRANCH_STATUS.md', script: 'scripts/sync-branch-status.mjs' },
+  { note: 'INTEGRATION_HANDOFF.md', script: 'scripts/sync-integration-handoff-history.mjs' }
+];
+
+for (const { note, script } of HANDOFF_CHECKS) {
+  if (!existsSync(join(ROOT, note)) || !existsSync(join(ROOT, script))) continue;
+  try {
+    execFileSync(process.execPath, [join(ROOT, script), '--check'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+  } catch (error) {
+    const detail = String(error.stderr || error.stdout || error.message || 'freshness check failed')
+      .trim()
+      .replace(/\s+/g, ' ');
+    fail(note, 0, detail);
   }
 }
 

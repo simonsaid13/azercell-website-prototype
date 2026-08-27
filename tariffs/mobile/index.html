@@ -23,8 +23,8 @@
  * INBOUND:  header → Mobile → All mobile tariffs; Prepaid/Postpaid (?type=);
  *           homepage → Compare all plans, Change plan; footer → Tariffs; support chat
  * OUTBOUND:
- *   sectionHead → Compare plans — CONNECTED (/tariffs/compare/)
- *   planCard → Compare — CONNECTED (/tariffs/compare/)
+ *   sectionHead → Compare plans — CONNECTED (/compare/)
+ *   planCard → Compare — CONNECTED (/compare/?billing=prepaid|postpaid)
  *   filter tabs — URL ?type=all|prepaid|postpaid|data-only — CONNECTED (synced)
  *   calloutBanner → prepaid archive — CONNECTED
  *   planCard → Plan details — CONNECTED (all 6 tariffs)
@@ -289,7 +289,7 @@
         eyebrow: 'Mobile tariffs',
         title: 'Pick a plan that fits how you use your phone',
         body: 'Prepaid packs renew on your schedule. Postpaid Alfa Plan runs on a monthly contract. Choose a price tier on each card to see what is included.',
-        action: { label: 'Compare plans', href: href('/tariffs/compare/') }
+        action: { label: 'Compare plans', href: R.compareLabHref() }
       })
     ),
 
