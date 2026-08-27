@@ -8,6 +8,11 @@
   var MAX_COLUMNS = 5;
   if (!root || !source) return;
 
+  if ((new URLSearchParams(window.location.search).get('lang') || '').toUpperCase() === 'RU') {
+    runRuVersion();
+    return;
+  }
+
   function esc(value) {
     return String(value == null ? '—' : value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
@@ -30,7 +35,7 @@
   }
 
   var state = { billing: billingFromUrl(), view: viewFromUrl(), ids: [] };
-  function defaultSelection(billing) { return catalog(billing).slice(0, 3).map(function (tariff) { return tariff.id; }); }
+  function defaultSelection(billing) { return catalog(billing).slice(0, window.innerWidth < 1024 ? 2 : 3).map(function (tariff) { return tariff.id; }); }
   state.ids = defaultSelection(state.billing);
   function byId(id) { return catalog(state.billing).find(function (tariff) { return tariff.id === id; }); }
   function selected() { return state.ids.map(byId).filter(Boolean); }
@@ -103,10 +108,25 @@
       return '<a data-billing="' + billing + '" href="' + billingUrl(billing) + '"' + (state.billing === billing ? ' aria-current="page"' : '') + '>' + (billing === 'prepaid' ? 'Prepaid' : 'Postpaid') + '</a>';
     }).join('') + '</nav><div class="tcl-selection-stepper" aria-label="Number of tariffs selected"><button class="t-body" type="button" data-remove-last' + (canRemove ? '' : ' disabled') + ' aria-label="Remove the last tariff">− <span>Remove</span></button><strong class="t-body">' + state.ids.length + ' selected</strong><button class="t-body" type="button" data-add-next' + (canAdd ? '' : ' disabled') + ' aria-label="Add another tariff">+ <span>Add</span></button></div></div>';
   }
-  function render() {
+  function legacyScrollSelector() { return state.view === 'compact' ? '.tcl-compact-scroll' : '.tcl-table-scroll'; }
+  function readScrollLeft(selector) {
+    var scroll = root.querySelector(selector);
+    return scroll ? scroll.scrollLeft : 0;
+  }
+  function restoreScrollLeft(selector, scrollLeft, callback) {
+    window.requestAnimationFrame(function () {
+      var scroll = root.querySelector(selector);
+      if (scroll) scroll.scrollLeft = Math.max(0, Math.min(scrollLeft, scroll.scrollWidth - scroll.clientWidth));
+      if (callback) callback();
+    });
+  }
+  function render(preserveScroll) {
+    var selector = legacyScrollSelector();
+    var previousScrollLeft = preserveScroll ? readScrollLeft(selector) : 0;
     normalize();
     var selectedTariffs = selected();
     root.innerHTML = '<section class="tcl-hero" id="top"><div class="wrap"><h1 class="t-display">Compare tariffs</h1><p class="t-lead t-muted">Choose the tariffs you want to compare and find the option that fits you best.</p></div></section><section class="tcl-compare-shell" id="compare" aria-label="Tariff comparison">' + controls() + (state.view === 'compact' ? compact(selectedTariffs) : detailed(selectedTariffs)) + '<p class="tcl-footnote t-small"><strong>Note:</strong> renewal periods differ between plans. Compare each price together with the validity shown directly below it. Prices include VAT.</p><p class="tcl-sr-only" role="status" aria-live="polite">' + state.ids.length + ' tariffs selected.</p></section>';
+    restoreScrollLeft(selector, previousScrollLeft);
     var footer = document.querySelector('#footer-probe footer');
     if (footer) footer.setAttribute('aria-label', 'Footer');
   }
@@ -115,14 +135,14 @@
     state.billing = billing;
     state.ids = defaultSelection(billing);
     if (push) window.history.pushState({ billing: billing, view: state.view }, '', billingUrl(billing));
-    render();
+    render(false);
     root.focus();
   }
   root.addEventListener('click', function (event) {
     var billing = event.target.closest('[data-billing]');
     if (billing) { event.preventDefault(); setBilling(billing.getAttribute('data-billing'), true); return; }
-    if (event.target.closest('[data-add-next]')) { var next = catalog(state.billing).find(function (tariff) { return state.ids.indexOf(tariff.id) === -1; }); if (next && state.ids.length < MAX_COLUMNS) state.ids.push(next.id); render(); return; }
-    if (event.target.closest('[data-remove-last]') && state.ids.length > MIN_COLUMNS) { state.ids.pop(); render(); }
+    if (event.target.closest('[data-add-next]')) { var next = catalog(state.billing).find(function (tariff) { return state.ids.indexOf(tariff.id) === -1; }); if (next && state.ids.length < MAX_COLUMNS) state.ids.push(next.id); render(true); return; }
+    if (event.target.closest('[data-remove-last]') && state.ids.length > MIN_COLUMNS) { state.ids.pop(); render(true); }
   });
   root.addEventListener('change', function (event) {
     var select = event.target.closest('[data-column-select]');
@@ -131,7 +151,7 @@
     var nextId = select.value;
     if (!byId(nextId) || (state.ids.indexOf(nextId) !== -1 && state.ids[index] !== nextId)) return;
     state.ids[index] = nextId;
-    render();
+    render(true);
     var replacement = root.querySelector('[data-column-select="' + index + '"]');
     if (replacement) replacement.focus();
   });
@@ -145,12 +165,172 @@
       var option = event.target.closest('[data-language-option]');
       if (!option) return;
       var language = option.getAttribute('data-language-option');
+      if (language === 'RU') { window.location.reload(); return; }
       if (language === 'EN') state.view = 'compact';
       if (language === 'AZ') state.view = 'detailed';
       window.history.replaceState({ billing: state.billing, view: state.view }, '', stateUrl(state.billing));
-      render();
+      render(false);
     });
   }
   window.history.replaceState({ billing: state.billing, view: state.view }, '', stateUrl(state.billing));
-  render();
+  render(false);
+
+  function runRuVersion() {
+    var ruTariffs = list(source.ruTariffs);
+    var familyOrder = {
+      prepaid: ['DigiMax', 'Premium+', 'Data+', 'Veteran', 'Əsgərcell'],
+      postpaid: ['Alfa Plan']
+    };
+    var recommended = {
+      'DigiMax': 'digimax-10',
+      'Premium+': 'premium-60',
+      'Data+': 'data-plus-12',
+      'Veteran': 'veteran',
+      'Əsgərcell': 'esgercell',
+      'Alfa Plan': 'alfa-60'
+    };
+    var RU_MIN_COLUMNS = 2;
+    var RU_MAX_COLUMNS = 5;
+    var ruState = { ids: ['digimax-10', 'premium-60'] };
+    var ruFeatureBlocks = [
+      { title: 'Plan details', items: [{ key: 'validity', label: 'Validity' }] },
+      { title: 'Internet', items: [{ key: 'internet', label: 'Included data' }, { key: 'whatsapp', label: 'WhatsApp data' }, { key: 'social', label: 'Social media data' }] },
+      { title: 'Calls and messages', items: [{ key: 'calls', label: 'Countrywide calls' }, { key: 'sms', label: 'Countrywide SMS' }] },
+      { title: 'Roaming', items: [{ key: 'roaming', label: 'Roaming data' }] },
+      { title: 'Contract options', items: [{ key: 'contract.12Month', label: '12-month contract' }, { key: 'contract.24Month', label: '24-month contract' }] },
+      { title: 'Activation', items: [{ key: 'activation', label: 'Activation code' }] }
+    ];
+
+    function ruById(id) { return ruTariffs.find(function (tariff) { return tariff.id === id; }); }
+    function ruSelected() { return ruState.ids.map(ruById).filter(Boolean); }
+    function ruFamilyTariffs(family) { return ruTariffs.filter(function (tariff) { return tariff.family === family; }); }
+    function ruDefaultId(family) { return recommended[family] || (ruFamilyTariffs(family)[0] || {}).id; }
+    function ruValue(tariff, key) {
+      if (key === 'validity') return tariff.validity;
+      if (key.indexOf('.') !== -1) return key.split('.').reduce(function (item, part) { return item && item[part] != null ? item[part] : null; }, tariff) || '—';
+      return tariff.features && tariff.features[key] != null ? tariff.features[key] : (tariff[key] != null ? tariff[key] : '—');
+    }
+    function ruPrice(tariff) { return tariff.price && tariff.price.display ? tariff.price.display : '—'; }
+    function ruLink(tariff, className) {
+      return '<a class="' + className + '" href="' + esc(tariff.url) + '" target="_blank" rel="noreferrer" aria-label="View tariff: ' + esc(tariff.name) + '">View tariff <span aria-hidden="true">↗</span></a>';
+    }
+    function familySelect(tariff, index) {
+      return '<label class="tcl-sr-only" for="ru-family-' + index + '">Tariff family for tariff ' + (index + 1) + '</label>' +
+        '<div class="tcl-select-wrap"><select class="t-body" id="ru-family-' + index + '" data-ru-family-select="' + index + '">' +
+          ['prepaid', 'postpaid'].map(function (billing) {
+            return '<optgroup label="' + (billing === 'prepaid' ? 'Prepaid' : 'Postpaid') + '">' + familyOrder[billing].map(function (family) {
+              return '<option value="' + esc(family) + '"' + (tariff.family === family ? ' selected' : '') + '>' + esc(family) + '</option>';
+            }).join('') + '</optgroup>';
+          }).join('') +
+        '</select></div>';
+    }
+    function variantSelect(tariff, index) {
+      var variants = ruFamilyTariffs(tariff.family);
+      if (variants.length < 2) return '';
+      return '<label class="tcl-sr-only" for="ru-variant-' + index + '">Variant for ' + esc(tariff.family) + '</label>' +
+        '<div class="tcl-select-wrap tcl-ru-variant-select"><select class="t-small" id="ru-variant-' + index + '" data-ru-variant-select="' + index + '">' +
+          variants.map(function (variant) {
+            var label = variant.name.replace(tariff.family, '').trim() || variant.name;
+            return '<option value="' + esc(variant.id) + '"' + (variant.id === tariff.id ? ' selected' : '') + '>' + esc(label) + '</option>';
+          }).join('') +
+        '</select></div>';
+    }
+    function ruSummary(tariff, index, isRail) {
+      var canRemove = ruState.ids.length > RU_MIN_COLUMNS;
+      var billingLabel = tariff.billing === 'postpaid' ? 'Postpaid' : 'Prepaid';
+      return '<div class="tcl-ru-summary' + (isRail ? ' tcl-ru-summary--rail' : '') + '">' +
+        '<button type="button" class="tcl-ru-remove" data-ru-remove="' + index + '" aria-label="Remove ' + esc(tariff.name) + '"' + (canRemove ? '' : ' disabled aria-disabled="true"') + '>×</button>' +
+        (isRail ? '' : familySelect(tariff, index) + variantSelect(tariff, index)) +
+        '<div class="tcl-ru-summary__main">' +
+          '<div class="tcl-plan-meta t-small"><span>' + billingLabel + '</span></div>' +
+          (isRail ? '<h2 class="t-h3">' + esc(tariff.name) + '</h2>' : '') +
+          '<p class="tcl-compact-price t-small"><strong class="t-h4">' + esc(ruPrice(tariff)) + '</strong><span> / ' + esc(String(tariff.validity).toLowerCase()) + '</span></p>' +
+          ruLink(tariff, 'tcl-plan-head__link t-body') +
+        '</div>' +
+      '</div>';
+    }
+    function ruFeatures(tariff) {
+      return '<div class="tcl-ru-features">' + ruFeatureBlocks.map(function (block) {
+        return '<section class="tcl-ru-feature-block"><h3 class="t-h4">' + esc(block.title) + '</h3><div class="tcl-feature-lines">' + block.items.map(function (item) {
+          return '<p><strong class="t-h4">' + esc(ruValue(tariff, item.key)) + '</strong><span class="t-small">' + esc(item.label) + '</span></p>';
+        }).join('') + '</div></section>';
+      }).join('') + '</div>';
+    }
+    function ruColumn(tariff, index) {
+      return '<article class="tcl-ru-column">' + ruSummary(tariff, index, false) + ruFeatures(tariff) + '</article>';
+    }
+    function ruEmpty() {
+      return '<div class="tcl-ru-empty"><p class="t-body">Add a tariff to start comparing.</p></div>';
+    }
+    function renderRu(preserveScroll) {
+      var previousScrollLeft = preserveScroll ? readScrollLeft('[data-ru-scroll]') : 0;
+      var selectedTariffs = ruSelected();
+      root.innerHTML = '<section class="tcl-hero" id="top"><div class="wrap"><h1 class="t-display">Compare tariffs</h1><p class="t-lead t-muted">Choose the tariffs you want to compare and find the option that fits you best.</p></div></section>' +
+        '<section class="tcl-compare-shell tcl-ru-shell" id="compare" aria-label="Tariff comparison">' +
+          '<div class="tcl-ru-actions"><button class="tcl-ru-add t-body" type="button" data-ru-add aria-label="Add another tariff"' + (selectedTariffs.length < RU_MAX_COLUMNS ? '' : ' disabled') + '><span aria-hidden="true">+</span><span>Add tariff</span></button></div>' +
+          '<div class="tcl-ru-scroll" data-ru-scroll tabindex="0" role="region" aria-label="Tariff comparison">' +
+            (selectedTariffs.length ? '<div class="tcl-ru-grid" style="--tcl-ru-columns:' + selectedTariffs.length + '">' + selectedTariffs.map(ruColumn).join('') + '</div>' : ruEmpty()) +
+          '</div>' +
+          '<div class="tcl-ru-sticky-rail" data-ru-sticky-rail hidden><div class="tcl-ru-sticky-grid" data-ru-sticky-grid style="--tcl-ru-columns:' + selectedTariffs.length + '">' + selectedTariffs.map(function (tariff, index) { return ruSummary(tariff, index, true); }).join('') + '</div></div>' +
+          '<p class="tcl-footnote t-small"><strong>Note:</strong> renewal periods differ between plans. Compare each price together with the validity shown directly below it. Prices include VAT.</p>' +
+          '<p class="tcl-sr-only" role="status" aria-live="polite">' + selectedTariffs.length + ' tariffs selected.</p>' +
+        '</section>';
+      var footer = document.querySelector('#footer-probe footer');
+      if (footer) footer.setAttribute('aria-label', 'Footer');
+      restoreScrollLeft('[data-ru-scroll]', previousScrollLeft, syncRuSticky);
+    }
+    function ruReplace(index, id) {
+      if (!ruById(id) || index < 0 || index >= ruState.ids.length) return;
+      ruState.ids[index] = id;
+      renderRu(true);
+    }
+    function syncRuSticky() {
+      var scroll = root.querySelector('[data-ru-scroll]');
+      var shell = root.querySelector('.tcl-ru-shell');
+      var rail = root.querySelector('[data-ru-sticky-rail]');
+      var railGrid = root.querySelector('[data-ru-sticky-grid]');
+      var firstSummary = root.querySelector('.tcl-ru-column .tcl-ru-summary');
+      var header = document.querySelector('[data-header]');
+      if (!scroll || !shell || !rail || !railGrid || !firstSummary || !header) return;
+      var headerBottom = header.getBoundingClientRect().bottom;
+      var shellRect = shell.getBoundingClientRect();
+      var scrollRect = scroll.getBoundingClientRect();
+      var railHeight = rail.offsetHeight || firstSummary.getBoundingClientRect().height;
+      var shouldShowRail = firstSummary.getBoundingClientRect().top <= headerBottom && shellRect.bottom > headerBottom + railHeight + 16;
+      rail.hidden = !shouldShowRail;
+      if (shouldShowRail) {
+        var gridRect = scroll.firstElementChild.getBoundingClientRect();
+        rail.style.top = Math.max(0, headerBottom) + 'px';
+        rail.style.left = scrollRect.left + 'px';
+        rail.style.width = scroll.clientWidth + 'px';
+        railGrid.style.transform = 'translateX(' + (gridRect.left - scrollRect.left) + 'px)';
+      }
+    }
+    root.addEventListener('click', function (event) {
+      var remove = event.target.closest('[data-ru-remove]');
+      if (remove) {
+        var removeIndex = Number(remove.getAttribute('data-ru-remove'));
+        if (removeIndex >= 0 && ruState.ids.length > RU_MIN_COLUMNS) { ruState.ids.splice(removeIndex, 1); renderRu(true); }
+        return;
+      }
+      if (event.target.closest('[data-ru-add]') && ruState.ids.length < RU_MAX_COLUMNS) { ruState.ids.push('digimax-10'); renderRu(true); }
+    });
+    root.addEventListener('change', function (event) {
+      var family = event.target.closest('[data-ru-family-select]');
+      if (family) { ruReplace(Number(family.getAttribute('data-ru-family-select')), ruDefaultId(family.value)); return; }
+      var variant = event.target.closest('[data-ru-variant-select]');
+      if (variant) ruReplace(Number(variant.getAttribute('data-ru-variant-select')), variant.value);
+    });
+    root.addEventListener('scroll', syncRuSticky, true);
+    window.addEventListener('scroll', syncRuSticky, { passive: true });
+    window.addEventListener('resize', syncRuSticky);
+    var navigationMount = document.getElementById('navigation-probe');
+    if (navigationMount) {
+      navigationMount.addEventListener('click', function (event) {
+        var option = event.target.closest('[data-language-option]');
+        if (option && option.getAttribute('data-language-option') !== 'RU') window.location.reload();
+      });
+    }
+    renderRu(false);
+  }
 }());
