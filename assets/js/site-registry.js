@@ -729,7 +729,7 @@
       name: 'Site header',
       group: 'Global chrome',
       usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']),
-      description: 'Personal: utility bar plus mega menus (Company, Mobile, TV, Apps, Devices, Campaigns, Support). Business keeps the classic mega menu. EN/AZ is a hidden switch between two Apps layouts.',
+      description: 'Personal chrome shared by Personal routes and the Business homepage: utility bar plus mega menus (Company, Mobile, TV, Apps, Devices, Campaigns, Support). EN/AZ is a hidden switch between two Apps layouts.',
       props: {
         layout: 'personal',
         branch: 'personal',
@@ -747,8 +747,8 @@
       id: 'floatingBar',
       name: 'Floating bar',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.slice(),
-      description: 'Shortcut bar for Internet, Tariffs, Roaming and Kinon. On the transfer page it changes to a Start transfer action after the hero button scrolls away.',
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']),
+      description: 'Shortcut bar for Internet, Tariffs, Roaming and Kinon, shared with the Business homepage. On the transfer page it changes to a Start transfer action after the hero button scrolls away.',
       props: SITE_CHROME.floatingBar
     },
     {
@@ -784,7 +784,7 @@
       name: 'Site footer',
       group: 'Global chrome',
       usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']),
-      description: 'Personal: brand, subscribe, sitemap-style columns, app download card, legal and social. Business keeps the four-column footer.',
+      description: 'Personal footer shared by Personal routes and the Business homepage: brand, subscribe, sitemap-style columns, app download card, legal and social.',
       props: SITE_CHROME.footer
     },
     {

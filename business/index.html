@@ -25,7 +25,7 @@
  *   tariff carousel → Plan details — PLANNED (/business/mobile/tariffs/)
  *   internet packs / solutions / IoT — PLANNED (business sub-routes)
  *   leadForm handoff — CONNECTED (contact, *6050)
- *   header/footer nav — mostly PLANNED
+ *   Personal announcement/header/floating bar/footer — CONNECTED / PLANNED per PAGE_CONNECTIONS.md
  */
 (function () {
   var R = SiteRegistry;
@@ -35,16 +35,18 @@
 
   var BIZNES = 'https://biznes.azercell.com';
   var CONTACT = href('/about/contact/');
+  var personalHeader = R.headerProps({ branch: 'personal' });
+  personalHeader.branch = 'business';
 
   /* ---------------------------------------------------------------- Chrome */
 
   Components.mount('#page-top', [
-    ['announcementBar', { messages: chrome.businessAnnouncements }],
-    ['siteHeader', R.headerProps({ branch: 'business' })]
+    ['announcementBar', { messages: chrome.announcements }],
+    ['siteHeader', personalHeader]
   ]);
 
-  Components.mount('#page-bottom', [['siteFooter', chrome.businessFooter]]);
-  /* Chat removed. Business keeps classic chrome only. */
+  Components.mount('#page-bottom', [['siteFooter', chrome.footer]]);
+  Components.mount('#page-chat', [['floatingBar', chrome.floatingBar]]);
 
   /* ------------------------------------------------------------------ Data */
 

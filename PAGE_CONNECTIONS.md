@@ -290,14 +290,16 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Tariff carousel → Plan details | `/business/mobile/tariffs/` | PLANNED |
 | Internet packs, solutions, IoT sections | Various `/business/…` routes | PLANNED |
 | Lead form handoff | Contact / *6050 | CONNECTED |
-| Header nav | B2B `SITE_CHROME.businessNav` | Mixed (mostly PLANNED) |
-| Footer | B2B footer columns | Mixed |
+| Announcement bar | Personal `SITE_CHROME.announcements` | CONNECTED |
+| Header nav | Personal `SITE_CHROME.nav`; Business audience tab active | Mixed (see Personal header section) |
+| Floating bar | Personal `SITE_CHROME.floatingBar` | Mixed (see Floating bar section) |
+| Footer | Personal `SITE_CHROME.footer` | Mixed (see Personal footer section) |
 
 ---
 
 ## Header navigation (`SITE_CHROME.nav` — B2C Personal)
 
-Personal chrome: Company, Mobile, TV, Apps, Devices, Campaigns, Support. Business keeps `SITE_CHROME.businessNav` (classic mega menu, no floating bar, no chat).
+Personal chrome: Company, Mobile, TV, Apps, Devices, Campaigns, Support. The Business homepage reuses the same chrome and actions, with the Business audience tab active.
 
 | Nav item | Target | Status |
 |----------|--------|--------|
@@ -326,7 +328,7 @@ Personal chrome: Company, Mobile, TV, Apps, Devices, Campaigns, Support. Busines
 
 ## Footer (`SITE_CHROME.footer` — B2C Personal)
 
-Business pages use `SITE_CHROME.businessFooter` instead (no sitemap legal link, no floating bar).
+The Business homepage also uses `SITE_CHROME.footer`, including its sitemap legal link, app card, subscribe form, and responsive accordion behavior.
 
 | Footer group / link | Target | Status |
 |---------------------|--------|--------|
@@ -343,9 +345,9 @@ Business pages use `SITE_CHROME.businessFooter` instead (no sitemap legal link, 
 
 ---
 
-## Floating bar (`SITE_CHROME.floatingBar` — B2C Personal only)
+## Floating bar (`SITE_CHROME.floatingBar` — Personal routes and Business homepage)
 
-Not shown on `/business/`. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
+Shown on `/business/` with the same Internet, Tariffs, Roaming, Kinon popovers and Search link as Personal. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
 
 | Item | Target | Status |
 |------|--------|--------|
@@ -398,6 +400,7 @@ Not shown on `/business/`. On `/join-azercell/transfer-number/` the bar switches
 
 | Date | Change |
 |------|--------|
+| 2026-08-27 | Business homepage now reuses the complete Personal announcement bar, responsive header/navigation, floating shortcut bar with popovers, and Personal footer. Business content remains unchanged. |
 | 2026-08-26 | Personal chrome swap — Vlad header/footer/floating bar on B2C pages. Homepage acquisition block replaces quick actions. Support chat removed. Built `/join-azercell/transfer-number/` with inbound from acquisition + header e-SIM. Footer Sitemap → `/sitemap/` (user-requested). Business keeps classic chrome, no chat, no floating bar. |
 | 2026-08-04 | Built B2C roaming section — hub, internet-packs, travel-packs, countries-and-prices. Country search with ?country= URL sync, ~35 sample destinations, header/footer/homepage/mobile links CONNECTED. |
 | 2026-08-04 | Built B2C mobile internet packs — hub + monthly/weekly/daily/unlimited. 10 packs, filters, cross-sell banner, header/footer/tariff upsell links CONNECTED. |
