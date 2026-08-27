@@ -76,11 +76,11 @@ and the versioned pre-push hook attempts the sync automatically.
 <!-- INTEGRATION_HISTORY:START -->
 ### Generated Git chronology
 
-Tracked behavior snapshot: `d5aff9c731ce7b541f2fae5d7002818db504c70c`. Documentation-only commits are excluded so regenerating this block cannot create a self-referential commit loop.
+Tracked behavior snapshot: `8f8fb7e561ff5ab3e3e3e90832bccc8e41f6b812`. Documentation-only commits are excluded so regenerating this block cannot create a self-referential commit loop.
 Baseline: `42a7855e77705974c11c2fba2e4cfae1854dcf03`. Only committed changes in the tracked behavior allowlist are included; working-tree changes and handoff/docs files are excluded.
 
-Latest behavior version: `d5aff9c` — feat: add RU tariff comparison and mobile snap scrolling.
-Previous behavior version: `6847eaf` — feat: add connected tariff comparison prototype.
+Latest behavior version: `8f8fb7e` — feat: unify tariff comparison controls and sticky headers.
+Previous behavior version: `d5aff9c` — feat: add RU tariff comparison and mobile snap scrolling.
 
 ### Versions and file deltas
 
@@ -91,6 +91,7 @@ Previous behavior version: `6847eaf` — feat: add connected tariff comparison p
 | `4aecf06` | 2026-08-26 | feat: add mobile navigation prototype | — (see exact Git message) | Navigation probe | 6 changed | Changed: `nav-lab/index.html`, `nav-lab/navigation.css`, `nav-lab/navigation.js`, `nav-lab/transfer-number/index.html`, `nav-lab/transfer-number/transfer-number.css`, `nav-lab/transfer-number/transfer-number.js` |
 | `6847eaf` | 2026-08-26 | feat: add connected tariff comparison prototype | — (see exact Git message) | Shared runtime, Navigation probe, Tariff comparator | 5 changed, 4 added | Changed: `assets/js/site-registry.js`, `nav-lab/index.html`, `nav-lab/navigation.css`, `nav-lab/navigation.js`, `nav-lab/transfer-number/index.html`<br>Added: `tariff-compare-lab/app.js`, `tariff-compare-lab/data.js`, `tariff-compare-lab/index.html`, `tariff-compare-lab/styles.css` |
 | `d5aff9c` | 2026-08-27 | feat: add RU tariff comparison and mobile snap scrolling | — (see exact Git message) | Tariff comparator | 3 changed | Changed: `tariff-compare-lab/app.js`, `tariff-compare-lab/data.js`, `tariff-compare-lab/styles.css` |
+| `8f8fb7e` | 2026-08-27 | feat: unify tariff comparison controls and sticky headers | — (see exact Git message) | Tariff comparator | 2 changed | Changed: `tariff-compare-lab/app.js`, `tariff-compare-lab/styles.css` |
 
 **Security attention:** `b1d2408` removes `middleware.js`. This is a historical Git fact, not permission to remove or weaken authentication in another branch; require an explicit security decision.
 
