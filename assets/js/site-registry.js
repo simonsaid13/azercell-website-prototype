@@ -515,6 +515,7 @@
 
     businessFloatingBar: {
       search: { label: 'Search', href: href('/search/') },
+      showPopoverTitles: false,
       items: [
         { label: 'Internet', href: href('/business/mobile/internet/'), detail: [
           { label: 'Monthly internet packs', href: href('/business/mobile/internet/monthly/') },
@@ -528,12 +529,15 @@
         ] },
         { label: 'Roaming', href: href('/business/mobile/roaming/'), detail: [
           { label: 'Countries and prices', href: href('/business/mobile/roaming/countries-and-prices/') },
+          { label: 'Turkiye', href: href('/business/mobile/roaming/countries-and-prices/turkiye/') },
+          { label: 'Georgia', href: href('/business/mobile/roaming/countries-and-prices/georgia/') },
+          { label: 'Germany', href: href('/business/mobile/roaming/countries-and-prices/germany/') },
           { label: 'Roaming internet packs', href: href('/business/mobile/roaming/internet-packs/') }
         ] },
         { label: 'Azercell Biznes', href: 'https://biznes.azercell.com', detail: [
+          { label: 'Log in to Azercell Biznes', href: 'https://biznes.azercell.com', featured: true },
           { label: 'Top-up', href: href('/business/mobile/azercell-biznes/top-up/') },
-          { label: 'Online Itemized Bill', href: href('/business/support/itemized-bill/') },
-          { label: 'Azercell Biznes', href: 'https://biznes.azercell.com', featured: true }
+          { label: 'Online Itemized Bill', href: href('/business/support/itemized-bill/') }
         ] }
       ]
     },
@@ -754,7 +758,6 @@
           { label: 'Awards', href: href('/about/awards/') }
         ] },
         { title: 'Mobile', links: [
-          { label: 'Azercell Biznes', href: href('/business/mobile/azercell-biznes/'), featured: true },
           { label: 'My Business tariff plans', href: href('/business/mobile/tariffs/') },
           { label: 'My Business Internet packs', href: href('/business/mobile/internet/') },
           { label: 'Roaming', href: href('/business/mobile/roaming/') }

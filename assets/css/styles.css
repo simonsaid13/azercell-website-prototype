@@ -2866,6 +2866,17 @@ html[data-nav-variant="v2"] [data-apps-v1] {
   gap: var(--sp-1);
 }
 
+.cmp-nav__acquisition--solutions .cmp-nav__acquisition-grid {
+  gap: var(--sp-4);
+  border: 0;
+}
+
+.cmp-nav__acquisition--solutions .cmp-nav__acquisition-card {
+  min-height: 176px;
+  padding: var(--sp-4);
+  border: 1px solid var(--c-line);
+}
+
 .cmp-nav__content-placeholder {
   width: 100%;
   padding-block: var(--sp-6);
@@ -3144,6 +3155,10 @@ html[data-nav-variant="v2"] [data-apps-v1] {
     margin-top: var(--sp-3);
   }
 
+  .cmp-nav__floating-bar--no-titles .cmp-nav__floating-links {
+    margin-top: 0;
+  }
+
   .cmp-nav__floating-popover .ph {
     width: 100%;
     min-height: 196px;
@@ -3284,14 +3299,10 @@ html[data-nav-variant="v2"] [data-apps-v1] {
    corresponding mega menu. Gaps are measured between visible labels. */
 .cmp-nav[data-branch="business"] .cmp-header__nav-list {
   justify-content: flex-start;
-  gap: var(--sp-4);
+  gap: 0;
 }
 
 .cmp-nav[data-branch="business"] .cmp-header__nav-btn {
-  min-height: 36px;
-  padding-inline: 0;
-  font-size: 12px;
-  line-height: 1.15;
   text-align: left;
 }
 
@@ -3302,6 +3313,17 @@ html[data-nav-variant="v2"] [data-apps-v1] {
 
 .cmp-nav__category-link {
   border-radius: 0;
+}
+
+.cmp-nav__category-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 40px;
+  padding-right: var(--sp-2);
+  color: var(--c-muted);
+  font-size: 14px;
 }
 
 .cmp-nav__category-control:hover .cmp-nav__category-link,
@@ -3544,12 +3566,8 @@ html[data-nav-variant="v2"] [data-apps-v1] {
     padding-inline: var(--sp-1);
   }
 
-  .cmp-nav[data-branch="business"] .cmp-header__nav-btn {
-    font-size: 11px;
-  }
-
   .cmp-nav[data-branch="business"] .cmp-nav__category-toggle {
-    width: 16px;
+    min-width: 20px;
   }
 
   .cmp-nav__actions {

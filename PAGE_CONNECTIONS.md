@@ -299,7 +299,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 
 ### Business header (`SITE_CHROME.businessNav`)
 
-Desktop category labels navigate to their landing pages. Hover/focus opens the mega menu; dropdown arrows are omitted and visible labels use equal 16px spacing with left alignment. Mobile uses a category link plus a separate expand control.
+Desktop category labels navigate to their landing pages. Hover/focus or the restored adjacent arrow opens the mega menu. Business category links use the same type, height and padding as Personal. Mobile uses a category link plus a separate expand control.
 
 Business reuses the Personal menu presentation patterns and type scale: Mobile and Digital solutions use the Personal Mobile rail/detail layout; Mobile retains an accented Azercell Biznes entry. Their rail labels remain landing-page links and expose submenus on hover/focus without repeating the selected label in the detail pane. Standard categories use the Personal Company list layout. Campaigns lists Why Azercell Business first, the active My Business Wi-Fi campaign, My Business Club and the archive beside a My Business Wi-Fi promo card.
 
@@ -316,7 +316,7 @@ Business reuses the Personal menu presentation patterns and type scale: Mobile a
 
 ### Business footer (`SITE_CHROME.businessFooter`)
 
-Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`, Campaigns links, a My Business Club banner, and an Azercell Biznes app banner. The Mobile group stops at its second-level links; deeper tariff, internet-pack and roaming links remain in the mega menu. Unknown store destinations are intentionally non-clickable.
+Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`, Campaigns links, a My Business Club banner, and an Azercell Biznes app banner. The Mobile group contains tariff plans, internet packs and roaming; Azercell Biznes appears only in its banner. Deeper tariff, internet-pack and roaming links remain in the mega menu. Unknown store destinations are intentionally non-clickable.
 
 ---
 
@@ -370,7 +370,7 @@ The Business footer preserves this shell, subscription, legal, social, language 
 
 ## Floating bars (`SITE_CHROME.floatingBar` / `SITE_CHROME.businessFloatingBar`)
 
-Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned placeholders use Internet, Tariffs, Roaming and Azercell Biznes with B2B destinations. Both retain Search. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
+Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned placeholders use Internet, Tariffs, Roaming and Azercell Biznes with B2B destinations. Business popovers omit repeated headings; Roaming adds Turkiye, Georgia and Germany. The Azercell Biznes popover starts with an accented Log in to Azercell Biznes action. Both bars retain Search. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
 
 | Item | Target | Status |
 |------|--------|--------|
@@ -384,7 +384,7 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 | Business Roaming | `/business/mobile/roaming/…` | PLANNED |
 | Business Azercell Biznes → Top-up | `/business/mobile/azercell-biznes/top-up/` | PLANNED |
 | Business Azercell Biznes → Online Itemized Bill | `/business/support/itemized-bill/` | PLANNED |
-| Business Azercell Biznes → accented Azercell Biznes | biznes.azercell.com | CONNECTED (external) |
+| Business Azercell Biznes → accented Log in to Azercell Biznes | biznes.azercell.com | CONNECTED (external) |
 
 ---
 
@@ -429,6 +429,7 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 
 | Date | Change |
 |------|--------|
+| 2026-08-27 | Matched Business category-link styling to Personal and restored dropdown arrows; removed the Mobile Azercell Biznes footer link; removed Business floating-popover headings, promoted Log in to Azercell Biznes and added three roaming countries; enlarged and separated Solution cards. |
 | 2026-08-27 | Restored arrowless Business hover dropdowns, increased visible label spacing to 16px, consolidated four categories under a Personal-Mobile-style Digital solutions menu, replaced Acquisition with a four-card Solution block and CTA subtitles, reordered Log in / Contact manager, and added a B2B floating bar. |
 | 2026-08-27 | Removed Business desktop dropdown arrows, left-aligned category links and set equal visual spacing between labels. Renamed the Business acquisition labels to Acquisition action 1–5 while preserving destinations and Personal labels. |
 | 2026-08-27 | Added the unchanged Personal acquisition block directly below the Business hero, reusing the shared component, content and destinations. |

@@ -568,6 +568,9 @@
                             ' data-menu-link="' + index + '" aria-expanded="false" aria-controls="nav-panel-' + index + '">' +
                             esc(item.label) +
                           '</a>' +
+                          '<button type="button" class="cmp-nav__category-toggle" data-menu-toggle="' + index + '"' +
+                            ' aria-expanded="false" aria-controls="nav-panel-' + index + '"' +
+                            ' aria-label="Open ' + esc(item.label) + ' menu"><span aria-hidden="true">▾</span></button>' +
                         '</div>' +
                       '</li>'
                     );
@@ -738,6 +741,7 @@
 
   C.floatingBar = function (props) {
     var search = props.search || { label: 'Search' };
+    var showPopoverTitles = props.showPopoverTitles !== false;
     if (props.mode === 'transfer') {
       var cta = props.cta || { label: 'Start transfer' };
       return (
@@ -754,14 +758,16 @@
     function popoverHtml(item) {
       if (!item.detail) {
         return '<div class="cmp-nav__floating-kinon">' +
-          '<div class="cmp-nav__floating-copy"><p class="t-label">' + esc(item.label) + '</p>' +
+          '<div class="cmp-nav__floating-copy">' +
+            (showPopoverTitles ? '<p class="t-label">' + esc(item.label) + '</p>' : '') +
             navLink(item, 't-h3') +
           '</div>' +
           '<div class="ph ph--wide" aria-hidden="true"></div>' +
         '</div>';
       }
       return '<div class="cmp-nav__floating-detail">' +
-        '<div class="cmp-nav__floating-copy"><p class="t-label">' + esc(item.label) + '</p>' +
+        '<div class="cmp-nav__floating-copy">' +
+          (showPopoverTitles ? '<p class="t-label">' + esc(item.label) + '</p>' : '') +
           '<div class="cmp-nav__floating-links">' +
             (item.detail || []).map(function (link) {
               return navLink(link, link.featured ? 'btn btn--primary' : 't-body cmp-nav__text-link');
@@ -773,7 +779,7 @@
     }
 
     return (
-      '<div class="cmp-nav__floating-bar" data-floating-bar aria-label="Shortcuts">' +
+      '<div class="cmp-nav__floating-bar' + (showPopoverTitles ? '' : ' cmp-nav__floating-bar--no-titles') + '" data-floating-bar aria-label="Shortcuts">' +
         '<div class="cmp-nav__floating-main" data-floating-main role="group" aria-label="Customer shortcuts">' +
           (props.items || []).map(function (item, index) {
             return '<button type="button" class="cmp-nav__floating-control" data-floating-trigger="' + index + '" aria-expanded="false">' +
@@ -794,8 +800,9 @@
 
   C.acquisitionBlock = function (props) {
     var items = props.items || [];
+    var isSolutions = props.variant === 'solutions';
     return (
-      '<section class="cmp-nav__acquisition" aria-labelledby="acquisition-title">' +
+      '<section class="cmp-nav__acquisition' + (isSolutions ? ' cmp-nav__acquisition--solutions' : '') + '" aria-labelledby="acquisition-title">' +
         '<div class="wrap">' +
           '<h2 id="acquisition-title" class="t-h1">' + esc(props.title || 'Acquisition block') + '</h2>' +
           '<div class="cmp-nav__acquisition-grid" role="list" style="--acquisition-columns: ' + items.length + '">' +
@@ -809,7 +816,7 @@
               return '<' + tag + ' class="cmp-nav__acquisition-card cmp-quick__item" role="listitem"' + attrs + '>' +
                 '<span class="ph ph--square cmp-nav__acquisition-icon" aria-hidden="true"></span>' +
                 (item.body
-                  ? '<span class="cmp-nav__acquisition-copy"><span class="t-h4">' + esc(item.label) + '</span>' +
+                  ? '<span class="cmp-nav__acquisition-copy"><span class="' + (isSolutions ? 't-h3' : 't-h4') + '">' + esc(item.label) + '</span>' +
                       '<span class="t-small t-muted">' + esc(item.body) + '</span></span>'
                   : '<span class="t-body">' + esc(item.label) + '</span>') +
               '</' + tag + '>';
