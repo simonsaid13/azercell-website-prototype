@@ -523,7 +523,7 @@
 
     businessNav: [
       {
-        label: 'Company', href: href('/about/'), mode: 'business-mega', panelColumns: 3,
+        label: 'Company', href: href('/about/'), mode: 'list',
         items: [
           { label: 'About us', href: href('/about/') },
           { label: 'Media & press', href: href('/about/press/') },
@@ -537,30 +537,29 @@
         ]
       },
       {
-        label: 'Mobile', href: href('/business/mobile/'), mode: 'business-mega', panelColumns: 4,
+        label: 'Mobile', href: href('/business/mobile/'), mode: 'detail-links',
         items: [
           { label: 'Azercell Biznes', href: href('/business/mobile/azercell-biznes/'), featured: true },
-          { label: 'My Business tariff plans', href: href('/business/mobile/tariffs/'), children: [
+          { label: 'My Business tariff plans', href: href('/business/mobile/tariffs/'), detail: [
             { label: 'Tariffs archive', href: href('/business/mobile/tariffs/archive/') }
           ] },
-          { label: 'My Business Internet packs', href: href('/business/mobile/internet/'), children: [
+          { label: 'My Business Internet packs', href: href('/business/mobile/internet/'), detail: [
             { label: 'Monthly internet packs', href: href('/business/mobile/internet/monthly/') },
             { label: 'Short-term packs', href: href('/business/mobile/internet/short-term/') },
             { label: 'Social network packs', href: href('/business/mobile/internet/social/') },
             { label: 'Internet packs Archive', href: href('/business/mobile/internet/archive/') }
           ] },
-          { label: 'Roaming', href: href('/business/mobile/roaming/'), children: [
-            { label: 'Countries and prices', href: href('/business/mobile/roaming/countries-and-prices/'), children: [
-              { label: 'Turkiye', href: href('/business/mobile/roaming/countries-and-prices/turkiye/') },
-              { label: 'Georgia', href: href('/business/mobile/roaming/countries-and-prices/georgia/') },
-              { label: 'Germany', href: href('/business/mobile/roaming/countries-and-prices/germany/') }
-            ] },
+          { label: 'Roaming', href: href('/business/mobile/roaming/'), detail: [
+            { label: 'Countries and prices', href: href('/business/mobile/roaming/countries-and-prices/') },
+            { label: 'Turkiye', href: href('/business/mobile/roaming/countries-and-prices/turkiye/'), nested: true },
+            { label: 'Georgia', href: href('/business/mobile/roaming/countries-and-prices/georgia/'), nested: true },
+            { label: 'Germany', href: href('/business/mobile/roaming/countries-and-prices/germany/'), nested: true },
             { label: 'Roaming internet packs', href: href('/business/mobile/roaming/internet-packs/') }
           ] }
         ]
       },
       {
-        label: 'Connectivity', href: href('/business/connectivity/'), mode: 'business-mega', panelColumns: 3,
+        label: 'Connectivity', href: href('/business/connectivity/'), mode: 'list',
         items: [
           { label: 'My Business Internet Leased Line', href: href('/business/connectivity/leased-line/') },
           { label: 'My Business Wi-Fi', href: href('/business/connectivity/wifi/') },
@@ -568,14 +567,14 @@
         ]
       },
       {
-        label: 'IoT & M2M', href: href('/business/iot/'), mode: 'business-mega', panelColumns: 2,
+        label: 'IoT & M2M', href: href('/business/iot/'), mode: 'list',
         items: [
           { label: 'IoT overview', href: href('/business/iot/overview/') },
           { label: 'M2M', href: href('/business/iot/m2m/') }
         ]
       },
       {
-        label: 'Fleet & field operations', href: href('/business/fleet-field-operations/'), mode: 'business-mega', panelColumns: 4,
+        label: 'Fleet & field operations', href: href('/business/fleet-field-operations/'), mode: 'list',
         items: [
           { label: 'YolDASH360', href: href('/business/fleet-field-operations/yoldash-360/') },
           { label: 'My Business Fleet', href: href('/business/fleet-field-operations/fleet/') },
@@ -584,14 +583,14 @@
         ]
       },
       {
-        label: 'Automation & management', href: href('/business/automation-management/'), mode: 'business-mega', panelColumns: 2,
+        label: 'Automation & management', href: href('/business/automation-management/'), mode: 'list',
         items: [
           { label: 'Robotic Automation Solution (RPA)', href: href('/business/automation-management/rpa/') },
           { label: 'Mobile Device Management', href: href('/business/automation-management/device-management/') }
         ]
       },
       {
-        label: 'Customer engagement', href: href('/business/customer-engagement/'), mode: 'business-mega', panelColumns: 3,
+        label: 'Customer engagement', href: href('/business/customer-engagement/'), mode: 'list',
         items: [
           { label: 'Customer Experience Management Platform', href: href('/business/customer-engagement/cpaas/') },
           { label: 'InfoHUB', href: href('/business/customer-engagement/infohub/') },
@@ -601,16 +600,16 @@
         ]
       },
       {
-        label: 'Campaigns', href: href('/business/campaigns/'), mode: 'business-mega', panelColumns: 4,
+        label: 'Campaigns', href: href('/business/campaigns/'), mode: 'list-promo',
         items: [
           { label: 'All campaigns', href: href('/business/campaigns/') },
-          { label: 'My Business Club', href: href('/business/campaigns/my-business-club/'), featured: true },
           { label: 'Campaigns archive', href: href('/business/campaigns/archive/') },
           { label: 'Why Azercell Business?', href: href('/business/campaigns/why-azercell-business/') }
-        ]
+        ],
+        promo: { label: 'My Business Club', href: href('/business/campaigns/my-business-club/') }
       },
       {
-        label: 'Support', href: href('/business/support/'), mode: 'business-mega', panelColumns: 3,
+        label: 'Support', href: href('/business/support/'), mode: 'list',
         items: [
           { label: 'Help', href: href('/business/support/help/') },
           { label: 'Talk to Support', href: href('/business/support/talk-to-support/') },
@@ -735,18 +734,8 @@
         { title: 'Mobile', links: [
           { label: 'Azercell Biznes', href: href('/business/mobile/azercell-biznes/'), featured: true },
           { label: 'My Business tariff plans', href: href('/business/mobile/tariffs/') },
-          { label: 'Tariffs archive', href: href('/business/mobile/tariffs/archive/'), nested: true },
           { label: 'My Business Internet packs', href: href('/business/mobile/internet/') },
-          { label: 'Monthly internet packs', href: href('/business/mobile/internet/monthly/'), nested: true },
-          { label: 'Short-term packs', href: href('/business/mobile/internet/short-term/'), nested: true },
-          { label: 'Social network packs', href: href('/business/mobile/internet/social/'), nested: true },
-          { label: 'Internet packs Archive', href: href('/business/mobile/internet/archive/'), nested: true },
-          { label: 'Roaming', href: href('/business/mobile/roaming/') },
-          { label: 'Countries and prices', href: href('/business/mobile/roaming/countries-and-prices/'), nested: true },
-          { label: 'Turkiye', href: href('/business/mobile/roaming/countries-and-prices/turkiye/'), nested: true },
-          { label: 'Georgia', href: href('/business/mobile/roaming/countries-and-prices/georgia/'), nested: true },
-          { label: 'Germany', href: href('/business/mobile/roaming/countries-and-prices/germany/'), nested: true },
-          { label: 'Roaming internet packs', href: href('/business/mobile/roaming/internet-packs/'), nested: true }
+          { label: 'Roaming', href: href('/business/mobile/roaming/') }
         ] },
         { title: 'Connectivity', links: [
           { label: 'My Business Internet Leased Line', href: href('/business/connectivity/leased-line/') },

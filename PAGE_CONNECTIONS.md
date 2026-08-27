@@ -300,6 +300,8 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 
 Desktop category labels navigate to their landing pages. Hover/focus or the adjacent chevron opens the mega menu. Mobile uses a category link plus a separate expand control.
 
+Business reuses the Personal menu presentation patterns and type scale: Mobile uses the Personal Mobile rail/detail layout with an accented Azercell Biznes entry; standard categories use the Personal Company list layout; Campaigns uses that list beside a My Business Club promo card.
+
 | Category | Landing / children | Status |
 |----------|--------------------|--------|
 | Company | `/about/…` | PLANNED; Careers and Azercell Life external |
@@ -316,7 +318,7 @@ Desktop category labels navigate to their landing pages. Hover/focus or the adja
 
 ### Business footer (`SITE_CHROME.businessFooter`)
 
-Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`, Campaigns links, a My Business Club banner, and an Azercell Biznes app banner. Unknown store destinations are intentionally non-clickable.
+Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`, Campaigns links, a My Business Club banner, and an Azercell Biznes app banner. The Mobile group stops at its second-level links; deeper tariff, internet-pack and roaming links remain in the mega menu. Unknown store destinations are intentionally non-clickable.
 
 ---
 
@@ -423,6 +425,7 @@ Shown on `/business/` and B2B planned placeholders with the same Internet, Tarif
 
 | Date | Change |
 |------|--------|
+| 2026-08-27 | Aligned Business mega-menu presentation with Personal: Mobile now uses the rail/detail pattern with an Azercell Biznes accent; standard categories use the Company list; Campaigns adds a My Business Club promo. Removed third-level Mobile links from the Business footer. |
 | 2026-08-27 | Rebuilt the Business mega menu, footer and page registry around the confirmed B2B IA. Category labels now navigate while hover/focus and chevrons expose menus; mobile separates link and expand controls. All unbuilt destinations use the existing `/planned/?path=…` flow. |
 | 2026-08-27 | Business homepage now reuses the complete Personal announcement bar, responsive header/navigation, floating shortcut bar with popovers, and Personal footer. Business content remains unchanged. |
 | 2026-08-26 | Personal chrome swap — Vlad header/footer/floating bar on B2C pages. Homepage acquisition block replaces quick actions. Support chat removed. Built `/join-azercell/transfer-number/` with inbound from acquisition + header e-SIM. Footer Sitemap → `/sitemap/` (user-requested). Business keeps classic chrome, no chat, no floating bar. |

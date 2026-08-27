@@ -293,28 +293,17 @@
     );
   }
 
-  function renderBusinessTreeItem(entry, depth) {
-    var level = depth || 0;
-    var cls = 'cmp-nav__business-link cmp-nav__business-link--' + level;
-    if (entry.featured) cls += ' cmp-nav__business-link--featured';
-    return '<div class="cmp-nav__business-tree-item" data-depth="' + level + '">' +
-      navLink(entry, cls) +
-      ((entry.children || []).length
-        ? '<div class="cmp-nav__business-children">' + entry.children.map(function (child) {
-            return renderBusinessTreeItem(child, level + 1);
-          }).join('') + '</div>'
-        : '') +
-    '</div>';
-  }
-
-  function renderBusinessMegaPanel(item, index) {
+  function renderListPromoPanel(item, index) {
     return (
-      '<div class="cmp-header__panel cmp-nav__business-panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
         '<div class="wrap">' +
-          '<div class="cmp-nav__business-grid" style="--business-menu-columns:' + esc(item.panelColumns || 3) + '">' +
+          '<div class="cmp-nav__list-promo">' +
+            '<div class="cmp-nav__panel-list">' +
             (item.items || []).map(function (entry) {
-              return renderBusinessTreeItem(entry, 0);
+              return navLink(entry, 't-body cmp-nav__text-link');
             }).join('') +
+            '</div>' +
+            '<div class="cmp-nav__list-promo-card">' + personalPromo(item.promo || {}) + '</div>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -322,13 +311,16 @@
   }
 
   function renderDetailPane(item, entry) {
+    if (entry.featured) {
+      return '<div class="cmp-nav__detail-card cmp-nav__detail-card--featured">' + personalPromo(entry) + '</div>';
+    }
     if (item.mode === 'detail-links') {
       return (
         '<div>' +
           '<p class="t-label">' + esc(entry.label) + '</p>' +
           '<div class="cmp-nav__detail-links">' +
             (entry.detail || []).map(function (link) {
-              return navLink(link, 't-body cmp-nav__text-link');
+              return navLink(link, 't-body cmp-nav__text-link' + (link.nested ? ' cmp-nav__text-link--nested' : ''));
             }).join('') +
           '</div>' +
         '</div>'
@@ -345,7 +337,7 @@
             '<div class="cmp-nav__rail" role="listbox" aria-label="' + esc(item.label) + '">' +
               (item.items || []).map(function (entry, itemIndex) {
                 return (
-                  '<button type="button" class="cmp-nav__rail-button"' +
+                  '<button type="button" class="cmp-nav__rail-button' + (entry.featured ? ' cmp-nav__rail-button--featured' : '') + '"' +
                     ' data-detail-trigger="' + itemIndex + '"' +
                     ' aria-selected="' + (itemIndex === 0 ? 'true' : 'false') + '">' +
                     esc(entry.label) +
@@ -444,9 +436,9 @@
   }
 
   function renderPersonalPanel(item, index, apps) {
-    if (item.mode === 'business-mega') return renderBusinessMegaPanel(item, index);
     if (item.label === 'TV') return renderWidePromoPanel(item, index);
     if (item.mode === 'apps') return renderAppsPanel(item, index, apps);
+    if (item.mode === 'list-promo') return renderListPromoPanel(item, index);
     if (item.mode === 'list') return renderListPanel(item, index);
     return renderDetailPanel(item, index);
   }
@@ -467,17 +459,10 @@
   }
 
   function renderMobilePanel(item, index, apps) {
-    if (item.mode === 'business-mega') {
-      return '<div class="cmp-nav__mobile-panel-body cmp-nav__business-mobile-tree">' +
-        (item.items || []).map(function (entry) {
-          return renderBusinessTreeItem(entry, 0);
-        }).join('') +
-      '</div>';
-    }
     if (item.label === 'Mobile') {
       return '<div class="cmp-nav__mobile-panel-body cmp-nav__mobile-inner-groups">' +
         (item.items || []).map(function (entry, entryIndex) {
-          return '<section class="cmp-nav__mobile-inner-group">' +
+          return '<section class="cmp-nav__mobile-inner-group' + (entry.featured ? ' cmp-nav__mobile-inner-group--featured' : '') + '">' +
             '<button type="button" class="t-h4 cmp-nav__mobile-inner-toggle" data-mobile-inner-toggle="' + index + '-' + entryIndex + '" aria-expanded="false">' +
               '<span>' + esc(entry.label) + '</span><span aria-hidden="true">+</span>' +
             '</button>' +
@@ -518,6 +503,14 @@
             '</section>';
           }).join('') +
         '</div>';
+    }
+    if (item.mode === 'list-promo') {
+      return '<div class="cmp-nav__mobile-simple-list">' +
+        (item.items || []).map(function (entry) {
+          return navLink(entry, 't-body cmp-nav__mobile-link');
+        }).join('') +
+        '<div class="cmp-nav__mobile-promo-card">' + personalPromo(item.promo || {}) + '</div>' +
+      '</div>';
     }
     return '<div class="cmp-nav__mobile-simple-list">' +
       (item.items || []).map(function (entry) {
