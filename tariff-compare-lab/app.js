@@ -72,8 +72,13 @@
     if (state.billing !== 'postpaid') return '';
     return '<div class="tcl-contract-strip"><div><strong>' + esc(value(tariff, 'contract.12Month')) + '</strong><span>12 months</span></div><div><strong>' + esc(value(tariff, 'contract.24Month')) + '</strong><span>24 months</span></div></div>';
   }
+  function removeControl(tariff, index) {
+    var canRemove = state.ids.length > MIN_COLUMNS;
+    return '<button type="button" class="tcl-remove" data-remove-column="' + index + '" aria-label="Remove ' + esc(tariff.name) + '"' + (canRemove ? '' : ' disabled aria-disabled="true"') + '>×</button>';
+  }
   function card(tariff, index) {
     return '<article class="tcl-compact-plan' + (tariff.popular ? ' tcl-featured' : '') + '">' +
+      removeControl(tariff, index) +
       '<div class="tcl-column-toolbar"><label class="t-label" for="compact-tariff-' + index + '">Tariff ' + (index + 1) + '</label></div>' +
       '<div class="tcl-select-wrap"><select class="t-body" id="compact-tariff-' + index + '" data-column-select="' + index + '">' + options(tariff.id) + '</select></div>' +
       '<div class="tcl-plan-meta t-small"><span>' + esc(tariff.family) + '</span>' + (tariff.popular ? '<em class="t-label">Popular</em>' : '') + '</div>' +
@@ -84,10 +89,11 @@
     '</article>';
   }
   function compact(selectedTariffs) {
-    return '<div class="tcl-scroll tcl-compact-scroll" tabindex="0" role="region" aria-label="Compact tariff comparison"><div class="tcl-compact-grid" style="--tcl-columns:' + selectedTariffs.length + '">' + selectedTariffs.map(card).join('') + '</div></div>';
+    return '<div class="tcl-scroll tcl-compact-scroll" tabindex="0" role="region" aria-label="Compact tariff comparison"><div class="tcl-compact-grid" style="--tcl-columns:' + selectedTariffs.length + '">' + selectedTariffs.map(card).join('') + '</div></div>' + legacyStickyRail(selectedTariffs, 'compact');
   }
   function detailHeader(tariff, index) {
     return '<th scope="col" class="tcl-plan-head' + (tariff.popular ? ' tcl-featured' : '') + '">' +
+      removeControl(tariff, index) +
       '<div class="tcl-column-toolbar"><label class="t-label" for="detail-tariff-' + index + '">Tariff ' + (index + 1) + '</label></div><div class="tcl-select-wrap"><select class="t-body" id="detail-tariff-' + index + '" data-column-select="' + index + '">' + options(tariff.id) + '</select></div>' +
       '<div class="tcl-plan-meta t-small"><span>' + esc(tariff.family) + '</span>' + (tariff.popular ? '<em class="t-label">Popular</em>' : '') + '</div><h2 class="t-h3">' + esc(tariff.name) + '</h2><p class="t-small"><strong class="t-h4">' + esc(price(tariff)) + '</strong><span> / ' + esc(String(tariff.validity).toLowerCase()) + '</span></p>' + link(tariff, 'tcl-plan-head__link t-body') +
     '</th>';
@@ -99,14 +105,23 @@
   }
   function detailed(selectedTariffs) {
     var blocks = list(source.featureBlocks).filter(function (block) { return !block.billing || block.billing === state.billing; });
-    return '<div class="tcl-scroll tcl-table-scroll" tabindex="0" role="region" aria-label="Detailed tariff comparison"><table class="tcl-detail-table" style="--tcl-columns:' + selectedTariffs.length + '"><thead><tr>' + selectedTariffs.map(detailHeader).join('') + '</tr></thead><tbody>' + blocks.map(function (block) { return featureBlock(block, selectedTariffs); }).join('') + '</tbody></table></div>';
+    return '<div class="tcl-scroll tcl-table-scroll" tabindex="0" role="region" aria-label="Detailed tariff comparison"><table class="tcl-detail-table" style="--tcl-columns:' + selectedTariffs.length + '"><thead><tr>' + selectedTariffs.map(detailHeader).join('') + '</tr></thead><tbody>' + blocks.map(function (block) { return featureBlock(block, selectedTariffs); }).join('') + '</tbody></table></div>' + legacyStickyRail(selectedTariffs, 'detailed');
+  }
+  function legacyStickySummary(tariff, index, view) {
+    return '<div class="tcl-legacy-summary tcl-legacy-summary--' + view + '">' +
+      removeControl(tariff, index) +
+      '<div class="tcl-plan-meta t-small"><span>' + esc(tariff.family) + '</span>' + (tariff.popular ? '<em class="t-label">Popular</em>' : '') + '</div>' +
+      '<h2 class="t-h3">' + esc(tariff.name) + '</h2><p class="tcl-compact-price t-small"><strong class="t-h4">' + esc(price(tariff)) + '</strong><span> / ' + esc(String(tariff.validity).toLowerCase()) + '</span></p>' + link(tariff, 'tcl-plan-head__link t-body') +
+    '</div>';
+  }
+  function legacyStickyRail(selectedTariffs, view) {
+    return '<div class="tcl-legacy-sticky-rail" data-legacy-sticky-rail hidden><div class="tcl-legacy-sticky-grid tcl-legacy-sticky-grid--' + view + '" data-legacy-sticky-grid style="--tcl-columns:' + selectedTariffs.length + '">' + selectedTariffs.map(function (tariff, index) { return legacyStickySummary(tariff, index, view); }).join('') + '</div></div>';
   }
   function controls() {
-    var canRemove = state.ids.length > MIN_COLUMNS;
     var canAdd = state.ids.length < MAX_COLUMNS && catalog(state.billing).some(function (tariff) { return state.ids.indexOf(tariff.id) === -1; });
     return '<div class="tcl-control-bar" aria-label="Tariff comparison controls"><nav class="tcl-segmented" aria-label="Billing type">' + ['prepaid', 'postpaid'].map(function (billing) {
       return '<a data-billing="' + billing + '" href="' + billingUrl(billing) + '"' + (state.billing === billing ? ' aria-current="page"' : '') + '>' + (billing === 'prepaid' ? 'Prepaid' : 'Postpaid') + '</a>';
-    }).join('') + '</nav><div class="tcl-selection-stepper" aria-label="Number of tariffs selected"><button class="t-body" type="button" data-remove-last' + (canRemove ? '' : ' disabled') + ' aria-label="Remove the last tariff">− <span>Remove</span></button><strong class="t-body">' + state.ids.length + ' selected</strong><button class="t-body" type="button" data-add-next' + (canAdd ? '' : ' disabled') + ' aria-label="Add another tariff">+ <span>Add</span></button></div></div>';
+    }).join('') + '</nav><div class="tcl-add-action"><button class="tcl-add t-body" type="button" data-add-next aria-label="Add another tariff"' + (canAdd ? '' : ' disabled') + '><span aria-hidden="true">+</span><span>Add tariff</span></button></div></div>';
   }
   function legacyScrollSelector() { return state.view === 'compact' ? '.tcl-compact-scroll' : '.tcl-table-scroll'; }
   function readScrollLeft(selector) {
@@ -126,7 +141,7 @@
     normalize();
     var selectedTariffs = selected();
     root.innerHTML = '<section class="tcl-hero" id="top"><div class="wrap"><h1 class="t-display">Compare tariffs</h1><p class="t-lead t-muted">Choose the tariffs you want to compare and find the option that fits you best.</p></div></section><section class="tcl-compare-shell" id="compare" aria-label="Tariff comparison">' + controls() + (state.view === 'compact' ? compact(selectedTariffs) : detailed(selectedTariffs)) + '<p class="tcl-footnote t-small"><strong>Note:</strong> renewal periods differ between plans. Compare each price together with the validity shown directly below it. Prices include VAT.</p><p class="tcl-sr-only" role="status" aria-live="polite">' + state.ids.length + ' tariffs selected.</p></section>';
-    restoreScrollLeft(selector, previousScrollLeft);
+    restoreScrollLeft(selector, previousScrollLeft, syncLegacySticky);
     var footer = document.querySelector('#footer-probe footer');
     if (footer) footer.setAttribute('aria-label', 'Footer');
   }
@@ -142,7 +157,8 @@
     var billing = event.target.closest('[data-billing]');
     if (billing) { event.preventDefault(); setBilling(billing.getAttribute('data-billing'), true); return; }
     if (event.target.closest('[data-add-next]')) { var next = catalog(state.billing).find(function (tariff) { return state.ids.indexOf(tariff.id) === -1; }); if (next && state.ids.length < MAX_COLUMNS) state.ids.push(next.id); render(true); return; }
-    if (event.target.closest('[data-remove-last]') && state.ids.length > MIN_COLUMNS) { state.ids.pop(); render(true); }
+    var remove = event.target.closest('[data-remove-column]');
+    if (remove && state.ids.length > MIN_COLUMNS) { state.ids.splice(Number(remove.getAttribute('data-remove-column')), 1); render(true); }
   });
   root.addEventListener('change', function (event) {
     var select = event.target.closest('[data-column-select]');
@@ -159,6 +175,32 @@
     state.view = viewFromUrl();
     setBilling(billingFromUrl(), false);
   });
+  function syncLegacySticky() {
+    var scroll = root.querySelector(legacyScrollSelector());
+    var shell = root.querySelector('.tcl-compare-shell');
+    var rail = root.querySelector('[data-legacy-sticky-rail]');
+    var railGrid = root.querySelector('[data-legacy-sticky-grid]');
+    var firstHeader = root.querySelector(state.view === 'compact' ? '.tcl-compact-plan' : '.tcl-plan-head');
+    var header = document.querySelector('[data-header]');
+    if (!scroll || !shell || !rail || !railGrid || !firstHeader || !header) return;
+    var headerBottom = header.getBoundingClientRect().bottom;
+    var shellRect = shell.getBoundingClientRect();
+    var scrollRect = scroll.getBoundingClientRect();
+    rail.hidden = false;
+    var railHeight = rail.offsetHeight;
+    var shouldShowRail = firstHeader.getBoundingClientRect().top <= headerBottom && shellRect.bottom > headerBottom + railHeight + 16;
+    rail.hidden = !shouldShowRail;
+    if (shouldShowRail) {
+      var gridRect = scroll.firstElementChild.getBoundingClientRect();
+      rail.style.top = Math.max(0, headerBottom) + 'px';
+      rail.style.left = scrollRect.left + 'px';
+      rail.style.width = scroll.clientWidth + 'px';
+      railGrid.style.transform = 'translateX(' + (gridRect.left - scrollRect.left) + 'px)';
+    }
+  }
+  root.addEventListener('scroll', syncLegacySticky, true);
+  window.addEventListener('scroll', syncLegacySticky, { passive: true });
+  window.addEventListener('resize', syncLegacySticky);
   var navigationMount = document.getElementById('navigation-probe');
   if (navigationMount) {
     navigationMount.addEventListener('click', function (event) {
