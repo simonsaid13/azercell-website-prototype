@@ -309,7 +309,7 @@ if (options.fetch) {
   }
 }
 
-const targetCommit = resolveCommit(TARGET) || resolveCommit(`${REMOTE}/${TARGET}`);
+const targetCommit = resolveCommit(`${REMOTE}/${TARGET}`) || resolveCommit(TARGET);
 if (!targetCommit) die(`could not resolve ${TARGET} or ${REMOTE}/${TARGET}`);
 
 let document;
