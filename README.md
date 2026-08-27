@@ -3,6 +3,12 @@
 A wireframe-level HTML prototype of the Azercell website revamp. It stands in for wireframes:
 plain HTML, CSS and JavaScript, no build step, no framework, no dependencies.
 
+## Agent entrypoint for branch integration
+
+Before merging, cherry-picking, copying, or reimplementing work from `vlad`,
+read [`INTEGRATION_HANDOFF.md`](INTEGRATION_HANDOFF.md). Repository agents are
+required to follow it by [`AGENTS.md`](AGENTS.md).
+
 ## Run it
 
 ```bash
