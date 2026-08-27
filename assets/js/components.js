@@ -310,15 +310,15 @@
     );
   }
 
-  function renderDetailPane(item, entry) {
+  function renderDetailPane(item, entry, compactDetail) {
     if (entry.featured) {
       return '<div class="cmp-nav__detail-card cmp-nav__detail-card--featured">' + personalPromo(entry) + '</div>';
     }
     if (item.mode === 'detail-links') {
       return (
         '<div>' +
-          '<p class="t-label">' + esc(entry.label) + '</p>' +
-          '<div class="cmp-nav__detail-links">' +
+          (compactDetail ? '' : '<p class="t-label">' + esc(entry.label) + '</p>') +
+          '<div class="cmp-nav__detail-links' + (compactDetail ? ' cmp-nav__detail-links--flush' : '') + '">' +
             (entry.detail || []).map(function (link) {
               return navLink(link, 't-body cmp-nav__text-link' + (link.nested ? ' cmp-nav__text-link--nested' : ''));
             }).join('') +
@@ -329,26 +329,29 @@
     return '<div class="cmp-nav__detail-card">' + personalPromo(entry) + '</div>';
   }
 
-  function renderDetailPanel(item, index) {
+  function renderDetailPanel(item, index, hoverLinks) {
     return (
       '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
         '<div class="wrap">' +
-          '<div class="cmp-nav__detail" data-detail-menu="' + index + '">' +
+          '<div class="cmp-nav__detail" data-detail-menu="' + index + '"' + (hoverLinks ? ' data-detail-hover="true"' : '') + '>' +
             '<div class="cmp-nav__rail" role="listbox" aria-label="' + esc(item.label) + '">' +
               (item.items || []).map(function (entry, itemIndex) {
+                var tag = hoverLinks ? 'a' : 'button';
                 return (
-                  '<button type="button" class="cmp-nav__rail-button' + (entry.featured ? ' cmp-nav__rail-button--featured' : '') + '"' +
+                  '<' + tag + (hoverLinks ? '' : ' type="button"') +
+                    ' class="cmp-nav__rail-button' + (entry.featured ? ' cmp-nav__rail-button--featured' : '') + '"' +
+                    (hoverLinks ? attr('href', entry.href) : '') +
                     ' data-detail-trigger="' + itemIndex + '"' +
                     ' aria-selected="' + (itemIndex === 0 ? 'true' : 'false') + '">' +
                     esc(entry.label) +
-                  '</button>'
+                  '</' + tag + '>'
                 );
               }).join('') +
             '</div>' +
             '<div class="cmp-nav__detail-content">' +
               (item.items || []).map(function (entry, itemIndex) {
                 return '<div data-detail-pane="' + itemIndex + '"' + (itemIndex === 0 ? '' : ' hidden') + '>' +
-                  renderDetailPane(item, entry) +
+                  renderDetailPane(item, entry, hoverLinks) +
                 '</div>';
               }).join('') +
             '</div>' +
@@ -435,12 +438,12 @@
     );
   }
 
-  function renderPersonalPanel(item, index, apps) {
+  function renderPersonalPanel(item, index, apps, isBusiness) {
     if (item.label === 'TV') return renderWidePromoPanel(item, index);
     if (item.mode === 'apps') return renderAppsPanel(item, index, apps);
     if (item.mode === 'list-promo') return renderListPromoPanel(item, index);
     if (item.mode === 'list') return renderListPanel(item, index);
-    return renderDetailPanel(item, index);
+    return renderDetailPanel(item, index, isBusiness && item.mode === 'detail-links');
   }
 
   function renderMobileAppItem(entry) {
@@ -593,7 +596,7 @@
             '</div>' +
           '</div>' +
         '</div>' +
-        nav.map(function (item, index) { return renderPersonalPanel(item, index, apps); }).join('') +
+        nav.map(function (item, index) { return renderPersonalPanel(item, index, apps, isBusiness); }).join('') +
         '<div class="cmp-nav__mobile-drawer" id="nav-probe-mobile-drawer" data-mobile-drawer hidden aria-hidden="true">' +
           '<div class="wrap">' +
             '<div class="cmp-nav__mobile-utility-row">' +

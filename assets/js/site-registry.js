@@ -194,6 +194,7 @@
     { path: '/business/customer-engagement/bulk-sms/', title: 'Bulk & Profile SMS', parent: '/business/customer-engagement/', branch: 'b2b', status: 'planned' },
     { path: '/business/customer-engagement/content-services/', title: 'Call Signature / Content Services', parent: '/business/customer-engagement/', branch: 'b2b', status: 'planned' },
     { path: '/business/campaigns/', title: 'Campaigns', parent: '/business/', branch: 'b2b', status: 'planned' },
+    { path: '/business/campaigns/my-business-wifi/', title: 'My Business Wi-Fi', parent: '/business/campaigns/', branch: 'b2b', status: 'planned' },
     { path: '/business/campaigns/my-business-club/', title: 'My Business Club', parent: '/business/campaigns/', branch: 'b2b', status: 'planned' },
     { path: '/business/campaigns/archive/', title: 'Campaigns archive', parent: '/business/campaigns/', branch: 'b2b', status: 'planned' },
     { path: '/business/campaigns/why-azercell-business/', title: 'Why Azercell Business?', parent: '/business/campaigns/', branch: 'b2b', status: 'planned' },
@@ -602,11 +603,11 @@
       {
         label: 'Campaigns', href: href('/business/campaigns/'), mode: 'list-promo',
         items: [
-          { label: 'All campaigns', href: href('/business/campaigns/') },
-          { label: 'Campaigns archive', href: href('/business/campaigns/archive/') },
-          { label: 'Why Azercell Business?', href: href('/business/campaigns/why-azercell-business/') }
+          { label: 'Why Azercell Business?', href: href('/business/campaigns/why-azercell-business/') },
+          { label: 'My Business Wi-Fi', href: href('/business/campaigns/my-business-wifi/') },
+          { label: 'Campaigns archive', href: href('/business/campaigns/archive/') }
         ],
-        promo: { label: 'My Business Club', href: href('/business/campaigns/my-business-club/') }
+        promo: { label: 'My Business Wi-Fi', href: href('/business/campaigns/my-business-wifi/') }
       },
       {
         label: 'Support', href: href('/business/support/'), mode: 'list',

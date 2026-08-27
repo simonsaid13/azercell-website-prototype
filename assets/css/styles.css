@@ -3414,6 +3414,10 @@ html[data-nav-variant="v2"] [data-apps-v1] {
   margin-top: var(--sp-3);
 }
 
+.cmp-nav__detail-links--flush {
+  margin-top: 0;
+}
+
 .cmp-nav__detail-card {
   width: min(100%, 28rem);
 }

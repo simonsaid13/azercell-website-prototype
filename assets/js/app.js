@@ -1455,6 +1455,8 @@
       }
       var appTrigger = closest(event.target, '[data-app-trigger]');
       if (appTrigger) activateAppPromo(appTrigger);
+      var detailTrigger = closest(event.target, '[data-detail-trigger]');
+      if (detailTrigger && closest(detailTrigger, '[data-detail-hover="true"]')) activateDetail(detailTrigger);
     });
 
     document.addEventListener('mouseout', function (event) {
@@ -1465,6 +1467,8 @@
     });
 
     document.addEventListener('focusin', function (event) {
+      var detailTrigger = closest(event.target, '[data-detail-trigger]');
+      if (detailTrigger && closest(detailTrigger, '[data-detail-hover="true"]')) activateDetail(detailTrigger);
       var menuControl = closest(event.target, '[data-menu-link], [data-menu-toggle]');
       var businessHeader = closest(menuControl, '[data-header][data-branch="business"]');
       if (!businessHeader || !menuControl) return;
