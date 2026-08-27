@@ -300,7 +300,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 
 Desktop category labels navigate to their landing pages. Hover/focus or the adjacent chevron opens the mega menu. Mobile uses a category link plus a separate expand control.
 
-Business reuses the Personal menu presentation patterns and type scale: Mobile uses the Personal Mobile rail/detail layout with an accented Azercell Biznes entry; its rail labels remain landing-page links and expose submenus on hover/focus without repeating the selected label in the detail pane. Standard categories use the Personal Company list layout. Campaigns lists Why Azercell Business first, the active My Business Wi-Fi campaign and the archive beside a My Business Wi-Fi promo card.
+Business reuses the Personal menu presentation patterns and type scale: Mobile uses the Personal Mobile rail/detail layout with an accented Azercell Biznes entry; its rail labels remain landing-page links and expose submenus on hover/focus without repeating the selected label in the detail pane. Standard categories use the Personal Company list layout. Campaigns lists Why Azercell Business first, the active My Business Wi-Fi campaign, My Business Club and the archive beside a My Business Wi-Fi promo card.
 
 | Category | Landing / children | Status |
 |----------|--------------------|--------|
@@ -425,6 +425,7 @@ Shown on `/business/` and B2B planned placeholders with the same Internet, Tarif
 
 | Date | Change |
 |------|--------|
+| 2026-08-27 | Restored My Business Club to the Business Campaigns mega-menu while retaining the My Business Wi-Fi promo banner. |
 | 2026-08-27 | Updated Business Campaigns to show Why Azercell Business first, the active My Business Wi-Fi campaign and archive, with a matching Wi-Fi promo. Business Mobile rail links now expose submenus on hover/focus without duplicated detail headings; Personal behavior remains unchanged. |
 | 2026-08-27 | Aligned Business mega-menu presentation with Personal: Mobile now uses the rail/detail pattern with an Azercell Biznes accent; standard categories use the Company list; Campaigns adds a My Business Club promo. Removed third-level Mobile links from the Business footer. |
 | 2026-08-27 | Rebuilt the Business mega menu, footer and page registry around the confirmed B2B IA. Category labels now navigate while hover/focus and chevrons expose menus; mobile separates link and expand controls. All unbuilt destinations use the existing `/planned/?path=…` flow. |

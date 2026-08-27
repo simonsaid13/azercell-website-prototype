@@ -605,6 +605,7 @@
         items: [
           { label: 'Why Azercell Business?', href: href('/business/campaigns/why-azercell-business/') },
           { label: 'My Business Wi-Fi', href: href('/business/campaigns/my-business-wifi/') },
+          { label: 'My Business Club', href: href('/business/campaigns/my-business-club/') },
           { label: 'Campaigns archive', href: href('/business/campaigns/archive/') }
         ],
         promo: { label: 'My Business Wi-Fi', href: href('/business/campaigns/my-business-wifi/') }
