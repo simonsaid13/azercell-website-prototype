@@ -101,6 +101,16 @@
     panel.setAttribute('data-open', open ? 'false' : 'true');
   }
 
+  function openMenu(header, key) {
+    var btn = header && header.querySelector('[data-menu-toggle="' + key + '"]');
+    var panel = header && header.querySelector('[data-menu-panel="' + key + '"]');
+    if (!btn || !panel) return;
+    closeMenus(header, key);
+    closeHeaderSearch(header);
+    btn.setAttribute('aria-expanded', 'true');
+    panel.setAttribute('data-open', 'true');
+  }
+
   /* ----------------------------------------------------------------------
      Header — search toggle on mobile/tablet
      ---------------------------------------------------------------------- */
@@ -1091,7 +1101,12 @@
 
     var menuToggle = closest(el, '[data-menu-toggle]');
     if (menuToggle) {
-      toggleMenu(closest(menuToggle, '[data-header]'), menuToggle.getAttribute('data-menu-toggle'));
+      var menuHeader = closest(menuToggle, '[data-header]');
+      if (menuHeader && menuHeader.getAttribute('data-branch') === 'business') {
+        openMenu(menuHeader, menuToggle.getAttribute('data-menu-toggle'));
+      } else {
+        toggleMenu(menuHeader, menuToggle.getAttribute('data-menu-toggle'));
+      }
       return;
     }
 
@@ -1433,8 +1448,28 @@
     all(document, '[data-roam-search-wrap]').forEach(initRoamingCountrySearch);
 
     document.addEventListener('mouseover', function (event) {
+      var menuHover = closest(event.target, '[data-menu-hover]');
+      if (menuHover) {
+        var businessHeader = closest(menuHover, '[data-header][data-branch="business"]');
+        if (businessHeader) openMenu(businessHeader, menuHover.getAttribute('data-menu-hover'));
+      }
       var appTrigger = closest(event.target, '[data-app-trigger]');
       if (appTrigger) activateAppPromo(appTrigger);
+    });
+
+    document.addEventListener('mouseout', function (event) {
+      var businessHeader = closest(event.target, '[data-header][data-branch="business"]');
+      if (businessHeader && (!event.relatedTarget || !businessHeader.contains(event.relatedTarget))) {
+        closeMenus(businessHeader, null);
+      }
+    });
+
+    document.addEventListener('focusin', function (event) {
+      var menuControl = closest(event.target, '[data-menu-link], [data-menu-toggle]');
+      var businessHeader = closest(menuControl, '[data-header][data-branch="business"]');
+      if (!businessHeader || !menuControl) return;
+      var key = menuControl.getAttribute('data-menu-link') || menuControl.getAttribute('data-menu-toggle');
+      openMenu(businessHeader, key);
     });
 
     window.addEventListener('resize', function () {

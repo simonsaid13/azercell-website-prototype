@@ -286,20 +286,43 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 
 ## `/business/` — Business homepage
 
+| Connection | Target | Status |
 |----------------|--------|--------|
 | Tariff carousel → Plan details | `/business/mobile/tariffs/` | PLANNED |
-| Internet packs, solutions, IoT sections | Various `/business/…` routes | PLANNED |
+| Internet packs, solutions, IoT sections | New canonical `/business/…` IA routes | PLANNED |
 | Lead form handoff | Contact / *6050 | CONNECTED |
 | Announcement bar | Personal `SITE_CHROME.announcements` | CONNECTED |
-| Header nav | Personal `SITE_CHROME.nav`; Business audience tab active | Mixed (see Personal header section) |
+| Header nav | `SITE_CHROME.businessNav`; Business audience tab active | PLANNED destinations via working placeholders |
 | Floating bar | Personal `SITE_CHROME.floatingBar` | Mixed (see Floating bar section) |
-| Footer | Personal `SITE_CHROME.footer` | Mixed (see Personal footer section) |
+| Footer | `SITE_CHROME.businessFooter` | Mixed: external/legal connected; B2B destinations planned |
+
+### Business header (`SITE_CHROME.businessNav`)
+
+Desktop category labels navigate to their landing pages. Hover/focus or the adjacent chevron opens the mega menu. Mobile uses a category link plus a separate expand control.
+
+| Category | Landing / children | Status |
+|----------|--------------------|--------|
+| Company | `/about/…` | PLANNED; Careers and Azercell Life external |
+| Mobile | `/business/mobile/…` | PLANNED |
+| Connectivity | `/business/connectivity/…` | PLANNED; Fixed service relationship on hold |
+| IoT & M2M | `/business/iot/…` | PLANNED |
+| Fleet & field operations | `/business/fleet-field-operations/…` | PLANNED; separate Fleet package page on hold |
+| Automation & management | `/business/automation-management/…` | PLANNED |
+| Customer engagement | `/business/customer-engagement/…` | PLANNED |
+| Campaigns | `/business/campaigns/…` | PLANNED |
+| Support | `/business/support/…` | PLANNED |
+| Header → Azercell Biznes | biznes.azercell.com | CONNECTED (external) |
+| Header → Log in | `/business/login/` | PLANNED; final destination pending |
+
+### Business footer (`SITE_CHROME.businessFooter`)
+
+Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`, Campaigns links, a My Business Club banner, and an Azercell Biznes app banner. Unknown store destinations are intentionally non-clickable.
 
 ---
 
 ## Header navigation (`SITE_CHROME.nav` — B2C Personal)
 
-Personal chrome: Company, Mobile, TV, Apps, Devices, Campaigns, Support. The Business homepage reuses the same chrome and actions, with the Business audience tab active.
+Personal chrome: Company, Mobile, TV, Apps, Devices, Campaigns, Support. Business uses the same responsive shell with its own data and interaction rules.
 
 | Nav item | Target | Status |
 |----------|--------|--------|
@@ -328,7 +351,7 @@ Personal chrome: Company, Mobile, TV, Apps, Devices, Campaigns, Support. The Bus
 
 ## Footer (`SITE_CHROME.footer` — B2C Personal)
 
-The Business homepage also uses `SITE_CHROME.footer`, including its sitemap legal link, app card, subscribe form, and responsive accordion behavior.
+The Business footer preserves this shell, subscription, legal, social, language and copyright behavior but supplies separate B2B navigation and banners.
 
 | Footer group / link | Target | Status |
 |---------------------|--------|--------|
@@ -345,9 +368,9 @@ The Business homepage also uses `SITE_CHROME.footer`, including its sitemap lega
 
 ---
 
-## Floating bar (`SITE_CHROME.floatingBar` — Personal routes and Business homepage)
+## Floating bar (`SITE_CHROME.floatingBar` — Personal routes and Business pages)
 
-Shown on `/business/` with the same Internet, Tariffs, Roaming, Kinon popovers and Search link as Personal. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
+Shown on `/business/` and B2B planned placeholders with the same Internet, Tariffs, Roaming, Kinon popovers and Search link as Personal. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
 
 | Item | Target | Status |
 |------|--------|--------|
@@ -400,6 +423,7 @@ Shown on `/business/` with the same Internet, Tariffs, Roaming, Kinon popovers a
 
 | Date | Change |
 |------|--------|
+| 2026-08-27 | Rebuilt the Business mega menu, footer and page registry around the confirmed B2B IA. Category labels now navigate while hover/focus and chevrons expose menus; mobile separates link and expand controls. All unbuilt destinations use the existing `/planned/?path=…` flow. |
 | 2026-08-27 | Business homepage now reuses the complete Personal announcement bar, responsive header/navigation, floating shortcut bar with popovers, and Personal footer. Business content remains unchanged. |
 | 2026-08-26 | Personal chrome swap — Vlad header/footer/floating bar on B2C pages. Homepage acquisition block replaces quick actions. Support chat removed. Built `/join-azercell/transfer-number/` with inbound from acquisition + header e-SIM. Footer Sitemap → `/sitemap/` (user-requested). Business keeps classic chrome, no chat, no floating bar. |
 | 2026-08-04 | Built B2C roaming section — hub, internet-packs, travel-packs, countries-and-prices. Country search with ?country= URL sync, ~35 sample destinations, header/footer/homepage/mobile links CONNECTED. |

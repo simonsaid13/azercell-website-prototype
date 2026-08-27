@@ -2947,6 +2947,25 @@ html[data-nav-variant="v2"] [data-apps-v1] {
   text-decoration: underline;
 }
 
+.cmp-nav__footer-link--nested {
+  padding-left: var(--sp-3);
+  color: var(--c-muted);
+  font-size: 13px;
+}
+
+.cmp-nav__footer-link--featured {
+  padding: var(--sp-2);
+  background: var(--c-inverse-bg);
+  color: var(--c-inverse-ink);
+  font-weight: 800;
+}
+
+.cmp-nav__footer-feature-cards {
+  display: grid;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
 .cmp-nav__footer-app-card {
   min-width: 0;
   display: flex;
@@ -3255,6 +3274,105 @@ html[data-nav-variant="v2"] [data-apps-v1] {
   white-space: nowrap;
 }
 
+/* Business navigation: category labels navigate; hover/focus or the chevron
+   opens the corresponding mega menu. */
+.cmp-nav[data-branch="business"] .cmp-header__nav-list {
+  justify-content: flex-start;
+}
+
+.cmp-nav[data-branch="business"] .cmp-header__nav-btn {
+  min-height: 36px;
+  padding-inline: var(--sp-1);
+  font-size: 12px;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.cmp-nav__category-control {
+  display: flex;
+  align-items: center;
+}
+
+.cmp-nav__category-link {
+  border-radius: 0;
+}
+
+.cmp-nav__category-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  min-height: 36px;
+  color: var(--c-muted);
+}
+
+.cmp-nav__category-control:hover .cmp-nav__category-link,
+.cmp-nav__category-control:focus-within .cmp-nav__category-link {
+  border-color: var(--c-line-strong);
+}
+
+.cmp-nav__business-panel {
+  max-height: min(72vh, 640px);
+  overflow-y: auto;
+}
+
+.cmp-nav__business-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--business-menu-columns, 3), minmax(0, 1fr));
+  gap: var(--sp-4);
+}
+
+.cmp-nav__business-tree-item[data-depth="0"] {
+  min-width: 0;
+  padding: var(--sp-3);
+  border: 1px solid var(--c-line);
+}
+
+.cmp-nav__business-link {
+  display: block;
+  color: var(--c-ink);
+  overflow-wrap: anywhere;
+}
+
+.cmp-nav__business-link:hover,
+.cmp-nav__business-link:focus-visible {
+  text-decoration: underline;
+}
+
+.cmp-nav__business-link--0 {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.cmp-nav__business-link--featured {
+  min-height: 72px;
+  padding: var(--sp-3);
+  background: var(--c-inverse-bg);
+  color: var(--c-inverse-ink);
+  font-size: 18px;
+}
+
+.cmp-nav__business-children {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding-left: var(--sp-3);
+  border-left: 1px solid var(--c-line-strong);
+}
+
+.cmp-nav__business-link--1 {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cmp-nav__business-link--2 {
+  color: var(--c-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .cmp-nav__panel-list {
   width: min(100%, 24rem);
   display: flex;
@@ -3436,6 +3554,14 @@ html[data-nav-variant="v2"] [data-apps-v1] {
     padding-inline: var(--sp-1);
   }
 
+  .cmp-nav[data-branch="business"] .cmp-header__nav-btn {
+    font-size: 11px;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__category-toggle {
+    width: 16px;
+  }
+
   .cmp-nav__actions {
     gap: var(--sp-1);
   }
@@ -3556,6 +3682,36 @@ html[data-nav-variant="v2"] [data-apps-v1] {
     min-height: 48px;
     padding: var(--sp-3) 0;
     text-align: left;
+  }
+
+  .cmp-nav__mobile-category-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px;
+    align-items: stretch;
+  }
+
+  .cmp-nav__mobile-category-link,
+  .cmp-nav__mobile-category-toggle {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+  }
+
+  .cmp-nav__mobile-category-link {
+    padding-right: var(--sp-2);
+  }
+
+  .cmp-nav__mobile-category-toggle {
+    justify-content: center;
+    border-left: 1px solid var(--c-line);
+  }
+
+  .cmp-nav__business-mobile-tree {
+    gap: var(--sp-2);
+  }
+
+  .cmp-nav__business-mobile-tree .cmp-nav__business-tree-item[data-depth="0"] {
+    padding: var(--sp-3);
   }
 
   .cmp-nav__mobile-group-body[data-open="false"],
@@ -3839,6 +3995,140 @@ html[data-nav-variant="v2"] [data-apps-v1] {
 
   .cmp-nav__floating-label {
     font: inherit;
+  }
+}
+
+/* The expanded Business information architecture needs the compact drawer at
+   tablet widths. Personal keeps its existing breakpoint and desktop menu. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cmp-nav[data-branch="business"] .cmp-header__nav,
+  .cmp-nav[data-branch="business"] .cmp-nav__actions > .btn:not(.cmp-nav__mobile-menu-btn) {
+    display: none;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-menu-btn {
+    display: inline-flex !important;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-drawer {
+    display: block !important;
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+    padding-block: var(--sp-3);
+    border-top: 1px solid var(--c-line);
+    background: var(--c-surface);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-utility-row,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-audience-segment,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-category-link,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-category-toggle,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-group-toggle,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-inner-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-utility-row {
+    align-items: stretch;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-3);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-audience {
+    display: grid;
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 1px solid var(--c-line-strong);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-audience-segment {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-audience-tab {
+    min-height: 40px;
+    padding: var(--sp-2) var(--sp-3);
+    border-right: 1px solid var(--c-line-strong);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-audience-tab:last-child {
+    border-right: 0;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-audience-tab[aria-current="page"] {
+    color: var(--c-inverse-ink);
+    background: var(--c-inverse-bg);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-variant-toggle {
+    min-width: 42px;
+    min-height: 40px;
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--c-line-strong);
+    font-weight: 700;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-group {
+    border-top: 1px solid var(--c-line);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-group:last-child {
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-category-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-category-link,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-category-toggle,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-group-toggle,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-inner-toggle {
+    min-height: 48px;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-category-link {
+    padding-right: var(--sp-2);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-category-toggle {
+    justify-content: center;
+    border-left: 1px solid var(--c-line);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-group-body[data-open="false"],
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-inner-body[data-open="false"] {
+    display: none;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-group-body[data-open="true"] {
+    display: block;
+    padding-bottom: var(--sp-3);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-simple-list,
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__mobile-link {
+    display: block;
+    min-height: 36px;
+    padding: var(--sp-2) 0;
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__business-mobile-tree {
+    gap: var(--sp-2);
+  }
+
+  .cmp-nav[data-branch="business"] .cmp-nav__business-mobile-tree .cmp-nav__business-tree-item[data-depth="0"] {
+    padding: var(--sp-3);
   }
 }
 

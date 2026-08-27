@@ -35,17 +35,16 @@
 
   var BIZNES = 'https://biznes.azercell.com';
   var CONTACT = href('/about/contact/');
-  var personalHeader = R.headerProps({ branch: 'personal' });
-  personalHeader.branch = 'business';
+  var businessHeader = R.headerProps({ branch: 'business' });
 
   /* ---------------------------------------------------------------- Chrome */
 
   Components.mount('#page-top', [
     ['announcementBar', { messages: chrome.announcements }],
-    ['siteHeader', personalHeader]
+    ['siteHeader', businessHeader]
   ]);
 
-  Components.mount('#page-bottom', [['siteFooter', chrome.footer]]);
+  Components.mount('#page-bottom', [['siteFooter', chrome.businessFooter]]);
   Components.mount('#page-chat', [['floatingBar', chrome.floatingBar]]);
 
   /* ------------------------------------------------------------------ Data */
@@ -74,7 +73,7 @@
       media: 'Azercell Biznes portal',
       actions: [
         { label: 'Open Azercell Biznes', href: BIZNES, variant: 'primary' },
-        { label: 'What it does', href: href('/business/mobile/special-services/azercell-biznes/') }
+        { label: 'What it does', href: href('/business/mobile/azercell-biznes/') }
       ]
     },
     {
@@ -82,21 +81,21 @@
       title: 'Intelligent video surveillance for your fleet',
       body: 'Smart dash-cams with cloud footage and alerts, for safety and dispute resolution.',
       media: 'YolDASH360',
-      actions: [{ label: 'YolDASH360 details', href: href('/business/iot/yoldash-360/'), variant: 'primary' }]
+      actions: [{ label: 'YolDASH360 details', href: href('/business/fleet-field-operations/yoldash-360/'), variant: 'primary' }]
     },
     {
       eyebrow: 'InfoHUB',
       title: 'Monitor and optimize',
       body: 'Your business knowledge and answers in one centre for customer-service teams.',
       media: 'InfoHUB',
-      actions: [{ label: 'InfoHUB details', href: href('/business/cloud/infohub/'), variant: 'primary' }]
+      actions: [{ label: 'InfoHUB details', href: href('/business/customer-engagement/infohub/'), variant: 'primary' }]
     },
     {
       eyebrow: 'Mobile team management',
       title: 'See where your field team is working',
       body: 'Task dispatch with GPS and photo reporting, from 200 AZN per month.',
       media: 'Mobile team management',
-      actions: [{ label: 'Team management details', href: href('/business/iot/team-management/'), variant: 'primary' }]
+      actions: [{ label: 'Team management details', href: href('/business/fleet-field-operations/team-management/'), variant: 'primary' }]
     }
   ];
 
@@ -134,14 +133,14 @@
       priceNote: 'Per month, per point, VAT excluded',
       body: 'Dedicated wireless internet from 5Mb/s to 100Mb/s for sites that cannot tolerate consumer-grade connections.',
       meta: ['500 AZN one-time installation', '3-day install turnaround', '99.5% uptime SLA on 100Mb/s'],
-      href: href('/business/fixed/leased-line/')
+      href: href('/business/connectivity/leased-line/')
     },
     {
       category: 'fixed',
       name: 'Unified service',
       price: 'Price on request',
       body: 'Mobile, fixed, cloud and contact centre delivered as one package instead of separate vendors.',
-      href: href('/business/unified/')
+      href: href('/business/connectivity/unified-communications/')
     },
     {
       category: 'fixed',
@@ -150,21 +149,21 @@
       priceNote: 'Per month',
       body: 'Portable Mi-Fi hotspots for up to 10 devices, or fixed WTTx units for up to 32 devices.',
       meta: ['Mi-Fi 60GB — 40 AZN', 'WTTx 110GB — 50 AZN', 'WTTx 210GB — 70 AZN'],
-      href: href('/business/mobile/wifi/')
+      href: href('/business/connectivity/wifi/')
     },
     {
       category: 'cloud',
       name: 'Customer Experience Management Platform',
       price: 'Price on request',
       body: 'Build your own customer communications — calls, video, chat, SMS, email and chatbots — on Azercell infrastructure.',
-      href: href('/business/cloud/cpaas/')
+      href: href('/business/customer-engagement/cpaas/')
     },
     {
       category: 'cloud',
       name: 'InfoHUB',
       price: 'Price on request',
       body: 'Cloud knowledge and collaboration tool that turns business data into an operations dashboard.',
-      href: href('/business/cloud/infohub/')
+      href: href('/business/customer-engagement/infohub/')
     },
     {
       category: 'iot',
@@ -172,7 +171,7 @@
       price: 'Price on request',
       priceNote: 'Monthly subscription',
       body: 'Smart dash-cam fleet video surveillance with cloud footage and driver alerts.',
-      href: href('/business/iot/yoldash-360/')
+      href: href('/business/fleet-field-operations/yoldash-360/')
     },
     {
       category: 'iot',
@@ -186,7 +185,7 @@
       name: 'Robotic Automation Solution (RPA)',
       price: 'Price on request',
       body: 'Custom bots that take over invoicing, onboarding, data entry and reporting.',
-      href: href('/business/iot/rpa/')
+      href: href('/business/automation-management/rpa/')
     },
     {
       category: 'iot',
@@ -195,7 +194,7 @@
       priceNote: 'Per device, per month',
       body: 'Enterprise control and security over company devices, with dual-profile BYOD support.',
       meta: ['600 AZN one-time setup and training'],
-      href: href('/business/iot/device-management/')
+      href: href('/business/automation-management/device-management/')
     },
     {
       category: 'iot',
@@ -204,14 +203,14 @@
       priceNote: 'Per month, VAT excluded',
       body: 'Task dispatch and GPS or photo reporting for field teams.',
       meta: ['Lite — 200 AZN, 3 field users', 'Plus — 400 AZN, 6 field users', 'Pro — 700 AZN, 12 field users'],
-      href: href('/business/iot/team-management/')
+      href: href('/business/fleet-field-operations/team-management/')
     },
     {
       category: 'iot',
       name: 'My Business Fleet',
       price: 'Price on request',
       body: 'GPS telematics with harsh-braking, fuel-fraud and maintenance alerts.',
-      href: href('/business/iot/fleet/')
+      href: href('/business/fleet-field-operations/fleet/')
     },
     {
       category: 'iot',
@@ -219,7 +218,7 @@
       price: '30 AZN',
       priceNote: 'Per month',
       body: 'Remote irrigation monitoring and control with a dashboard and alerts.',
-      href: href('/business/iot/irrigation/')
+      href: href('/business/fleet-field-operations/irrigation/')
     }
   ];
 
@@ -229,14 +228,14 @@
       eyebrow: 'Active campaign',
       title: 'My Business Wi-Fi',
       body: 'Portable and fixed hotspot offers for teams that need connectivity beyond the SIM.',
-      actions: [{ label: 'Campaign details', href: href('/business/mobile/campaigns/'), variant: 'primary' }]
+      actions: [{ label: 'Campaign details', href: href('/business/campaigns/'), variant: 'primary' }]
     },
     {
       media: 'Device and tariff bundle',
       eyebrow: 'Active campaign',
       title: 'Device and plan bundles',
       body: 'A business smartphone bundled with a My Business plan over a commitment period.',
-      actions: [{ label: 'Campaign details', href: href('/business/mobile/campaigns/'), variant: 'primary' }]
+      actions: [{ label: 'Campaign details', href: href('/business/campaigns/'), variant: 'primary' }]
     }
   ];
 
@@ -434,7 +433,7 @@
         eyebrow: 'Campaigns',
         title: 'Current business campaigns',
         body: 'Active offers for corporate customers.',
-        action: { label: 'All campaigns', href: href('/business/mobile/campaigns/') }
+        action: { label: 'All campaigns', href: href('/business/campaigns/') }
       }) +
       '<div class="grid grid--3">' +
         campaigns.map(function (c) { return render('promoCard', c); }).join('') +
