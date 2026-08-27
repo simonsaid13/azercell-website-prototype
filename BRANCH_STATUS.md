@@ -63,15 +63,15 @@ Statuses are decisions, not code facts:
 <!-- BRANCH_FACTS:START -->
 ### Generated branch facts
 
-Integration target: `main` at `407157cea41920b36c937060064c4716538fd569`.
+Integration target: `main` at `ccbc9345f288e30f1ee4e2d7a5674e9019bd8b74`.
 Generated from local Git refs under `refs/remotes/origin`. Run `node scripts/sync-branch-status.mjs --fetch` to pull the latest remote state first. Working-tree changes are never included.
 
 ### Branches
 
 | Branch | Last commit | Date | Author | Ahead of `main` | Behind `main` | In `main` | Handoff note | Areas touched |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `vadym` | `f3ac0ec` | 2026-08-27 | pajasu | 13 | 1 | No | None | `.cursor/`, `.gitignore`, `PAGE_CONNECTIONS.md`, `assets/`, `business/`, `index.html`, `join-azercell/`, `planned/`, `tariffs/` |
-| `vlad` | `a3b763e` | 2026-08-27 | vladssssssss | 9 | 1 | No | `a3b763e` (2026-08-27) | `.githooks/`, `AGENTS.md`, `INTEGRATION_HANDOFF.md`, `PAGE_CONNECTIONS.md`, `README.md`, `assets/`, `middleware.js`, `nav-lab/`, `scripts/`, `tariff-compare-lab/` |
+| `vadym` | `f3ac0ec` | 2026-08-27 | pajasu | 13 | 3 | No | None | `.cursor/`, `.gitignore`, `PAGE_CONNECTIONS.md`, `assets/`, `business/`, `index.html`, `join-azercell/`, `planned/`, `tariffs/` |
+| `vlad` | `a3b763e` | 2026-08-27 | vladssssssss | 9 | 3 | No | `a3b763e` (2026-08-27) | `.githooks/`, `AGENTS.md`, `INTEGRATION_HANDOFF.md`, `PAGE_CONNECTIONS.md`, `README.md`, `assets/`, `middleware.js`, `nav-lab/`, `scripts/`, `tariff-compare-lab/` |
 
 ### File deltas since each fork point
 
@@ -89,14 +89,26 @@ Files below are touched by more than one unmerged branch, or were also changed o
 | `assets/js/site-registry.js` | `vadym`, `vlad` | Yes |
 | `PAGE_CONNECTIONS.md` | `vadym`, `vlad` | Yes |
 | `.cursor/skills/plan-handoff/SKILL.md` | `vadym` | Yes |
+| `.githooks/pre-push` | `vlad` | Yes |
 | `.gitignore` | `vadym` | Yes |
+| `AGENTS.md` | `vlad` | Yes |
 | `assets/css/styles.css` | `vadym` | Yes |
 | `assets/js/app.js` | `vadym` | Yes |
 | `assets/js/components.js` | `vadym` | Yes |
 | `business/index.html` | `vadym` | Yes |
 | `index.html` | `vadym` | Yes |
 | `join-azercell/transfer-number/index.html` | `vadym` | Yes |
+| `nav-lab/index.html` | `vlad` | Yes |
+| `nav-lab/navigation.css` | `vlad` | Yes |
+| `nav-lab/navigation.js` | `vlad` | Yes |
+| `nav-lab/transfer-number/index.html` | `vlad` | Yes |
+| `nav-lab/transfer-number/transfer-number.css` | `vlad` | Yes |
+| `nav-lab/transfer-number/transfer-number.js` | `vlad` | Yes |
 | `planned/index.html` | `vadym` | Yes |
+| `README.md` | `vlad` | Yes |
+| `scripts/audit.mjs` | `vlad` | Yes |
+| `scripts/install-integration-hooks.mjs` | `vlad` | Yes |
+| `scripts/sync-integration-handoff-history.mjs` | `vlad` | Yes |
 | `tariffs/compare/index.html` | `vadym` | Yes |
 | `tariffs/internet/daily/index.html` | `vadym` | Yes |
 | `tariffs/internet/index.html` | `vadym` | Yes |
