@@ -299,7 +299,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 
 ### Business header (`SITE_CHROME.businessNav`)
 
-Desktop category labels navigate to their landing pages. Hover/focus or the adjacent chevron opens the mega menu. Mobile uses a category link plus a separate expand control.
+Desktop category labels navigate to their landing pages. Hover/focus opens the mega menu; dropdown arrows are omitted and visible labels use equal spacing with left alignment. Mobile uses a category link plus a separate expand control.
 
 Business reuses the Personal menu presentation patterns and type scale: Mobile uses the Personal Mobile rail/detail layout with an accented Azercell Biznes entry; its rail labels remain landing-page links and expose submenus on hover/focus without repeating the selected label in the detail pane. Standard categories use the Personal Company list layout. Campaigns lists Why Azercell Business first, the active My Business Wi-Fi campaign, My Business Club and the archive beside a My Business Wi-Fi promo card.
 
@@ -426,6 +426,7 @@ Shown on `/business/` and B2B planned placeholders with the same Internet, Tarif
 
 | Date | Change |
 |------|--------|
+| 2026-08-27 | Removed Business desktop dropdown arrows, left-aligned category links and set equal visual spacing between labels. Renamed the Business acquisition labels to Acquisition action 1–5 while preserving destinations and Personal labels. |
 | 2026-08-27 | Added the unchanged Personal acquisition block directly below the Business hero, reusing the shared component, content and destinations. |
 | 2026-08-27 | Restored My Business Club to the Business Campaigns mega-menu while retaining the My Business Wi-Fi promo banner. |
 | 2026-08-27 | Updated Business Campaigns to show Why Azercell Business first, the active My Business Wi-Fi campaign and archive, with a matching Wi-Fi promo. Business Mobile rail links now expose submenus on hover/focus without duplicated detail headings; Personal behavior remains unchanged. |

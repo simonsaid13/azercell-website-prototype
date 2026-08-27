@@ -3274,18 +3274,19 @@ html[data-nav-variant="v2"] [data-apps-v1] {
   white-space: nowrap;
 }
 
-/* Business navigation: category labels navigate; hover/focus or the chevron
-   opens the corresponding mega menu. */
+/* Business navigation: category labels navigate; hover/focus opens the
+   corresponding mega menu. Gaps are measured between visible labels. */
 .cmp-nav[data-branch="business"] .cmp-header__nav-list {
   justify-content: flex-start;
+  gap: var(--sp-2);
 }
 
 .cmp-nav[data-branch="business"] .cmp-header__nav-btn {
   min-height: 36px;
-  padding-inline: var(--sp-1);
+  padding-inline: 0;
   font-size: 12px;
   line-height: 1.15;
-  text-align: center;
+  text-align: left;
 }
 
 .cmp-nav__category-control {
@@ -3295,15 +3296,6 @@ html[data-nav-variant="v2"] [data-apps-v1] {
 
 .cmp-nav__category-link {
   border-radius: 0;
-}
-
-.cmp-nav__category-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  min-height: 36px;
-  color: var(--c-muted);
 }
 
 .cmp-nav__category-control:hover .cmp-nav__category-link,

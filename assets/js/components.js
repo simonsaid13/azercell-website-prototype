@@ -568,9 +568,6 @@
                             ' data-menu-link="' + index + '" aria-controls="nav-panel-' + index + '">' +
                             esc(item.label) +
                           '</a>' +
-                          '<button type="button" class="cmp-nav__category-toggle" data-menu-toggle="' + index + '"' +
-                            ' aria-expanded="false" aria-controls="nav-panel-' + index + '"' +
-                            ' aria-label="Open ' + esc(item.label) + ' menu"><span aria-hidden="true">▾</span></button>' +
                         '</div>' +
                       '</li>'
                     );

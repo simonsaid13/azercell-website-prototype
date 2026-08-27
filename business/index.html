@@ -37,6 +37,12 @@
   var BIZNES = 'https://biznes.azercell.com';
   var CONTACT = href('/about/contact/');
   var businessHeader = R.headerProps({ branch: 'business' });
+  var businessAcquisition = {
+    title: chrome.acquisition.title,
+    items: chrome.acquisition.items.map(function (item, index) {
+      return { label: 'Acquisition action ' + (index + 1), href: item.href };
+    })
+  };
 
   /* ---------------------------------------------------------------- Chrome */
 
@@ -397,7 +403,7 @@
   Components.mount('#page-main', [
     ['heroBanner', { slides: heroSlides }],
 
-    render('acquisitionBlock', chrome.acquisition),
+    render('acquisitionBlock', businessAcquisition),
 
     section(
       render('sectionHead', {
