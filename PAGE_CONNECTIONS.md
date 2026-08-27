@@ -293,6 +293,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Lead form handoff | Contact / *6050 | CONNECTED |
 | Announcement bar | Personal `SITE_CHROME.announcements` | CONNECTED |
 | Header nav | `SITE_CHROME.businessNav`; Business audience tab active | PLANNED destinations via working placeholders |
+| Acquisition block below hero | Personal `SITE_CHROME.acquisition` | Mixed: same connected/planned destinations as Personal |
 | Floating bar | Personal `SITE_CHROME.floatingBar` | Mixed (see Floating bar section) |
 | Footer | `SITE_CHROME.businessFooter` | Mixed: external/legal connected; B2B destinations planned |
 
@@ -425,6 +426,7 @@ Shown on `/business/` and B2B planned placeholders with the same Internet, Tarif
 
 | Date | Change |
 |------|--------|
+| 2026-08-27 | Added the unchanged Personal acquisition block directly below the Business hero, reusing the shared component, content and destinations. |
 | 2026-08-27 | Restored My Business Club to the Business Campaigns mega-menu while retaining the My Business Wi-Fi promo banner. |
 | 2026-08-27 | Updated Business Campaigns to show Why Azercell Business first, the active My Business Wi-Fi campaign and archive, with a matching Wi-Fi promo. Business Mobile rail links now expose submenus on hover/focus without duplicated detail headings; Personal behavior remains unchanged. |
 | 2026-08-27 | Aligned Business mega-menu presentation with Personal: Mobile now uses the rail/detail pattern with an Azercell Biznes accent; standard categories use the Company list; Campaigns adds a My Business Club promo. Removed third-level Mobile links from the Business footer. |

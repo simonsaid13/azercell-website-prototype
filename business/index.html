@@ -25,6 +25,7 @@
  *   tariff carousel → Plan details — PLANNED (/business/mobile/tariffs/)
  *   internet packs / solutions / IoT — PLANNED (business sub-routes)
  *   leadForm handoff — CONNECTED (contact, *6050)
+ *   acquisitionBlock → Personal acquisition destinations — CONNECTED / PLANNED per PAGE_CONNECTIONS.md
  *   Personal announcement/header/floating bar/footer — CONNECTED / PLANNED per PAGE_CONNECTIONS.md
  */
 (function () {
@@ -395,6 +396,8 @@
 
   Components.mount('#page-main', [
     ['heroBanner', { slides: heroSlides }],
+
+    render('acquisitionBlock', chrome.acquisition),
 
     section(
       render('sectionHead', {
