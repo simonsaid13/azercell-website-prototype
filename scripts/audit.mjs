@@ -6,6 +6,7 @@
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, extname } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
@@ -147,6 +148,21 @@ for (const hidden of ['/sitemap/', '/components/']) {
   if (chromeBlock.includes(hidden)) {
     fail('assets/js/site-registry.js', 0, `Hidden route ${hidden} is linked from public navigation`);
   }
+}
+
+/* ------------------------------------------- Integration handoff freshness */
+
+try {
+  execFileSync(process.execPath, [join(ROOT, 'scripts/sync-integration-handoff-history.mjs'), '--check'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+} catch (error) {
+  const detail = String(error.stderr || error.stdout || error.message || 'chronology check failed')
+    .trim()
+    .replace(/\s+/g, ' ');
+  fail('INTEGRATION_HANDOFF.md', 0, detail);
 }
 
 /* ---------------------------------------------------------------- Report */

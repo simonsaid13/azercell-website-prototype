@@ -60,6 +60,42 @@ Do not blindly cherry-pick `b1d2408`: its authentication deletion is separate
 from the navigation feature. Do not restore or expose any historical embedded
 credentials. Authentication changes require an explicit security decision.
 
+### How this chronology stays current
+
+The marker-bounded block below is generated from committed Git history by
+`scripts/sync-integration-handoff-history.mjs`. It lists each tracked behavior
+version, exact file deltas, affected areas, and optional `Integration-Note:` /
+`Integration-Risk:` commit annotations. It deliberately ignores working-tree
+changes so an unpublished local experiment cannot appear as branch truth.
+
+Agents changing the tracked behavior must run the sync after the behavior
+commit, update the manual contract sections when behavior changed, and commit
+the resulting documentation before push. `scripts/audit.mjs` checks freshness,
+and the versioned pre-push hook attempts the sync automatically.
+
+<!-- INTEGRATION_HISTORY:START -->
+### Generated Git chronology
+
+Tracked behavior snapshot: `d5aff9c731ce7b541f2fae5d7002818db504c70c`. Documentation-only commits are excluded so regenerating this block cannot create a self-referential commit loop.
+Baseline: `42a7855e77705974c11c2fba2e4cfae1854dcf03`. Only committed changes in the tracked behavior allowlist are included; working-tree changes and handoff/docs files are excluded.
+
+Latest behavior version: `d5aff9c` — feat: add RU tariff comparison and mobile snap scrolling.
+Previous behavior version: `6847eaf` — feat: add connected tariff comparison prototype.
+
+### Versions and file deltas
+
+| Version | Date | Git message | Integration notes and risks | Areas | What changed | Files |
+| --- | --- | --- | --- | --- | --- | --- |
+| `b1d2408` | 2026-08-25 | feat: publish navigation review probe | — (see exact Git message) | Shared runtime, Security / access, Navigation probe | 1 changed, 1 removed, 3 added | Changed: `assets/js/site-registry.js`<br>Removed: `middleware.js`<br>Added: `nav-lab/index.html`, `nav-lab/navigation.css`, `nav-lab/navigation.js` |
+| `632d183` | 2026-08-25 | feat: add transfer number navigation probe | — (see exact Git message) | Shared runtime, Navigation probe | 4 changed, 3 added | Changed: `assets/js/site-registry.js`, `nav-lab/index.html`, `nav-lab/navigation.css`, `nav-lab/navigation.js`<br>Added: `nav-lab/transfer-number/index.html`, `nav-lab/transfer-number/transfer-number.css`, `nav-lab/transfer-number/transfer-number.js` |
+| `4aecf06` | 2026-08-26 | feat: add mobile navigation prototype | — (see exact Git message) | Navigation probe | 6 changed | Changed: `nav-lab/index.html`, `nav-lab/navigation.css`, `nav-lab/navigation.js`, `nav-lab/transfer-number/index.html`, `nav-lab/transfer-number/transfer-number.css`, `nav-lab/transfer-number/transfer-number.js` |
+| `6847eaf` | 2026-08-26 | feat: add connected tariff comparison prototype | — (see exact Git message) | Shared runtime, Navigation probe, Tariff comparator | 5 changed, 4 added | Changed: `assets/js/site-registry.js`, `nav-lab/index.html`, `nav-lab/navigation.css`, `nav-lab/navigation.js`, `nav-lab/transfer-number/index.html`<br>Added: `tariff-compare-lab/app.js`, `tariff-compare-lab/data.js`, `tariff-compare-lab/index.html`, `tariff-compare-lab/styles.css` |
+| `d5aff9c` | 2026-08-27 | feat: add RU tariff comparison and mobile snap scrolling | — (see exact Git message) | Tariff comparator | 3 changed | Changed: `tariff-compare-lab/app.js`, `tariff-compare-lab/data.js`, `tariff-compare-lab/styles.css` |
+
+**Security attention:** `b1d2408` removes `middleware.js`. This is a historical Git fact, not permission to remove or weaken authentication in another branch; require an explicit security decision.
+
+<!-- INTEGRATION_HISTORY:END -->
+
 ## 4. File and runtime map
 
 ### Navigation probe

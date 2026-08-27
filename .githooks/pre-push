@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel) || {
+  printf '%s\n' 'pre-push: unable to locate the repository root.' >&2
+  exit 1
+}
+
+cd "$repo_root"
+
+if ! node scripts/sync-integration-handoff-history.mjs; then
+  printf '%s\n' 'pre-push: integration handoff history sync failed; push aborted.' >&2
+  exit 1
+fi
+
+if ! git diff-index --quiet HEAD -- INTEGRATION_HANDOFF.md; then
+  printf '%s\n' 'pre-push: INTEGRATION_HANDOFF.md differs from HEAD after the history sync.' >&2
+  printf '%s\n' 'Review the generated change, then stage and commit it before pushing.' >&2
+  printf '%s\n' 'The hook does not stage, commit, amend, or push changes automatically.' >&2
+  exit 1
+fi
+
+exit 0

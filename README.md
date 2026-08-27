@@ -9,6 +9,28 @@ Before merging, cherry-picking, copying, or reimplementing work from `vlad`,
 read [`INTEGRATION_HANDOFF.md`](INTEGRATION_HANDOFF.md). Repository agents are
 required to follow it by [`AGENTS.md`](AGENTS.md).
 
+### Automatic handoff chronology
+
+Enable the repository's safe pre-push check once per checkout:
+
+```bash
+node scripts/install-integration-hooks.mjs
+```
+
+The hook attempts to refresh the generated Git chronology before push and
+stops if the refreshed handoff still needs a documentation commit. It does not
+stage, commit, amend, or push automatically.
+
+Manual update and read-only freshness check:
+
+```bash
+node scripts/sync-integration-handoff-history.mjs
+node scripts/sync-integration-handoff-history.mjs --check
+```
+
+Only committed navigation/comparator/shared-runtime history is included.
+Uncommitted experiments are never presented as published behavior.
+
 ## Run it
 
 ```bash
