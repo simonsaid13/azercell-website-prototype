@@ -55,8 +55,13 @@
     ['siteHeader', R.headerProps({ branch: siteBranch })]
   ]);
 
-  Components.mount('#chrome-bottom', [['siteFooter', chrome.footer]]);
-  Components.mount('#page-chat', [['supportChat', chrome.supportChat]]);
+  Components.mount('#chrome-bottom', [[
+    'siteFooter',
+    siteBranch === 'business' ? chrome.businessFooter : chrome.footer
+  ]]);
+  if (siteBranch !== 'business') {
+    Components.mount('#page-chat', [['floatingBar', chrome.floatingBar]]);
+  }
 
   var page = R.get(path);
 

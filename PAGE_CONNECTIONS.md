@@ -37,7 +37,7 @@ Default pattern: query param on the page path — `/path/?type=value`. "All" = n
 |------|----------------|--------|
 | `/` | Logo, branch switcher, `/business/` switcher | CONNECTED |
 | `/business/` | Logo (B2B), branch switcher, B2C homepage company links | CONNECTED |
-| `/tariffs/mobile/` | Header → Mobile → All mobile tariffs; Prepaid (`?type=prepaid`); Postpaid (`?type=postpaid`); Footer → Tariffs; Homepage → Change plan quick action; Support chat → See all mobile tariffs; Compare page → Browse all tariffs | CONNECTED |
+| `/tariffs/mobile/` | Header → Mobile → Tariffs; Prepaid (`?type=prepaid`); Postpaid (`?type=postpaid`); Footer → Mobile → Tariffs; Homepage acquisition → Choose a tariff; Compare page → Browse all tariffs | CONNECTED |
 | `/tariffs/compare/` | Homepage → Compare all plans, Compare all tariffs; `/tariffs/mobile/` → Compare plans; Plan cards → Compare (via `?add=` handoff) | CONNECTED |
 | `/tariffs/mobile/prepaid/digimax/` | Homepage + hub Plan details; header Popular plans; compare | CONNECTED |
 | `/tariffs/mobile/prepaid/premium-plus/` | Homepage + hub Plan details; header Popular plans; compare | CONNECTED |
@@ -45,15 +45,16 @@ Default pattern: query param on the page path — `/path/?type=value`. "All" = n
 | `/tariffs/mobile/prepaid/data/` | Homepage + hub Plan details; header Popular plans; compare | CONNECTED |
 | `/tariffs/mobile/prepaid/veteran/` | Homepage + hub Plan details; header Popular plans; compare | CONNECTED |
 | `/tariffs/mobile/postpaid/alfa/` | Homepage + hub Plan details; header Popular plans; compare | CONNECTED |
-| `/tariffs/internet/` | Header → Internet → All internet packs; footer → Internet packs; `/tariffs/mobile/` upsell | CONNECTED |
-| `/tariffs/internet/monthly/` | Header → Internet → High-volume / Monthly; `/tariffs/mobile/` upsell; tariff detail addon grids | CONNECTED |
-| `/tariffs/internet/weekly/` | Header → Internet → Weekly; `/tariffs/mobile/` upsell | CONNECTED |
-| `/tariffs/internet/daily/` | Header → Internet → Daily; `/tariffs/mobile/` upsell | CONNECTED |
-| `/tariffs/internet/unlimited/` | Header → Internet → Unlimited; `/tariffs/mobile/` upsell | CONNECTED |
-| `/tariffs/roaming/` | Header → Internet → Roaming overview; homepage hero → Roaming rates; `/tariffs/mobile/` related; support chat | CONNECTED |
-| `/tariffs/roaming/internet-packs/` | Header → Internet → Roaming internet packs; footer → Roaming packs; `/tariffs/mobile/` quick action; hub cross-sell | CONNECTED |
-| `/tariffs/roaming/travel-packs/` | Header → Internet → Travel packs; homepage hero → See travel packs | CONNECTED |
-| `/tariffs/roaming/countries-and-prices/` | Header → Internet → Countries and prices; support chat → Countries and prices | CONNECTED |
+| `/tariffs/internet/` | Header → Mobile → Internet; footer → Mobile → Internet; `/tariffs/mobile/` upsell; floating bar → Internet | CONNECTED |
+| `/tariffs/internet/monthly/` | Header → Mobile → Internet → High volume; `/tariffs/mobile/` upsell; floating bar → Internet → High volume; tariff detail addon grids | CONNECTED |
+| `/tariffs/internet/weekly/` | Header → Mobile → Internet → Weekly; `/tariffs/mobile/` upsell; floating bar → Internet → Weekly | CONNECTED |
+| `/tariffs/internet/daily/` | Header → Mobile → Internet → Daily; `/tariffs/mobile/` upsell; floating bar → Internet → Daily | CONNECTED |
+| `/tariffs/internet/unlimited/` | Header → Mobile → Internet → Unlimited; `/tariffs/mobile/` upsell; floating bar → Internet → Unlimited | CONNECTED |
+| `/tariffs/roaming/` | Header → Mobile → Roaming; homepage hero → Roaming rates; `/tariffs/mobile/` related; floating bar → Roaming | CONNECTED |
+| `/tariffs/roaming/internet-packs/` | Header → Mobile → Roaming → Roaming internet packs; footer → Mobile → Roaming; `/tariffs/mobile/` quick action; hub cross-sell; floating bar → Roaming | CONNECTED |
+| `/tariffs/roaming/travel-packs/` | Header → Mobile → Roaming → Travel packs; homepage hero → See travel packs | CONNECTED |
+| `/tariffs/roaming/countries-and-prices/` | Header → Mobile → Roaming → Countries & prices | CONNECTED |
+| `/join-azercell/transfer-number/` | Homepage acquisition → Transfer your number; header Mobile → e-Sim → Move number to e-SIM | CONNECTED |
 
 **Tab URLs on `/tariffs/mobile/`:** `?type=prepaid`, `?type=postpaid`, `?type=data-only`, or no param for All. Tabs update the URL when clicked.
 
@@ -69,8 +70,11 @@ Default pattern: query param on the page path — `/path/?type=value`. "All" = n
 | Hero → Compare all tariffs | `/tariffs/compare/` | CONNECTED |
 | Hero → Roaming rates | `/tariffs/roaming/` | CONNECTED |
 | Hero → See travel packs | `/tariffs/roaming/travel-packs/` | CONNECTED |
-| Quick action → Change plan | `/tariffs/mobile/` | CONNECTED |
-| Quick action → Switch to eSIM | `/tariffs/esim/` | PLANNED |
+| Acquisition → Get a number | azercellim.com | CONNECTED (external) |
+| Acquisition → Transfer your number | `/join-azercell/transfer-number/` | CONNECTED |
+| Acquisition → Choose a tariff | `/tariffs/mobile/` | CONNECTED |
+| Acquisition → Switch to e-SIM | `/tariffs/esim/` | PLANNED |
+| Acquisition → Get an Internet | `/tariffs/internet/` | CONNECTED |
 | Tariffs section → Compare all plans | `/tariffs/compare/` | CONNECTED |
 | Plan cards → Compare | `/tariffs/compare/?add=…` | CONNECTED |
 | Plan cards → Plan details | All 6 mobile tariff detail pages — CONNECTED |
@@ -78,10 +82,11 @@ Default pattern: query param on the page path — `/path/?type=value`. "All" = n
 | Devices section | `/devices/` | PLANNED |
 | Services link cards | Roaming CONNECTED; eSIM, 5G, Aicell routes | PLANNED (non-roaming) |
 | Kinon split banner | `/apps/cinema-and-tv/kinon/` | PLANNED |
-| Footer columns | Mixed built/planned via `href()` | PLANNED (most) |
+| Footer columns | Mixed built/planned via `href()` — see Footer section | Mixed |
 | Header nav (all items) | See `site-registry.js` → `SITE_CHROME.nav` | Mixed |
+| Floating bar | See Floating bar section | Mixed |
 
-**Not connected yet (homepage):** No direct header item labelled "Tariffs" — users reach tariffs via Mobile mega menu only.
+**Note:** The old 4-item quick actions row was replaced by the acquisition block (5 cards). Support chat was removed site-wide.
 
 ---
 
@@ -166,7 +171,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Related → mobile tariffs, roaming | `/tariffs/mobile/`, `/tariffs/roaming/` | CONNECTED |
 | Quick action → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
 
-**Inbound:** Header → Internet → All internet packs; footer → Internet packs; `/tariffs/mobile/` → See all internet packs.
+**Inbound:** Header → Mobile → Internet; footer → Mobile → Internet; `/tariffs/mobile/` → See all internet packs; floating bar → Internet.
 
 ---
 
@@ -180,7 +185,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Category nav | Hub + sibling categories | CONNECTED |
 | Cross-sell → Compare, DigiMax 25GB | `/tariffs/compare/`, `/tariffs/mobile/prepaid/digimax/` | CONNECTED |
 
-**Inbound:** Header → Internet → High-volume / Monthly; `/tariffs/mobile/` upsell; all 6 tariff detail addon grids.
+**Inbound:** Header → Mobile → Internet → High volume; `/tariffs/mobile/` upsell; floating bar → Internet → High volume; all 6 tariff detail addon grids.
 
 ---
 
@@ -193,7 +198,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Pack card → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
 | Cross-sell → DigiMax | `/tariffs/mobile/prepaid/digimax/` | CONNECTED |
 
-**Inbound:** Header → Internet → Weekly; `/tariffs/mobile/` upsell.
+**Inbound:** Header → Mobile → Internet → Weekly; `/tariffs/mobile/` upsell; floating bar → Internet → Weekly.
 
 ---
 
@@ -206,7 +211,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Pack cards → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
 | Cross-sell → DigiMax packs | `/tariffs/mobile/prepaid/digimax/` | CONNECTED |
 
-**Inbound:** Header → Internet → Daily; `/tariffs/mobile/` upsell.
+**Inbound:** Header → Mobile → Internet → Daily; `/tariffs/mobile/` upsell; floating bar → Internet → Daily.
 
 ---
 
@@ -219,7 +224,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Pack cards → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
 | Cross-sell → Weekly packs, DigiMax Weekly | `/tariffs/internet/weekly/`, DigiMax detail | CONNECTED |
 
-**Inbound:** Header → Internet → Unlimited; `/tariffs/mobile/` upsell.
+**Inbound:** Header → Mobile → Internet → Unlimited; `/tariffs/mobile/` upsell; floating bar → Internet → Unlimited.
 
 ---
 
@@ -236,7 +241,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Cross-sell → internet-packs, compare | Built routes | CONNECTED |
 | Related → internet, mobile, sibling roaming | Built routes | CONNECTED |
 
-**Inbound:** Header → Internet → Roaming overview; homepage hero; `/tariffs/mobile/` related; support chat topics.
+**Inbound:** Header → Mobile → Roaming; homepage hero; `/tariffs/mobile/` related; floating bar → Roaming.
 
 ---
 
@@ -249,7 +254,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Cross-sell → Premium+, compare | Built routes | CONNECTED |
 | Catalog nav | Hub + siblings | CONNECTED |
 
-**Inbound:** Header → Internet → Roaming internet packs; footer → Roaming packs; `/tariffs/mobile/` quick action; hub cross-sell.
+**Inbound:** Header → Mobile → Roaming → Roaming internet packs; footer → Mobile → Roaming; `/tariffs/mobile/` quick action; hub cross-sell; floating bar → Roaming.
 
 ---
 
@@ -261,7 +266,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Cross-sell → internet-packs | Built route | CONNECTED |
 | Catalog nav | Hub + siblings | CONNECTED |
 
-**Inbound:** Header → Internet → Travel packs; homepage hero → See travel packs.
+**Inbound:** Header → Mobile → Roaming → Travel packs; homepage hero → See travel packs.
 
 ---
 
@@ -275,7 +280,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Cross-sell → internet-packs, hub | Built routes | CONNECTED |
 | Catalog nav | Hub + siblings | CONNECTED |
 
-**Inbound:** Header → Internet → Countries and prices; support chat → Countries and prices.
+**Inbound:** Header → Mobile → Roaming → Countries & prices.
 
 ---
 
@@ -290,18 +295,78 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 
 ---
 
-## Header navigation (`SITE_CHROME.nav` — B2C)
+## Header navigation (`SITE_CHROME.nav` — B2C Personal)
 
-| Nav link | Target | Status |
+Personal chrome: Company, Mobile, TV, Apps, Devices, Campaigns, Support. Business keeps `SITE_CHROME.businessNav` (classic mega menu, no floating bar, no chat).
+
+| Nav item | Target | Status |
 |----------|--------|--------|
-| Mobile → All mobile tariffs | `/tariffs/mobile/` | CONNECTED |
-| Mobile → Prepaid | `/tariffs/mobile/?type=prepaid` | CONNECTED |
-| Mobile → Postpaid | `/tariffs/mobile/?type=postpaid` | CONNECTED |
-| Mobile → Tariffs archive | `/tariffs/mobile/prepaid/archive/` | CONNECTED |
-| Mobile → Popular plans (all 6 current tariffs) | All CONNECTED |
+| Company → About us, Media, CSR, Sustainability, Careers, Academy, Contact, Awards | `/about/…` routes | PLANNED |
+| Company → Azercell Life | azercellliler.azercell.com | CONNECTED (external) |
+| Mobile → Tariffs | `/tariffs/mobile/` | CONNECTED |
+| Mobile → Tariffs → Prepaid | `/tariffs/mobile/?type=prepaid` | CONNECTED |
+| Mobile → Tariffs → Postpaid | `/tariffs/mobile/?type=postpaid` | CONNECTED |
+| Mobile → Tariffs → Tariffs archive | `/tariffs/mobile/prepaid/archive/` | CONNECTED |
+| Mobile → Internet (+ High volume, Weekly, Daily, Unlimited) | `/tariffs/internet/…` | CONNECTED |
+| Mobile → Roaming (+ internet packs, countries, travel packs) | `/tariffs/roaming/…` | CONNECTED |
 | Mobile → Services column | `/tariffs/services/…` | PLANNED |
-| Internet → All packs / roaming / network | Internet + roaming CONNECTED; network support PLANNED |
-| Devices, Deals, Help columns | Mostly planned routes | PLANNED |
+| Mobile → e-Sim → About e-Sim | `/tariffs/esim/` | PLANNED |
+| Mobile → e-Sim → Buy e-Sim | azercellim.com | CONNECTED (external) |
+| Mobile → e-Sim → Move number to e-SIM | `/join-azercell/transfer-number/` | CONNECTED |
+| Mobile → Network (5G, VoLTE, Network support) | `/tariffs/5g/`, `/tariffs/volte/`, `/support/internet/` | PLANNED |
+| TV → Kinon | `/apps/cinema-and-tv/kinon/` | PLANNED |
+| Apps (all items) | `/apps/…` routes | PLANNED (aKart external CONNECTED) |
+| Devices (Catalog, shop, info links) | `/devices/` | PLANNED |
+| Campaigns (all items) | `/campaigns/…` | PLANNED |
+| Support (Help, Talk to Support, FAQs, Locations) | `/help/`, `/support/`, `/stores/` | PLANNED |
+| Header → Join Azercell | `/join-azercell/` | PLANNED |
+| Header → Log in | kabinetim.azercell.com | CONNECTED (external) |
+
+---
+
+## Footer (`SITE_CHROME.footer` — B2C Personal)
+
+Business pages use `SITE_CHROME.businessFooter` instead (no sitemap legal link, no floating bar).
+
+| Footer group / link | Target | Status |
+|---------------------|--------|--------|
+| About Azercell column | `/about/…` routes | PLANNED (Azercell Life external CONNECTED) |
+| Mobile → Tariffs, Internet, Roaming | Built tariff routes | CONNECTED |
+| Mobile → Services, e-Sim, Network | Planned routes | PLANNED |
+| Devices column | `/devices/` | PLANNED |
+| Campaigns column | `/campaigns/…` | PLANNED |
+| Support column | `/help/`, `/support/`, `/about/contact/`, `/stores/` | PLANNED (`tel:1111` CONNECTED) |
+| App download card | `/apps/kabinetim/` | PLANNED |
+| Legal → Sitemap | `/sitemap/` via `tool: 'sitemap'` | CONNECTED (internal tool — user-requested) |
+| Legal → Privacy, Cookie, Terms, Accessibility | Planned routes | PLANNED |
+| Social links | Facebook, X, YouTube, Instagram | CONNECTED (external) |
+
+---
+
+## Floating bar (`SITE_CHROME.floatingBar` — B2C Personal only)
+
+Not shown on `/business/`. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
+
+| Item | Target | Status |
+|------|--------|--------|
+| Search | `/search/` | PLANNED |
+| Internet (+ High volume, Weekly, Daily, Unlimited) | `/tariffs/internet/…` | CONNECTED |
+| Tariffs (+ Prepaid, Postpaid, archive) | `/tariffs/mobile/…` | CONNECTED |
+| Roaming (+ internet packs, countries, travel packs) | `/tariffs/roaming/…` | CONNECTED |
+| Kinon | `/apps/cinema-and-tv/kinon/` | PLANNED |
+
+---
+
+## `/join-azercell/transfer-number/` — Transfer your number
+
+| Section / link | Target | Status |
+|----------------|--------|--------|
+| transferHero → Start transfer | azercellim.com | CONNECTED (external) |
+| floatingBar → Start transfer (after scroll) | azercellim.com | CONNECTED (external) |
+| floatingBar → Search | `/search/` | PLANNED |
+| header/footer | `SITE_CHROME.nav` + `SITE_CHROME.footer` | Mixed (see sections above) |
+
+**Inbound:** Homepage acquisition → Transfer your number; header Mobile → e-Sim → Move number to e-SIM.
 
 ---
 
@@ -316,7 +381,7 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Promo callout → All mobile tariffs | `/tariffs/mobile/` | CONNECTED |
 | Promo cards → DigiMax, Premium+, Alfa | Individual detail routes | CONNECTED |
 
-**Inbound:** Header → Mobile → Prepaid tariffs archive; `/tariffs/mobile/` callout banner + legal link.
+**Inbound:** Header → Mobile → Tariffs → Tariffs archive; `/tariffs/mobile/` callout banner + legal link.
 
 ---
 
@@ -333,7 +398,8 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 
 | Date | Change |
 |------|--------|
-| 2026-08-04 | Built B2C roaming section — hub, internet-packs, travel-packs, countries-and-prices. Country search with ?country= URL sync, ~35 sample destinations, header/footer/homepage/mobile/chat links CONNECTED. |
+| 2026-08-26 | Personal chrome swap — Vlad header/footer/floating bar on B2C pages. Homepage acquisition block replaces quick actions. Support chat removed. Built `/join-azercell/transfer-number/` with inbound from acquisition + header e-SIM. Footer Sitemap → `/sitemap/` (user-requested). Business keeps classic chrome, no chat, no floating bar. |
+| 2026-08-04 | Built B2C roaming section — hub, internet-packs, travel-packs, countries-and-prices. Country search with ?country= URL sync, ~35 sample destinations, header/footer/homepage/mobile links CONNECTED. |
 | 2026-08-04 | Built B2C mobile internet packs — hub + monthly/weekly/daily/unlimited. 10 packs, filters, cross-sell banner, header/footer/tariff upsell links CONNECTED. |
 | 2026-08-03 | Built `/tariffs/mobile/prepaid/archive/` — 20 legacy plans, working search + pagination (8/page), promo section for current plans. |
 | 2026-08-03 | Full connection pass — header Popular plans (Data+, Data), archive promos CONNECTED, component `usedOn` for all 6 detail pages. |

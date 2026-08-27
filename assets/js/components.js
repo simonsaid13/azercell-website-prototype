@@ -139,7 +139,7 @@
     );
   }
 
-  C.siteHeader = function (props) {
+  function classicSiteHeader(props) {
     var nav = props.nav || [];
     var logo = props.logo || 'Azercell';
     var primary = props.primaryAction;
@@ -239,6 +239,514 @@
           '</div>' +
         '</div>' +
       '</header>'
+    );
+  };
+
+  function navHref(item) {
+    if (!item) return '';
+    if (item.tool === 'sitemap') return '/sitemap/';
+    return item.href || '';
+  }
+
+  function navLink(item, className, extra) {
+    if (!item) return '';
+    var href = navHref(item);
+    var external = /^https?:/.test(href) || /^tel:/.test(href);
+    var cls = className || 't-body cmp-nav__text-link';
+    if (!href) {
+      return '<span class="' + cls + '">' + esc(item.label) + '</span>';
+    }
+    return '<' + 'a class="' + cls + '"' + attr('href', href) +
+      (external ? ' target="_blank" rel="noopener"' : '') +
+      (extra || '') + '>' + esc(item.label) + '</a>';
+  }
+
+  function appByLabel(nav, label) {
+    var apps = (nav || []).filter(function (item) { return item.mode === 'apps'; })[0];
+    var items = (apps && apps.items) || [];
+    var i;
+    for (i = 0; i < items.length; i++) {
+      if (items[i].label === label) return items[i];
+    }
+    return { label: label };
+  }
+
+  function personalPromo(item) {
+    return C.promoCard({
+      title: item.label,
+      media: item.label,
+      actions: item.href ? [{ label: item.label, href: item.href, variant: 'primary' }] : []
+    });
+  }
+
+  function renderListPanel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="cmp-nav__panel-list">' +
+            (item.items || []).map(function (entry) {
+              return navLink(entry, 't-body cmp-nav__text-link');
+            }).join('') +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderDetailPane(item, entry) {
+    if (item.mode === 'detail-links') {
+      return (
+        '<div>' +
+          '<p class="t-label">' + esc(entry.label) + '</p>' +
+          '<div class="cmp-nav__detail-links">' +
+            (entry.detail || []).map(function (link) {
+              return navLink(link, 't-body cmp-nav__text-link');
+            }).join('') +
+          '</div>' +
+        '</div>'
+      );
+    }
+    return '<div class="cmp-nav__detail-card">' + personalPromo(entry) + '</div>';
+  }
+
+  function renderDetailPanel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="cmp-nav__detail" data-detail-menu="' + index + '">' +
+            '<div class="cmp-nav__rail" role="listbox" aria-label="' + esc(item.label) + '">' +
+              (item.items || []).map(function (entry, itemIndex) {
+                return (
+                  '<button type="button" class="cmp-nav__rail-button"' +
+                    ' data-detail-trigger="' + itemIndex + '"' +
+                    ' aria-selected="' + (itemIndex === 0 ? 'true' : 'false') + '">' +
+                    esc(entry.label) +
+                  '</button>'
+                );
+              }).join('') +
+            '</div>' +
+            '<div class="cmp-nav__detail-content">' +
+              (item.items || []).map(function (entry, itemIndex) {
+                return '<div data-detail-pane="' + itemIndex + '"' + (itemIndex === 0 ? '' : ' hidden') + '>' +
+                  renderDetailPane(item, entry) +
+                '</div>';
+              }).join('') +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderWidePromoPanel(item, index) {
+    var entry = (item.items || [])[0] || { label: 'Kinon' };
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="cmp-nav__wide-promo">' + personalPromo(entry) + '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderAppTile(entry) {
+    var href = navHref(entry);
+    var external = /^https?:/.test(href);
+    var tag = href ? 'a' : 'button';
+    var attrs = href
+      ? attr('href', href) + (external ? ' target="_blank" rel="noopener"' : '')
+      : ' type="button"';
+    return (
+      '<' + tag + ' class="cmp-nav__app-tile"' + attrs + '>' +
+        '<span class="ph ph--square cmp-nav__app-icon" aria-hidden="true"></span>' +
+        '<span class="t-small cmp-nav__app-label">' + esc(entry.label) + '</span>' +
+      '</' + tag + '>'
+    );
+  }
+
+  function renderAppsPanel(item, index, apps) {
+    var categories = (apps && apps.categories) || [];
+    var defaultCat = categories.length ? categories.length - 1 : 0;
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="cmp-nav__apps-variant cmp-nav__apps-v1" data-apps-v1>' +
+            '<div class="cmp-nav__apps-list" role="list" aria-label="Apps">' +
+              (item.items || []).map(function (entry) {
+                return navLink(entry, 't-body cmp-nav__text-link', ' data-app-trigger="' + esc(entry.label) + '"');
+              }).join('') +
+            '</div>' +
+            '<div class="cmp-nav__apps-promo">' +
+              (item.items || []).map(function (entry, i) {
+                var isAll = entry.label === 'All apps';
+                return '<div data-app-promo="' + esc(entry.label) + '"' + (isAll ? '' : ' hidden') + '>' +
+                  (isAll
+                    ? '<div class="ph ph--wide" aria-hidden="true"></div>'
+                    : personalPromo(entry)) +
+                '</div>';
+              }).join('') +
+            '</div>' +
+          '</div>' +
+          '<div class="cmp-nav__apps-variant cmp-nav__apps-v2" data-apps-v2>' +
+            '<div class="cmp-nav__rail cmp-nav__apps-categories" role="tablist" aria-label="App categories">' +
+              categories.map(function (category, categoryIndex) {
+                return (
+                  '<button type="button" class="cmp-nav__rail-button" role="tab"' +
+                    ' data-app-category-trigger="' + categoryIndex + '"' +
+                    ' aria-selected="' + (categoryIndex === defaultCat ? 'true' : 'false') + '">' +
+                    esc(category.label) +
+                  '</button>'
+                );
+              }).join('') +
+            '</div>' +
+            '<div class="cmp-nav__apps-grid-wrap">' +
+              categories.map(function (category, categoryIndex) {
+                return '<div class="cmp-nav__apps-grid" role="tabpanel" data-app-category-pane="' + categoryIndex + '"' +
+                  (categoryIndex === defaultCat ? '' : ' hidden') + '>' +
+                  (category.items || []).map(function (label) {
+                    return renderAppTile(appByLabel([item], label));
+                  }).join('') +
+                '</div>';
+              }).join('') +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderPersonalPanel(item, index, apps) {
+    if (item.label === 'TV') return renderWidePromoPanel(item, index);
+    if (item.mode === 'apps') return renderAppsPanel(item, index, apps);
+    if (item.mode === 'list') return renderListPanel(item, index);
+    return renderDetailPanel(item, index);
+  }
+
+  function renderMobileAppItem(entry) {
+    var href = navHref(entry);
+    var external = /^https?:/.test(href);
+    var tag = href ? 'a' : 'button';
+    var attrs = href
+      ? attr('href', href) + (external ? ' target="_blank" rel="noopener"' : '')
+      : ' type="button"';
+    return (
+      '<' + tag + ' class="cmp-nav__mobile-app-item"' + attrs + '>' +
+        '<span class="ph ph--square cmp-nav__mobile-app-icon" aria-hidden="true"></span>' +
+        '<span class="t-body">' + esc(entry.label) + '</span>' +
+      '</' + tag + '>'
+    );
+  }
+
+  function renderMobilePanel(item, index, apps) {
+    if (item.label === 'Mobile') {
+      return '<div class="cmp-nav__mobile-panel-body cmp-nav__mobile-inner-groups">' +
+        (item.items || []).map(function (entry, entryIndex) {
+          return '<section class="cmp-nav__mobile-inner-group">' +
+            '<button type="button" class="t-h4 cmp-nav__mobile-inner-toggle" data-mobile-inner-toggle="' + index + '-' + entryIndex + '" aria-expanded="false">' +
+              '<span>' + esc(entry.label) + '</span><span aria-hidden="true">+</span>' +
+            '</button>' +
+            '<div class="cmp-nav__mobile-inner-body" data-mobile-inner-body="' + index + '-' + entryIndex + '" data-open="false">' +
+              (entry.href ? navLink(entry, 't-body cmp-nav__mobile-link') : '') +
+              (entry.detail || []).map(function (link) {
+                return navLink(link, 't-body cmp-nav__mobile-link');
+              }).join('') +
+            '</div>' +
+          '</section>';
+        }).join('') +
+      '</div>';
+    }
+    if (item.label === 'TV') {
+      var tv = (item.items || [])[0] || { label: 'Kinon' };
+      return '<div class="cmp-nav__mobile-tv">' +
+        '<div class="cmp-nav__mobile-tv-copy"><p class="t-label">TV</p>' + navLink(tv, 't-h3') + '</div>' +
+        '<div class="ph ph--wide" aria-hidden="true"></div>' +
+      '</div>';
+    }
+    if (item.mode === 'apps') {
+      var categories = (apps && apps.categories) || [];
+      return '<div class="cmp-nav__mobile-apps" data-apps-v1 aria-label="Apps">' +
+          (item.items || []).map(renderMobileAppItem).join('') +
+        '</div>' +
+        '<div class="cmp-nav__mobile-apps" data-apps-v2 aria-label="Apps">' +
+          categories.map(function (category, categoryIndex) {
+            return '<section class="cmp-nav__mobile-app-category">' +
+              '<button type="button" class="t-h4 cmp-nav__mobile-app-category-toggle" data-mobile-app-category-toggle="' + categoryIndex + '"' +
+                ' aria-expanded="false">' +
+                '<span>' + esc(category.label) + '</span><span aria-hidden="true">+</span>' +
+              '</button>' +
+              '<div class="cmp-nav__mobile-app-category-items" data-mobile-app-category-body="' + categoryIndex + '" data-open="false">' +
+                (category.items || []).map(function (label) {
+                  return renderMobileAppItem(appByLabel([item], label));
+                }).join('') +
+              '</div>' +
+            '</section>';
+          }).join('') +
+        '</div>';
+    }
+    return '<div class="cmp-nav__mobile-simple-list">' +
+      (item.items || []).map(function (entry) {
+        return navLink(entry, 't-body cmp-nav__mobile-link');
+      }).join('') +
+    '</div>';
+  }
+
+  function personalSiteHeader(props) {
+    var nav = props.nav || [];
+    var logo = props.logo || 'Azercell';
+    var primary = props.primaryAction;
+    var secondary = props.secondaryAction;
+    var branches = props.branches || [];
+    var branch = props.branch || 'personal';
+    var locations = props.locations;
+    var apps = props.apps;
+
+    return (
+      '<header class="cmp-header cmp-nav" data-header data-header-variant="v1">' +
+        '<div class="cmp-nav__utility">' +
+          '<div class="wrap cmp-nav__utility-inner">' +
+            '<div class="cmp-nav__utility-group" aria-label="Personal or Business">' +
+              branches.map(function (item) {
+                var active = item.id === branch;
+                return (
+                  '<a class="cmp-nav__utility-button"' +
+                    attr('href', item.href) +
+                    (active ? ' aria-current="page"' : '') +
+                  '>' + esc(item.label) + '</a>'
+                );
+              }).join('') +
+            '</div>' +
+            '<div class="cmp-nav__utility-group">' +
+              (locations ? navLink(locations, 'cmp-nav__utility-button') : '') +
+              '<button type="button" class="cmp-nav__utility-button" data-header-variant-toggle data-variant="v1" aria-pressed="false" aria-label="Switch Apps menu layout">EN</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="wrap">' +
+          '<div class="cmp-nav__main">' +
+            '<a class="cmp-header__logo"' + attr('href', props.logoHref || '/') + '>' + esc(logo) + '</a>' +
+            '<nav class="cmp-header__nav" aria-label="Main">' +
+              '<ul class="cmp-header__nav-list">' +
+                nav.map(function (item, index) {
+                  return (
+                    '<li>' +
+                      '<button type="button" class="cmp-header__nav-btn"' +
+                        ' data-menu-toggle="' + index + '"' +
+                        ' aria-expanded="false" aria-controls="nav-panel-' + index + '">' +
+                        esc(item.label) + '<span aria-hidden="true">▾</span>' +
+                      '</button>' +
+                    '</li>'
+                  );
+                }).join('') +
+              '</ul>' +
+            '</nav>' +
+            '<div class="cmp-nav__actions">' +
+              (secondary ? '<a class="btn btn--small btn--quiet"' + attr('href', secondary.href) + '>' + esc(secondary.label) + '</a>' : '') +
+              (primary ? '<a class="btn btn--small btn--primary"' + attr('href', primary.href) + '>' + esc(primary.label) + '</a>' : '') +
+              '<button type="button" class="btn btn--small cmp-nav__mobile-menu-btn" data-mobile-menu-btn aria-expanded="false" aria-label="Open menu" aria-controls="nav-probe-mobile-drawer">' +
+                '<span class="t-h4 cmp-nav__mobile-menu-icon" data-mobile-menu-icon aria-hidden="true">☰</span>' +
+              '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        nav.map(function (item, index) { return renderPersonalPanel(item, index, apps); }).join('') +
+        '<div class="cmp-nav__mobile-drawer" id="nav-probe-mobile-drawer" data-mobile-drawer hidden aria-hidden="true">' +
+          '<div class="wrap">' +
+            '<div class="cmp-nav__mobile-utility-row">' +
+              '<div class="cmp-nav__mobile-audience" aria-label="Audience">' +
+                '<div class="cmp-nav__mobile-audience-segment">' +
+                  branches.map(function (item) {
+                    var active = item.id === branch;
+                    return (
+                      '<a class="t-small cmp-nav__mobile-audience-tab"' +
+                        attr('href', item.href) +
+                        (active ? ' aria-current="page"' : '') +
+                      '>' + esc(item.label) + '</a>'
+                    );
+                  }).join('') +
+                '</div>' +
+              '</div>' +
+              '<button type="button" class="t-small cmp-nav__mobile-variant-toggle" data-mobile-variant-toggle data-variant="v1" aria-label="Switch Apps menu layout">EN</button>' +
+            '</div>' +
+            '<div class="cmp-nav__mobile-groups">' +
+              nav.map(function (item, index) {
+                return '<section class="cmp-nav__mobile-group">' +
+                  '<button type="button" class="t-h4 cmp-nav__mobile-group-toggle" data-mobile-group-toggle="' + index + '" aria-expanded="false">' +
+                    '<span>' + esc(item.label) + '</span><span aria-hidden="true">+</span>' +
+                  '</button>' +
+                  '<div class="cmp-nav__mobile-group-body" data-mobile-group-body="' + index + '" data-open="false">' +
+                    renderMobilePanel(item, index, apps) +
+                  '</div>' +
+                '</section>';
+              }).join('') +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</header>'
+    );
+  }
+
+  C.siteHeader = function (props) {
+    if (props.layout === 'personal') return personalSiteHeader(props);
+    return classicSiteHeader(props);
+  };
+
+  function personalFooterGroup(title, links, extraAttr, keyOverride) {
+    var key = keyOverride || String(title).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return '<section class="cmp-nav__footer-group"' + (extraAttr || '') + '>' +
+      '<h3 class="t-h4 cmp-nav__footer-group-heading">' + esc(title) + '</h3>' +
+      '<button type="button" class="t-h4 cmp-nav__footer-group-toggle" data-footer-group-toggle="' + key + '" aria-expanded="false">' +
+        '<span>' + esc(title) + '</span><span aria-hidden="true">+</span>' +
+      '</button>' +
+      '<div class="cmp-nav__footer-links cmp-nav__footer-group-body" data-footer-group-body="' + key + '" data-open="false">' +
+        (links || []).map(function (item) {
+          return navLink(item, 'cmp-nav__footer-link t-body');
+        }).join('') +
+      '</div>' +
+    '</section>';
+  }
+
+  function personalSiteFooter(props) {
+    var brand = props.brand || {};
+    var subscribe = props.subscribe || {};
+    var appCard = props.appCard || {};
+    return (
+      '<footer class="cmp-nav__footer" aria-label="Site footer">' +
+        '<div class="wrap">' +
+          '<div class="cmp-nav__footer-top">' +
+            '<div class="cmp-nav__footer-brand">' +
+              '<p class="t-h2">' + esc(brand.title || 'Azercell') + '</p>' +
+              (brand.tagline ? '<p class="t-body t-muted">' + esc(brand.tagline) + '</p>' : '') +
+            '</div>' +
+            '<form class="cmp-nav__footer-subscribe" data-footer-subscribe>' +
+              '<label class="t-label" for="footer-email">' + esc(subscribe.label || 'Subscribe for updates') + '</label>' +
+              '<div class="cmp-nav__footer-subscribe-row">' +
+                '<input class="input" id="footer-email" type="email" required placeholder="' + esc(subscribe.placeholder || 'Your email') + '" aria-label="Your email">' +
+                '<button type="submit" class="btn btn--small btn--quiet" aria-label="Subscribe">→</button>' +
+              '</div>' +
+              (subscribe.note ? '<p class="t-small t-muted">' + esc(subscribe.note) + '</p>' : '') +
+            '</form>' +
+          '</div>' +
+          '<div class="cmp-nav__footer-main">' +
+            '<div class="cmp-nav__footer-groups">' +
+              (props.groups || []).slice(0, 2).map(function (group) {
+                return personalFooterGroup(group.title, group.links);
+              }).join('') +
+              personalFooterGroup('Apps', props.appsV1, ' data-apps-v1', 'apps-v1') +
+              personalFooterGroup('Apps', props.appsV2, ' data-apps-v2', 'apps-v2') +
+              (props.groups || []).slice(2).map(function (group) {
+                return personalFooterGroup(group.title, group.links);
+              }).join('') +
+            '</div>' +
+            '<article class="cmp-card cmp-nav__footer-app-card">' +
+              placeholder(appCard.media || 'Azercell App', 'ph--wide') +
+              '<div class="cmp-card__body">' +
+                '<h3 class="t-h3">' + esc(appCard.title || 'Download Azercell App') + '</h3>' +
+                '<div class="cmp-nav__footer-app-actions">' +
+                  (appCard.actions || []).map(function (item) {
+                    return navLink(item, 'btn btn--small btn--quiet');
+                  }).join('') +
+                '</div>' +
+              '</div>' +
+            '</article>' +
+          '</div>' +
+          '<div class="cmp-nav__footer-bottom">' +
+            '<div class="cmp-nav__footer-legal">' +
+              (props.legal || []).map(function (item) {
+                return navLink(item, 't-small cmp-nav__footer-link');
+              }).join('') +
+            '</div>' +
+            '<div class="cmp-nav__footer-social">' +
+              (props.social || []).map(function (item) {
+                return navLink(item, 'btn btn--small btn--quiet');
+              }).join('') +
+            '</div>' +
+            '<div class="cmp-nav__footer-meta">' +
+              '<button type="button" class="t-small cmp-nav__footer-language" data-header-variant-toggle>English</button>' +
+              (props.copyright ? '<p class="t-small t-muted cmp-nav__footer-copyright">' + esc(props.copyright) + '</p>' : '') +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</footer>'
+    );
+  }
+
+  C.floatingBar = function (props) {
+    var search = props.search || { label: 'Search' };
+    if (props.mode === 'transfer') {
+      var cta = props.cta || { label: 'Start transfer' };
+      return (
+        '<div class="cmp-nav__floating-bar cmp-nav__float--product" data-floating-bar aria-label="Transfer page actions">' +
+          '<div class="cmp-nav__floating-main" data-floating-main>' +
+            '<a class="btn btn--primary cmp-nav__floating-transfer" data-transfer-floating-cta hidden aria-hidden="true" tabindex="-1"' +
+              attr('href', cta.href) + '>' + esc(cta.label) + '</a>' +
+          '</div>' +
+          navLink(search, 'cmp-nav__floating-search') +
+        '</div>'
+      );
+    }
+
+    function popoverHtml(item) {
+      if (!item.detail) {
+        return '<div class="cmp-nav__floating-kinon">' +
+          '<div class="cmp-nav__floating-copy"><p class="t-label">' + esc(item.label) + '</p>' +
+            navLink(item, 't-h3') +
+          '</div>' +
+          '<div class="ph ph--wide" aria-hidden="true"></div>' +
+        '</div>';
+      }
+      return '<div class="cmp-nav__floating-detail">' +
+        '<div class="cmp-nav__floating-copy"><p class="t-label">' + esc(item.label) + '</p>' +
+          '<div class="cmp-nav__floating-links">' +
+            (item.detail || []).map(function (link) {
+              return navLink(link, 't-body cmp-nav__text-link');
+            }).join('') +
+          '</div>' +
+        '</div>' +
+        '<div class="ph ph--wide" aria-hidden="true"></div>' +
+      '</div>';
+    }
+
+    return (
+      '<div class="cmp-nav__floating-bar" data-floating-bar aria-label="Shortcuts">' +
+        '<div class="cmp-nav__floating-main" data-floating-main role="group" aria-label="Customer shortcuts">' +
+          (props.items || []).map(function (item, index) {
+            return '<button type="button" class="cmp-nav__floating-control" data-floating-trigger="' + index + '" aria-expanded="false">' +
+              '<span class="ph ph--square cmp-nav__floating-icon" aria-hidden="true"></span>' +
+              '<span class="t-small cmp-nav__floating-label">' + esc(item.label) + '</span>' +
+            '</button>';
+          }).join('') +
+          '<div class="cmp-nav__floating-popover" data-floating-popover hidden>' +
+            (props.items || []).map(function (item, index) {
+              return '<div data-floating-pane="' + index + '" hidden>' + popoverHtml(item) + '</div>';
+            }).join('') +
+          '</div>' +
+        '</div>' +
+        navLink(search, 'cmp-nav__floating-search') +
+      '</div>'
+    );
+  };
+
+  C.acquisitionBlock = function (props) {
+    return (
+      '<section class="cmp-nav__acquisition" aria-labelledby="acquisition-title">' +
+        '<div class="wrap">' +
+          '<h2 id="acquisition-title" class="t-h1">' + esc(props.title || 'Acquisition block') + '</h2>' +
+          '<div class="cmp-nav__acquisition-grid" role="list">' +
+            (props.items || []).map(function (item) {
+              var href = navHref(item);
+              var external = /^https?:/.test(href);
+              var tag = href ? 'a' : 'button';
+              var attrs = href
+                ? attr('href', href) + (external ? ' target="_blank" rel="noopener"' : '')
+                : ' type="button"';
+              return '<' + tag + ' class="cmp-nav__acquisition-card cmp-quick__item" role="listitem"' + attrs + '>' +
+                '<span class="ph ph--square cmp-nav__acquisition-icon" aria-hidden="true"></span>' +
+                '<span class="t-body">' + esc(item.label) + '</span>' +
+              '</' + tag + '>';
+            }).join('') +
+          '</div>' +
+        '</div>' +
+      '</section>'
     );
   };
 
@@ -1269,378 +1777,10 @@
   };
 
   /* --------------------------------------------------------------------
-     Support chat — floating button and panel (Aicell shell)
-     -------------------------------------------------------------------- */
-
-  C.supportChat = function (props) {
-    var suggestions = props.suggestions || [];
-    var handoff = props.handoff;
-
-    return (
-      '<div class="cmp-chat" data-chat' + attr('data-button-label', props.buttonLabel || 'Chat') +
-        attr('data-support-href', handoff ? handoff.href : '') + '>' +
-        '<section class="cmp-chat__panel" data-chat-panel id="support-chat-panel" hidden aria-label="' + esc(props.title || 'Support chat') + '">' +
-          '<header class="cmp-chat__head">' +
-            '<div class="cmp-chat__title">' +
-              (props.eyebrow ? '<p class="t-label">' + esc(props.eyebrow) + '</p>' : '') +
-              '<h2 class="t-h4">' + esc(props.title || 'Support') + '</h2>' +
-            '</div>' +
-            '<button type="button" class="btn btn--icon btn--quiet" data-chat-close aria-label="Close chat">' +
-              '<span aria-hidden="true">&#215;</span></button>' +
-          '</header>' +
-          '<div class="cmp-chat__log" data-chat-log role="log" aria-live="polite">' +
-            '<div class="cmp-chat__msg cmp-chat__msg--bot">' +
-              '<p class="t-body">' + esc(props.intro || '') + '</p>' +
-            '</div>' +
-          '</div>' +
-          (suggestions.length
-            ? '<div class="cmp-chat__suggestions" data-chat-suggestions role="group" aria-label="Suggested questions">' +
-                suggestions.map(function (item, i) {
-                  return (
-                    '<button type="button" class="cmp-chat__chip" data-chat-suggest="' + i + '">' +
-                      esc(item.label) + '</button>'
-                  );
-                }).join('') +
-              '</div>' +
-              '<script type="application/json" data-chat-suggest-data>' + JSON.stringify(suggestions) + '</script>'
-            : '') +
-          '<form class="cmp-chat__form" data-chat-form>' +
-            '<label class="visually-hidden" for="chat-input">' + esc(props.inputLabel || 'Your message') + '</label>' +
-            '<input class="input" type="text" id="chat-input" data-chat-input autocomplete="off"' +
-              attr('placeholder', props.inputPlaceholder || 'Type a question...') + '>' +
-            '<button type="submit" class="btn btn--primary">Send</button>' +
-          '</form>' +
-          (handoff
-            ? '<div class="cmp-chat__foot">' +
-                '<a class="t-small link-inline"' + attr('href', handoff.href) + '>' + esc(handoff.label) + '</a>' +
-              '</div>'
-            : '') +
-          (props.note ? '<p class="t-small t-muted cmp-chat__note">' + esc(props.note) + '</p>' : '') +
-        '</section>' +
-        '<button type="button" class="cmp-chat__toggle" data-chat-toggle aria-expanded="false" aria-controls="support-chat-panel">' +
-          '<span class="cmp-chat__toggle-label">' + esc(props.buttonLabel || 'Chat') + '</span>' +
-        '</button>' +
-      '</div>'
-    );
-  };
-
-  /* --------------------------------------------------------------------
-     Internet pack components
-     -------------------------------------------------------------------- */
-
-  C.internetCategoryNav = function (props) {
-    var items = props.items || [];
-    var active = props.active || '';
-    var anchor = props.anchor || 'ipack-catalog';
-    var hrefFn = global.SiteRegistry ? global.SiteRegistry.href : registryHref;
-
-    function tabHref(path) {
-      var base = hrefFn(path);
-      if (!base || base === '#') return base;
-      if (base.indexOf('#') >= 0) return base;
-      return base + '#' + anchor;
-    }
-
-    return (
-      '<nav class="cmp-ipack-nav"' + attr('aria-label', props.ariaLabel || 'Internet pack categories') + '>' +
-        items.map(function (item) {
-          var isActive = item.id === active;
-          var cls = classes('cmp-ipack-nav__link', isActive ? 'cmp-ipack-nav__link--active' : null);
-          return (
-            '<a class="' + cls + '"' + attr('href', tabHref(item.href)) +
-              (isActive ? ' aria-current="page"' : '') + '>' +
-              esc(item.label) +
-            '</a>'
-          );
-        }).join('') +
-      '</nav>'
-    );
-  };
-
-  C.internetPackFilters = function (props) {
-    var groups = props.groups || [];
-    var urlBase = props.urlBase || '';
-    return (
-      '<div class="cmp-ipack-filters">' +
-        groups.map(function (group) {
-          var param = group.urlParam || 'sort';
-          var useLinks = !!(group.syncUrl && urlBase);
-          return (
-            '<div class="cmp-ipack-filters__group">' +
-              (group.label ? '<p class="t-label cmp-ipack-filters__label">' + esc(group.label) + '</p>' : '') +
-              '<div class="cmp-tabs" role="tablist"' +
-                attr('aria-label', group.label) +
-                attr('data-filter-group', group.key) +
-                attr('data-filter-sync-url', group.syncUrl ? 'true' : null) +
-                attr('data-filter-param', group.urlParam || null) + '>' +
-                (group.options || []).map(function (opt, i) {
-                  var selected = i === 0 ? 'true' : 'false';
-                  var attrs =
-                    ' class="cmp-tab" role="tab"' +
-                    ' data-filter-value="' + esc(opt.value) + '"' +
-                    ' aria-selected="' + selected + '"';
-                  if (useLinks) {
-                    return (
-                      '<a href="' + esc(filterTabHref(urlBase, param, opt.value)) + '"' + attrs + '>' +
-                        esc(opt.label) + '</a>'
-                    );
-                  }
-                  return (
-                    '<button type="button"' + attrs + '>' +
-                      esc(opt.label) + '</button>'
-                  );
-                }).join('') +
-              '</div>' +
-            '</div>'
-          );
-        }).join('') +
-      '</div>'
-    );
-  };
-
-  C.internetPackCard = function (props) {
-    var hints = props.usageHints || [];
-    var validity = props.validity || {};
-    var validityText = validity.prepaid && validity.postpaid && validity.prepaid !== validity.postpaid
-      ? 'Prepaid: ' + validity.prepaid + '. Postpaid: ' + validity.postpaid + '.'
-      : (validity.prepaid || validity.postpaid || '');
-    var activation = props.keyword && props.shortCode
-      ? 'Send "' + props.keyword + '" to ' + props.shortCode + '.'
-      : '';
-    var kabinetim = props.kabinetimHref || 'https://kabinetim.azercell.com/my/login';
-    var hasDetails = hints.length || props.details;
-
-    return (
-      '<article class="cmp-ipack-card"' +
-        attr('data-filter-tags', props.volumeBand || 'all') +
-        attr('data-ipack-price', props.priceNum != null ? String(props.priceNum) : null) +
-        attr('data-ipack-sort', props.sort != null ? String(props.sort) : null) +
-        attr('data-ipack-id', props.id) + '>' +
-        '<div class="cmp-ipack-card__head">' +
-          '<h3 class="t-h3">' + esc(props.name) + '</h3>' +
-          (props.badge ? '<span class="badge">' + esc(props.badge) + '</span>' : '') +
-        '</div>' +
-        '<p class="t-display cmp-ipack-card__data">' + esc(props.data) + '</p>' +
-        '<p class="t-h2">' + esc(props.price) + '</p>' +
-        (validityText ? '<p class="t-small t-muted">' + esc(validityText) + '</p>' : '') +
-        (props.autoRenew
-          ? '<p class="t-small t-muted">Auto-renews when balance allows.</p>'
-          : '') +
-        (activation ? '<p class="t-body cmp-ipack-card__activate">' + esc(activation) + '</p>' : '') +
-        (props.ussd ? '<p class="t-small t-muted">Or dial ' + esc(props.ussd) + '</p>' : '') +
-        '<div class="cmp-ipack-card__actions">' +
-          '<a class="btn btn--primary btn--block" href="' + esc(kabinetim) + '" target="_blank" rel="noopener">' +
-            esc(props.ctaLabel || 'Activate in Kabinetim') +
-          '</a>' +
-        '</div>' +
-        (hasDetails
-          ? '<details class="cmp-ipack-card__details">' +
-              '<summary class="cmp-ipack-card__summary">' +
-                '<span class="t-label cmp-ipack-card__summary-label">Usage guide and details</span>' +
-                '<span class="cmp-ipack-card__summary-icon" aria-hidden="true">&#8595;</span>' +
-              '</summary>' +
-              '<div class="cmp-ipack-card__details-body">' +
-                (hints.length
-                  ? '<ul class="cmp-ipack-card__hints">' +
-                      hints.map(function (h) {
-                        return (
-                          '<li class="t-body">' +
-                            '<span class="t-muted">' + esc(h.activity) + '</span> — ' + esc(h.duration) +
-                          '</li>'
-                        );
-                      }).join('') +
-                    '</ul>'
-                  : '') +
-                (props.details ? '<p class="t-body t-muted">' + esc(props.details) + '</p>' : '') +
-                '<div class="ph cmp-ipack-card__qr">Scan in Kabinetim app</div>' +
-              '</div>' +
-            '</details>'
-          : '') +
-      '</article>'
-    );
-  };
-
-  C.internetUpgradeBanner = function (props) {
-    var hrefFn = global.SiteRegistry ? global.SiteRegistry.href : registryHref;
-    var acts = (props.actions || []).map(function (a) {
-      return {
-        label: a.label,
-        href: hrefFn(a.href),
-        variant: a.variant
-      };
-    });
-    return (
-      '<section class="cmp-ipack-upgrade">' +
-        '<div class="cmp-ipack-upgrade__copy">' +
-          (props.eyebrow ? '<p class="t-label">' + esc(props.eyebrow) + '</p>' : '') +
-          '<h2 class="t-h2">' + esc(props.title) + '</h2>' +
-          (props.body ? '<p class="t-body t-muted">' + esc(props.body) + '</p>' : '') +
-          actions(acts) +
-          (props.note ? '<p class="t-small t-muted">' + esc(props.note) + '</p>' : '') +
-        '</div>' +
-        '<div class="ph ph--wide cmp-ipack-upgrade__visual">Plan comparison visual</div>' +
-      '</section>'
-    );
-  };
-
-  /* --------------------------------------------------------------------
-     Roaming country components
-     -------------------------------------------------------------------- */
-
-  function networkBadges(networks) {
-    return (networks || []).map(function (n) {
-      return '<span class="cmp-roam-network badge">' + esc(n) + '</span>';
-    }).join('');
-  }
-
-  C.roamingCountrySearch = function (props) {
-    var chips = props.topCountries || [];
-    return (
-      '<div class="cmp-roam-search" data-roam-search-wrap' +
-        attr('data-roam-sync-url', props.syncUrl !== false ? 'true' : 'false') +
-        attr('data-roam-url-base', props.urlBase || '') +
-        attr('data-roam-show-all-default', props.showAllDefault ? 'true' : 'false') +
-        attr('data-roam-pack-supported-only', props.packSupportedOnly ? 'true' : 'false') + '>' +
-        '<label class="t-label" for="' + esc(props.inputId || 'roam-country-search') + '">' +
-          esc(props.label || 'Search for a country') +
-        '</label>' +
-        (props.hint ? '<p class="t-body t-muted">' + esc(props.hint) + '</p>' : '') +
-        '<input class="input cmp-roam-search__input" type="search"' +
-          attr('id', props.inputId || 'roam-country-search') +
-          attr('data-roam-search-input', props.inputId || 'roam-country-search') +
-          attr('placeholder', props.placeholder || 'Enter country name…') +
-          ' autocomplete="off">' +
-        (chips.length
-          ? '<div class="cmp-roam-search__chips" role="group" aria-label="Popular destinations">' +
-              chips.map(function (chip) {
-                return (
-                  '<button type="button" class="btn btn--small btn--quiet" data-roam-country-id="' + esc(chip.id) + '">' +
-                    esc(chip.name) +
-                  '</button>'
-                );
-              }).join('') +
-            '</div>'
-          : '') +
-        '<div class="cmp-roam-search__results" data-roam-results aria-live="polite"></div>' +
-      '</div>'
-    );
-  };
-
-  function roamRateRows(rates) {
-    if (!rates) return '';
-    return (
-      '<ul class="cmp-roam-results__rates">' +
-        '<li class="t-small"><span class="t-muted">Outgoing calls</span> ' + esc(rates.outgoing) + '</li>' +
-        '<li class="t-small"><span class="t-muted">Incoming calls</span> ' + esc(rates.incoming) + '</li>' +
-        '<li class="t-small"><span class="t-muted">Internet</span> ' + esc(rates.internetMb) + '</li>' +
-        '<li class="t-small"><span class="t-muted">SMS</span> ' + esc(rates.sms) + '</li>' +
-      '</ul>'
-    );
-  }
-
-  C.roamingCountryResults = function (props) {
-    var countries = props.countries || [];
-    var planType = props.planType || 'prepaid';
-    if (!countries.length) {
-      return (
-        '<p class="t-body t-muted cmp-roam-results__empty">' +
-          esc(props.emptyText || 'No country matches. Try another spelling.') +
-        '</p>'
-      );
-    }
-    return (
-      '<div class="cmp-roam-results">' +
-        countries.map(function (country) {
-          var operators = country.operators || [];
-          return (
-            '<article class="cmp-roam-results__country"' + attr('data-roam-country-id', country.id) + '>' +
-              '<h3 class="t-h3">' + esc(country.name) + '</h3>' +
-              operators.map(function (operator) {
-                var rates = planType === 'postpaid' ? operator.postpaid : operator.prepaid;
-                return (
-                  '<div class="cmp-roam-results__operator">' +
-                    '<div class="cmp-roam-results__operator-head">' +
-                      '<p class="t-body"><strong>' + esc(operator.name) + '</strong></p>' +
-                      (operator.displayName && operator.displayName !== operator.name
-                        ? '<p class="t-small t-muted">' + esc(operator.displayName) + '</p>'
-                        : '') +
-                    '</div>' +
-                    '<div class="cmp-roam-results__networks">' + networkBadges(operator.networks) + '</div>' +
-                    '<p class="t-small">' +
-                      '<span class="t-muted">Roaming internet pack:</span> ' +
-                      (operator.internetPackSupported ? 'Supported' : 'Not available') +
-                    '</p>' +
-                    roamRateRows(rates) +
-                  '</div>'
-                );
-              }).join('') +
-            '</article>'
-          );
-        }).join('') +
-      '</div>'
-    );
-  };
-
-  C.roamingCountriesTable = function (props) {
-    var rows = props.rows || [];
-    var planType = props.planType || 'prepaid';
-    if (!rows.length) {
-      return '<p class="t-body t-muted">No supported operators in this sample list.</p>';
-    }
-    return (
-      '<div class="cmp-roam-table-wrap" data-roam-table-wrap>' +
-        '<p class="t-small t-muted cmp-roam-table-wrap__hint">Swipe sideways to see all columns</p>' +
-        '<div class="cmp-roam-table-scroll">' +
-          '<table class="cmp-roam-table">' +
-            '<thead><tr>' +
-              '<th class="t-label">Country</th>' +
-              '<th class="t-label">Operator</th>' +
-              '<th class="t-label">Display name</th>' +
-              '<th class="t-label">Networks</th>' +
-            '</tr></thead>' +
-            '<tbody>' +
-              rows.map(function (row) {
-                var op = row.operator;
-                return (
-                  '<tr>' +
-                    '<td class="t-body">' + esc(row.country) + '</td>' +
-                    '<td class="t-body">' + esc(op.name) + '</td>' +
-                    '<td class="t-body t-muted">' + esc(op.displayName) + '</td>' +
-                    '<td class="t-body"><span class="cmp-roam-table__networks">' + networkBadges(op.networks) + '</span></td>' +
-                  '</tr>'
-                );
-              }).join('') +
-            '</tbody>' +
-          '</table>' +
-        '</div>' +
-        (props.note ? '<p class="t-small t-muted cmp-roam-table-wrap__note">' + esc(props.note) + '</p>' : '') +
-      '</div>'
-    );
-  };
-
-  C.roamingPlanToggle = function (props) {
-    var current = props.current || 'prepaid';
-    return (
-      '<div class="cmp-tabs" role="tablist" aria-label="Plan type" data-roam-plan-toggle>' +
-        ['prepaid', 'postpaid'].map(function (type) {
-          var selected = type === current;
-          return (
-            '<button type="button" class="cmp-tab" role="tab"' +
-              ' data-roam-plan-value="' + type + '"' +
-              ' aria-selected="' + (selected ? 'true' : 'false') + '">' +
-              esc(type.charAt(0).toUpperCase() + type.slice(1)) +
-            '</button>'
-          );
-        }).join('') +
-      '</div>'
-    );
-  };
-
-  /* --------------------------------------------------------------------
      Footer
      -------------------------------------------------------------------- */
 
-  C.siteFooter = function (props) {
+  function classicSiteFooter(props) {
     return (
       '<footer class="cmp-footer">' +
         '<div class="wrap">' +
@@ -1676,6 +1816,42 @@
           (props.copyright ? '<p class="t-small t-muted" style="margin-top:var(--sp-4)">' + esc(props.copyright) + '</p>' : '') +
         '</div>' +
       '</footer>'
+    );
+  };
+
+
+  C.siteFooter = function (props) {
+    if (props.layout === 'personal') return personalSiteFooter(props);
+    return classicSiteFooter(props);
+  };
+
+  C.transferHero = function (props) {
+    var action = props.action || {};
+    return (
+      '<section class="cmp-nav__transfer-hero" aria-labelledby="transfer-page-title">' +
+        '<div class="wrap">' +
+          '<div class="cmp-nav__transfer-hero-grid">' +
+            '<div class="cmp-nav__transfer-hero-copy">' +
+              '<h1 id="transfer-page-title" class="t-display">' + esc(props.title || 'Transfer your number') + '</h1>' +
+              (action.href
+                ? '<a class="btn btn--primary" data-transfer-hero-cta' + attr('href', action.href) +
+                    (/^https?:/.test(action.href) ? ' target="_blank" rel="noopener"' : '') + '>' +
+                    esc(action.label || 'Start transfer') + '</a>'
+                : '') +
+            '</div>' +
+            placeholder(props.media || 'Transfer visual', 'ph--tall') +
+          '</div>' +
+        '</div>' +
+      '</section>'
+    );
+  };
+
+  C.mediaPlaceholder = function (props) {
+    return (
+      '<section class="cmp-nav__transfer-placeholder"' +
+        (props.label ? ' aria-label="' + esc(props.label) + '"' : '') + '>' +
+        '<div class="wrap">' + placeholder(props.media || '', 'ph--wide') + '</div>' +
+      '</section>'
     );
   };
 
