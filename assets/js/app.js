@@ -82,6 +82,11 @@
         btn.setAttribute('aria-expanded', 'false');
       }
     });
+    all(header, '[data-menu-link]').forEach(function (link) {
+      if (link.getAttribute('data-menu-link') !== except) {
+        link.setAttribute('aria-expanded', 'false');
+      }
+    });
     all(header, '[data-menu-panel]').forEach(function (panel) {
       if (panel.getAttribute('data-menu-panel') !== except) {
         panel.setAttribute('data-open', 'false');
@@ -103,11 +108,13 @@
 
   function openMenu(header, key) {
     var btn = header && header.querySelector('[data-menu-toggle="' + key + '"]');
+    var link = header && header.querySelector('[data-menu-link="' + key + '"]');
     var panel = header && header.querySelector('[data-menu-panel="' + key + '"]');
-    if (!btn || !panel) return;
+    if (!panel) return;
     closeMenus(header, key);
     closeHeaderSearch(header);
-    btn.setAttribute('aria-expanded', 'true');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+    if (link) link.setAttribute('aria-expanded', 'true');
     panel.setAttribute('data-open', 'true');
   }
 

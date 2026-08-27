@@ -293,29 +293,26 @@ Same layout pattern as DigiMax (pack carousel + FAQ + cross-links). Each has `?t
 | Lead form handoff | Contact / *6050 | CONNECTED |
 | Announcement bar | Personal `SITE_CHROME.announcements` | CONNECTED |
 | Header nav | `SITE_CHROME.businessNav`; Business audience tab active | PLANNED destinations via working placeholders |
-| Acquisition block below hero | Personal `SITE_CHROME.acquisition` | Mixed: same connected/planned destinations as Personal |
-| Floating bar | Personal `SITE_CHROME.floatingBar` | Mixed (see Floating bar section) |
+| Solution block below hero | Four Digital solutions category landings | PLANNED via working placeholders |
+| Floating bar | `SITE_CHROME.businessFloatingBar` | Mixed (see Floating bar section) |
 | Footer | `SITE_CHROME.businessFooter` | Mixed: external/legal connected; B2B destinations planned |
 
 ### Business header (`SITE_CHROME.businessNav`)
 
-Desktop category labels navigate to their landing pages. Hover/focus opens the mega menu; dropdown arrows are omitted and visible labels use equal spacing with left alignment. Mobile uses a category link plus a separate expand control.
+Desktop category labels navigate to their landing pages. Hover/focus opens the mega menu; dropdown arrows are omitted and visible labels use equal 16px spacing with left alignment. Mobile uses a category link plus a separate expand control.
 
-Business reuses the Personal menu presentation patterns and type scale: Mobile uses the Personal Mobile rail/detail layout with an accented Azercell Biznes entry; its rail labels remain landing-page links and expose submenus on hover/focus without repeating the selected label in the detail pane. Standard categories use the Personal Company list layout. Campaigns lists Why Azercell Business first, the active My Business Wi-Fi campaign, My Business Club and the archive beside a My Business Wi-Fi promo card.
+Business reuses the Personal menu presentation patterns and type scale: Mobile and Digital solutions use the Personal Mobile rail/detail layout; Mobile retains an accented Azercell Biznes entry. Their rail labels remain landing-page links and expose submenus on hover/focus without repeating the selected label in the detail pane. Standard categories use the Personal Company list layout. Campaigns lists Why Azercell Business first, the active My Business Wi-Fi campaign, My Business Club and the archive beside a My Business Wi-Fi promo card.
 
 | Category | Landing / children | Status |
 |----------|--------------------|--------|
 | Company | `/about/…` | PLANNED; Careers and Azercell Life external |
 | Mobile | `/business/mobile/…` | PLANNED |
 | Connectivity | `/business/connectivity/…` | PLANNED; Fixed service relationship on hold |
-| IoT & M2M | `/business/iot/…` | PLANNED |
-| Fleet & field operations | `/business/fleet-field-operations/…` | PLANNED; separate Fleet package page on hold |
-| Automation & management | `/business/automation-management/…` | PLANNED |
-| Customer engagement | `/business/customer-engagement/…` | PLANNED |
+| Digital solutions | `/business/digital-solutions/` → IoT & M2M, Fleet & field operations, Automation & management, Customer engagement | PLANNED; separate Fleet package page on hold |
 | Campaigns | `/business/campaigns/…` | PLANNED |
 | Support | `/business/support/…` | PLANNED |
-| Header → Azercell Biznes | biznes.azercell.com | CONNECTED (external) |
 | Header → Log in | `/business/login/` | PLANNED; final destination pending |
+| Header → Contact manager | biznes.azercell.com | CONNECTED (external) |
 
 ### Business footer (`SITE_CHROME.businessFooter`)
 
@@ -371,9 +368,9 @@ The Business footer preserves this shell, subscription, legal, social, language 
 
 ---
 
-## Floating bar (`SITE_CHROME.floatingBar` — Personal routes and Business pages)
+## Floating bars (`SITE_CHROME.floatingBar` / `SITE_CHROME.businessFloatingBar`)
 
-Shown on `/business/` and B2B planned placeholders with the same Internet, Tariffs, Roaming, Kinon popovers and Search link as Personal. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
+Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned placeholders use Internet, Tariffs, Roaming and Azercell Biznes with B2B destinations. Both retain Search. On `/join-azercell/transfer-number/` the bar switches to a Start transfer CTA after the hero button scrolls away.
 
 | Item | Target | Status |
 |------|--------|--------|
@@ -382,6 +379,12 @@ Shown on `/business/` and B2B planned placeholders with the same Internet, Tarif
 | Tariffs (+ Prepaid, Postpaid, archive) | `/tariffs/mobile/…` | CONNECTED |
 | Roaming (+ internet packs, countries, travel packs) | `/tariffs/roaming/…` | CONNECTED |
 | Kinon | `/apps/cinema-and-tv/kinon/` | PLANNED |
+| Business Internet | `/business/mobile/internet/…` | PLANNED |
+| Business Tariffs | `/business/mobile/tariffs/…` | PLANNED |
+| Business Roaming | `/business/mobile/roaming/…` | PLANNED |
+| Business Azercell Biznes → Top-up | `/business/mobile/azercell-biznes/top-up/` | PLANNED |
+| Business Azercell Biznes → Online Itemized Bill | `/business/support/itemized-bill/` | PLANNED |
+| Business Azercell Biznes → accented Azercell Biznes | biznes.azercell.com | CONNECTED (external) |
 
 ---
 
@@ -426,6 +429,7 @@ Shown on `/business/` and B2B planned placeholders with the same Internet, Tarif
 
 | Date | Change |
 |------|--------|
+| 2026-08-27 | Restored arrowless Business hover dropdowns, increased visible label spacing to 16px, consolidated four categories under a Personal-Mobile-style Digital solutions menu, replaced Acquisition with a four-card Solution block and CTA subtitles, reordered Log in / Contact manager, and added a B2B floating bar. |
 | 2026-08-27 | Removed Business desktop dropdown arrows, left-aligned category links and set equal visual spacing between labels. Renamed the Business acquisition labels to Acquisition action 1–5 while preserving destinations and Personal labels. |
 | 2026-08-27 | Added the unchanged Personal acquisition block directly below the Business hero, reusing the shared component, content and destinations. |
 | 2026-08-27 | Restored My Business Club to the Business Campaigns mega-menu while retaining the My Business Wi-Fi promo banner. |

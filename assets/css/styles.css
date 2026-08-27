@@ -2832,7 +2832,7 @@ html[data-nav-variant="v2"] [data-apps-v1] {
 
 .cmp-nav__acquisition-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--acquisition-columns, 5), minmax(0, 1fr));
   border: 1px solid var(--c-line);
 }
 
@@ -2858,6 +2858,12 @@ html[data-nav-variant="v2"] [data-apps-v1] {
   height: 32px;
   min-height: 0;
   flex: none;
+}
+
+.cmp-nav__acquisition-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
 }
 
 .cmp-nav__content-placeholder {
@@ -3278,7 +3284,7 @@ html[data-nav-variant="v2"] [data-apps-v1] {
    corresponding mega menu. Gaps are measured between visible labels. */
 .cmp-nav[data-branch="business"] .cmp-header__nav-list {
   justify-content: flex-start;
-  gap: var(--sp-2);
+  gap: var(--sp-4);
 }
 
 .cmp-nav[data-branch="business"] .cmp-header__nav-btn {

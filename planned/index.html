@@ -59,7 +59,10 @@
     'siteFooter',
     siteBranch === 'business' ? chrome.businessFooter : chrome.footer
   ]]);
-  Components.mount('#page-chat', [['floatingBar', chrome.floatingBar]]);
+  Components.mount('#page-chat', [[
+    'floatingBar',
+    siteBranch === 'business' ? chrome.businessFloatingBar : chrome.floatingBar
+  ]]);
 
   var page = R.get(path);
 

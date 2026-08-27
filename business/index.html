@@ -37,11 +37,14 @@
   var BIZNES = 'https://biznes.azercell.com';
   var CONTACT = href('/about/contact/');
   var businessHeader = R.headerProps({ branch: 'business' });
-  var businessAcquisition = {
-    title: chrome.acquisition.title,
-    items: chrome.acquisition.items.map(function (item, index) {
-      return { label: 'Acquisition action ' + (index + 1), href: item.href };
-    })
+  var businessSolutions = {
+    title: 'Solution block',
+    items: [
+      { label: 'IoT & M2M', body: 'Connect devices and automate data exchange', href: href('/business/iot/') },
+      { label: 'Fleet & field operations', body: 'Track vehicles, teams and field work', href: href('/business/fleet-field-operations/') },
+      { label: 'Automation & management', body: 'Streamline workflows and manage devices', href: href('/business/automation-management/') },
+      { label: 'Customer engagement', body: 'Reach customers across every channel', href: href('/business/customer-engagement/') }
+    ]
   };
 
   /* ---------------------------------------------------------------- Chrome */
@@ -52,7 +55,7 @@
   ]);
 
   Components.mount('#page-bottom', [['siteFooter', chrome.businessFooter]]);
-  Components.mount('#page-chat', [['floatingBar', chrome.floatingBar]]);
+  Components.mount('#page-chat', [['floatingBar', chrome.businessFloatingBar]]);
 
   /* ------------------------------------------------------------------ Data */
 
@@ -403,7 +406,7 @@
   Components.mount('#page-main', [
     ['heroBanner', { slides: heroSlides }],
 
-    render('acquisitionBlock', businessAcquisition),
+    render('acquisitionBlock', businessSolutions),
 
     section(
       render('sectionHead', {

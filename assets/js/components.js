@@ -462,7 +462,7 @@
   }
 
   function renderMobilePanel(item, index, apps) {
-    if (item.label === 'Mobile') {
+    if (item.mode === 'detail-links') {
       return '<div class="cmp-nav__mobile-panel-body cmp-nav__mobile-inner-groups">' +
         (item.items || []).map(function (entry, entryIndex) {
           return '<section class="cmp-nav__mobile-inner-group' + (entry.featured ? ' cmp-nav__mobile-inner-group--featured' : '') + '">' +
@@ -565,7 +565,7 @@
                       '<li class="cmp-nav__category" data-menu-hover="' + index + '">' +
                         '<div class="cmp-nav__category-control">' +
                           '<a class="cmp-header__nav-btn cmp-nav__category-link"' + attr('href', item.href) +
-                            ' data-menu-link="' + index + '" aria-controls="nav-panel-' + index + '">' +
+                            ' data-menu-link="' + index + '" aria-expanded="false" aria-controls="nav-panel-' + index + '">' +
                             esc(item.label) +
                           '</a>' +
                         '</div>' +
@@ -764,7 +764,7 @@
         '<div class="cmp-nav__floating-copy"><p class="t-label">' + esc(item.label) + '</p>' +
           '<div class="cmp-nav__floating-links">' +
             (item.detail || []).map(function (link) {
-              return navLink(link, 't-body cmp-nav__text-link');
+              return navLink(link, link.featured ? 'btn btn--primary' : 't-body cmp-nav__text-link');
             }).join('') +
           '</div>' +
         '</div>' +
@@ -793,12 +793,13 @@
   };
 
   C.acquisitionBlock = function (props) {
+    var items = props.items || [];
     return (
       '<section class="cmp-nav__acquisition" aria-labelledby="acquisition-title">' +
         '<div class="wrap">' +
           '<h2 id="acquisition-title" class="t-h1">' + esc(props.title || 'Acquisition block') + '</h2>' +
-          '<div class="cmp-nav__acquisition-grid" role="list">' +
-            (props.items || []).map(function (item) {
+          '<div class="cmp-nav__acquisition-grid" role="list" style="--acquisition-columns: ' + items.length + '">' +
+            items.map(function (item) {
               var href = navHref(item);
               var external = /^https?:/.test(href);
               var tag = href ? 'a' : 'button';
@@ -807,7 +808,10 @@
                 : ' type="button"';
               return '<' + tag + ' class="cmp-nav__acquisition-card cmp-quick__item" role="listitem"' + attrs + '>' +
                 '<span class="ph ph--square cmp-nav__acquisition-icon" aria-hidden="true"></span>' +
-                '<span class="t-body">' + esc(item.label) + '</span>' +
+                (item.body
+                  ? '<span class="cmp-nav__acquisition-copy"><span class="t-h4">' + esc(item.label) + '</span>' +
+                      '<span class="t-small t-muted">' + esc(item.body) + '</span></span>'
+                  : '<span class="t-body">' + esc(item.label) + '</span>') +
               '</' + tag + '>';
             }).join('') +
           '</div>' +
