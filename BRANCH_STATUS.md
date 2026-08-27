@@ -41,9 +41,12 @@ Statuses are decisions, not code facts:
 
 ### Standing constraints
 
-- `vlad` commit `b1d2408` deletes `middleware.js`. That is an authentication change, not part of the
-  navigation feature. Never carry it into another branch automatically. It needs its own explicit
-  security decision.
+- Basic Auth on `main` is off by an explicit decision (2026-08-27, Simon): it blocked Hotjar's
+  servers from fetching `assets/css/styles.css`, so recordings and heatmaps rendered unstyled. The
+  gate is parked as `middleware.js.disabled`; renaming it back to `middleware.js` restores the
+  password and re-breaks Hotjar. `vlad` commit `b1d2408` deletes the file outright — still do not
+  carry that deletion across branches automatically; the prototype must stay open by decision, not
+  by accident.
 - `nav-lab/` and `/compare/` (Vlad’s compare lab) are review probes. They must not silently replace the stable
   `/tariffs/compare/` route or the shared site header and footer.
 - `assets/js/site-registry.js` and `PAGE_CONNECTIONS.md` accumulate independent work on several

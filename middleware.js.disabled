@@ -1,4 +1,10 @@
-/* HTTP Basic Auth — runs on Vercel Edge only (not the local Python server). */
+/* HTTP Basic Auth — runs on Vercel Edge only (not the local Python server).
+ *
+ * DISABLED. Vercel only picks this up when the file is named `middleware.js`.
+ * Basic Auth also blocked Hotjar's servers from fetching /assets/css/styles.css,
+ * so recordings and heatmap screenshots rendered unstyled. Rename back to
+ * `middleware.js` to re-protect the prototype — Hotjar playback will break again.
+ */
 
 var USER = 'azercell';
 var PASS = 'Az3-o67wm5ZoYKvN6LrbTE';
