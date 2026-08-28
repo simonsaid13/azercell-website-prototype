@@ -9,13 +9,13 @@ checkout.
 
 ## 1. Status and authority boundary
 
-Verified feature snapshot: `d5aff9c731ce7b541f2fae5d7002818db504c70c`
+Verified feature snapshot: `d598d97c2054b7873d2d94f9681cf1223cb17c18`
 on `vlad`. The stable `main` snapshot at the time of verification was
 `42a7855e77705974c11c2fba2e4cfae1854dcf03`.
 
 | Area | Current status | Do not infer |
 | --- | --- | --- |
-| Navigation probe | Implemented in `nav-lab/` for review | Current code is not approved final IA, stable shared chrome, or business truth |
+| Navigation probe | Implemented in `nav-lab/` for review; current behavior snapshot is `d598d97` | Current code is not approved final IA, stable shared chrome, or business truth; no deployment is recorded for this snapshot |
 | Tariff comparator | Current version and exact Header placement accepted by Vlad | No Semen/team, business/client, design, CMS, legal, or stable-route acceptance |
 | Stable `/tariffs/compare/` | Unchanged | The lab must not silently replace it |
 | `main` integration | Not performed | A working probe or passing checks do not authorize a merge |
@@ -55,6 +55,7 @@ The feature history after stable `main` is:
 | `4aecf06` | Mobile navigation behavior | Modifies both the main nav probe and transfer scenario |
 | `6847eaf` | Connected EN/AZ tariff comparator and language dropdown | Changes shared nav, registry, connection docs, and adds the comparator |
 | `d5aff9c` | RU Version 3 and mobile snap geometry | Depends on the complete comparator from `6847eaf` |
+| `d598d97` | RU V3 navigation and Floating actions | Local `nav-lab` probe only: Chat and E-commerce are preview-only; preserve EN/AZ and do not infer acceptance or deployment |
 
 Do not blindly cherry-pick `b1d2408`: its authentication deletion is separate
 from the navigation feature. Do not restore or expose any historical embedded
@@ -76,11 +77,11 @@ and the versioned pre-push hook attempts the sync automatically.
 <!-- INTEGRATION_HISTORY:START -->
 ### Generated Git chronology
 
-Tracked behavior snapshot: `8f8fb7e561ff5ab3e3e3e90832bccc8e41f6b812`. Documentation-only commits are excluded so regenerating this block cannot create a self-referential commit loop.
+Tracked behavior snapshot: `d598d97c2054b7873d2d94f9681cf1223cb17c18`. Documentation-only commits are excluded so regenerating this block cannot create a self-referential commit loop.
 Baseline: `42a7855e77705974c11c2fba2e4cfae1854dcf03`. Only committed changes in the tracked behavior allowlist are included; working-tree changes and handoff/docs files are excluded.
 
-Latest behavior version: `8f8fb7e` — feat: unify tariff comparison controls and sticky headers.
-Previous behavior version: `d5aff9c` — feat: add RU tariff comparison and mobile snap scrolling.
+Latest behavior version: `d598d97` — feat(nav-lab): refine RU navigation and floating actions.
+Previous behavior version: `8f8fb7e` — feat: unify tariff comparison controls and sticky headers.
 
 ### Versions and file deltas
 
@@ -92,6 +93,7 @@ Previous behavior version: `d5aff9c` — feat: add RU tariff comparison and mobi
 | `6847eaf` | 2026-08-26 | feat: add connected tariff comparison prototype | — (see exact Git message) | Shared runtime, Navigation probe, Tariff comparator | 5 changed, 4 added | Changed: `assets/js/site-registry.js`, `nav-lab/index.html`, `nav-lab/navigation.css`, `nav-lab/navigation.js`, `nav-lab/transfer-number/index.html`<br>Added: `tariff-compare-lab/app.js`, `tariff-compare-lab/data.js`, `tariff-compare-lab/index.html`, `tariff-compare-lab/styles.css` |
 | `d5aff9c` | 2026-08-27 | feat: add RU tariff comparison and mobile snap scrolling | — (see exact Git message) | Tariff comparator | 3 changed | Changed: `tariff-compare-lab/app.js`, `tariff-compare-lab/data.js`, `tariff-compare-lab/styles.css` |
 | `8f8fb7e` | 2026-08-27 | feat: unify tariff comparison controls and sticky headers | — (see exact Git message) | Tariff comparator | 2 changed | Changed: `tariff-compare-lab/app.js`, `tariff-compare-lab/styles.css` |
+| `d598d97` | 2026-08-28 | feat(nav-lab): refine RU navigation and floating actions | Note: Commit the reviewed RU/V3 navigation and floating action behavior for integration review.<br>Risk: Chat and E-commerce are preview-only placeholders; no client acceptance or production integration is implied. | Navigation probe | 6 changed | Changed: `nav-lab/index.html`, `nav-lab/navigation.css`, `nav-lab/navigation.js`, `nav-lab/transfer-number/index.html`, `nav-lab/transfer-number/transfer-number.css`, `nav-lab/transfer-number/transfer-number.js` |
 
 **Security attention:** `b1d2408` removes `middleware.js`. This is a historical Git fact, not permission to remove or weaken authentication in another branch; require an explicit security decision.
 
@@ -148,7 +150,7 @@ control:
 | --- | --- | --- | --- |
 | `EN` | `lang=en&variant=v1` | Navigation/Footer Apps V1 | Compact EN/AZ renderer |
 | `AZ` | `lang=az&variant=v2` | Navigation/Footer Apps V2 | Detailed EN/AZ renderer |
-| `RU` | `lang=ru` plus the current `variant` | Retains the current V1/V2 navigation variant | Separate RU Version 3 renderer |
+| `RU` | `lang=ru&variant=v3` | Navigation V3 | Separate RU Version 3 renderer |
 
 This is prototype version control, not completed content localization. The
 visible copy is largely English, and the document language is not dynamically
@@ -164,9 +166,17 @@ Selecting a language must update all of these together:
 - every Compare tariffs link (`billing=prepaid`, `lang`, and `variant`);
 - the active comparator renderer.
 
-For `EN`, force `variant=v1`. For `AZ`, force `variant=v2`. For `RU`, retain
-the current navigation variant and enter RU Version 3 in the comparator. The
+For `EN`, force `variant=v1`. For `AZ`, force `variant=v2`. For `RU`, force
+`variant=v3` and enter RU Version 3 in both navigation and the comparator. The
 dropdown closes on selection, outside click, or Escape.
+
+RU/V3 is a review variant, not localization completion. Its utility label is
+`Service Centers` (EN/AZ retain `Locations`); it adds an `E-commerce` entry
+after `Devices` in Header and Footer with only the preview placeholder `Details
+to be confirmed later.` Apps is a full flat list with a stable promo area: two
+columns on desktop/tablet and one on mobile. These labels, order and
+placeholders are not accepted product IA or destinations. This changes the
+utility label only: the current Support inventory still includes `Locations`.
 
 Do not reintroduce a page-level Compact/Detailed switch or the retired `view`
 query parameter. `billing=prepaid|postpaid` remains the shareable EN/AZ state.
@@ -217,9 +227,15 @@ add, and remove, then clamp it if content shrinks.
 - The desktop Header menus and mobile drawer have distinct mechanics. Mobile
   groups, nested tariff groups, Apps categories, and Footer accordions close
   competing sections rather than leaving every section open.
-- The Floating Bar has Internet, Tariffs, Roaming, and Kinon plus a separate
-  inert Search control. One popover opens at a time; outside click and Escape
-  close it.
+- EN/AZ Floating Bar has Internet, Tariffs, Roaming, and Kinon plus a separate
+  inert Search control. RU/V3 hides Kinon and uses Internet, Tariffs, Roaming |
+  preview-only inactive Chat / inert Search. Chat does not open a popover or
+  start a support conversation; one product popover opens at a time, and
+  outside click and Escape close it.
+- On the RU Transfer scenario, default Floating utilities are preview-only
+  inactive Chat / inert Search. When the hero CTA leaves view, the action is
+  `Start transfer` | Chat / Search; when hidden, the CTA group collapses fully
+  so no empty divider or padding remains. EN/AZ Transfer behavior is unchanged.
 - The Floating Bar docks `16px` before the Footer and returns to fixed position
   on reverse scroll. Preserve its attached popover during docking.
 - The Header's owning stacking context must stay above the product Floating
@@ -275,6 +291,9 @@ Then verify the adopted scenarios in a real browser at approximately `375px`,
 - RU sticky alignment below the Header;
 - Floating open/close/docking, Header overlap, Footer gap, and reverse-scroll
   recovery;
+- RU/V3 floating replacement of Kinon by preview-only Chat, including
+  hidden/visible ARIA and tab order; RU Transfer default Chat/Search symmetry
+  and CTA-visible `Start transfer | Chat | Search` restoration;
 - zero browser console errors or unhandled rejections.
 
 Passing these checks proves the bounded implementation behavior only. It does
