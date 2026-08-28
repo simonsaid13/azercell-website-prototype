@@ -218,6 +218,18 @@
   display: flex;
 }
 
+.nav-probe__floating-utility-group {
+  display: flex;
+  align-items: stretch;
+  flex: 0 0 auto;
+}
+
+.nav-probe__floating-bar[data-floating-variant="v3"] .nav-probe__floating-utility-group {
+  gap: var(--sp-1);
+  padding-left: var(--sp-1);
+  border-left: 1px solid var(--c-line-strong);
+}
+
 @media (min-width: 768px) {
   .nav-probe__floating-bar {
     position: fixed;
@@ -253,8 +265,13 @@
     min-width: 0;
   }
 
+  .nav-probe__floating-bar[data-floating-variant="v3"] .nav-probe__floating-main {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .nav-probe__floating-control,
-  .nav-probe__floating-search {
+  .nav-probe__floating-search,
+  .nav-probe__floating-chat {
     min-width: 0;
     min-height: 40px;
     padding: var(--sp-2) var(--sp-3);
@@ -275,10 +292,17 @@
     border-color: var(--c-line-strong);
   }
 
+  .nav-probe__floating-chat {
+    flex: 0 0 5.5rem;
+    border-color: var(--c-line-strong);
+  }
+
   .nav-probe__floating-control:hover,
   .nav-probe__floating-control:focus-visible,
   .nav-probe__floating-search:hover,
-  .nav-probe__floating-search:focus-visible {
+  .nav-probe__floating-search:focus-visible,
+  .nav-probe__floating-chat:hover,
+  .nav-probe__floating-chat:focus-visible {
     background: var(--c-fill-soft);
   }
 
@@ -603,10 +627,21 @@
   grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 1.45fr);
 }
 
+.nav-probe__apps-v3 {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
 .nav-probe__apps-list {
   display: flex;
   flex-direction: column;
   gap: var(--sp-1);
+}
+
+.nav-probe__apps-v3 .nav-probe__apps-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-1);
+  align-content: start;
 }
 
 .nav-probe__wide-promo {
@@ -639,6 +674,10 @@
 .nav-probe__apps-promo .cmp-card,
 .nav-probe__apps-promo > .ph {
   min-height: 160px;
+}
+
+.nav-probe__apps-v3 .nav-probe__apps-promo-placeholder .cmp-card__body {
+  visibility: hidden;
 }
 
 .nav-probe__apps-categories {
@@ -1002,8 +1041,13 @@
     min-width: 0;
   }
 
+  .nav-probe__floating-bar[data-floating-variant="v3"] .nav-probe__floating-main {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .nav-probe__floating-control,
-  .nav-probe__floating-search {
+  .nav-probe__floating-search,
+  .nav-probe__floating-chat {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1018,6 +1062,11 @@
   }
 
   .nav-probe__floating-search {
+    flex: 0 0 3.5rem;
+    border-color: var(--c-line-strong);
+  }
+
+  .nav-probe__floating-chat {
     flex: 0 0 3.5rem;
     border-color: var(--c-line-strong);
   }
@@ -1056,6 +1105,27 @@
   .nav-probe__floating-detail,
   .nav-probe__floating-kinon {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nav-probe__floating-media {
+    display: grid;
+    min-width: 0;
+  }
+
+  /* Keep the existing 260px popover panel while fitting the longest mobile
+     detail list without an inner scrollbar. */
+  .nav-probe__floating-popover .ph {
+    grid-area: 1 / 1;
+    width: 100%;
+    min-height: 100px;
+  }
+
+  .nav-probe__floating-cta {
+    grid-area: 1 / 1;
+    align-self: end;
+    justify-self: start;
+    z-index: 1;
+    margin: var(--sp-3);
   }
 
   .nav-probe__footer-groups {

@@ -56,16 +56,19 @@
 </main>
 
 <div class="nav-probe__floating-bar" aria-label="Floating navigation preview">
-  <div class="nav-probe__floating-main" data-floating-main role="group" aria-label="Customer shortcuts">
+  <div class="nav-probe__floating-main" data-floating-main data-floating-primary-group role="group" aria-label="Customer shortcuts">
     <button type="button" class="nav-probe__floating-control" data-floating-trigger="Internet" aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Internet</span></button>
     <button type="button" class="nav-probe__floating-control" data-floating-trigger="Tariffs" aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Tariffs</span></button>
     <button type="button" class="nav-probe__floating-control" data-floating-trigger="Roaming" aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Roaming</span></button>
-    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Kinon" aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Kinon</span></button>
+    <button type="button" class="nav-probe__floating-control" data-floating-trigger="Kinon" data-floating-kinon aria-controls="floating-popover" aria-expanded="false"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Kinon</span></button>
     <div class="nav-probe__floating-popover" id="floating-popover" data-floating-popover role="dialog" aria-label="Floating navigation details" hidden>
       <div data-floating-popover-content></div>
     </div>
   </div>
-  <button type="button" class="nav-probe__floating-search" data-floating-search aria-label="Search preview is inactive"><span class="t-small nav-probe__floating-label">Search</span></button>
+  <div class="nav-probe__floating-utility-group" data-floating-utility-group role="group" aria-label="Floating utilities">
+    <button type="button" class="nav-probe__floating-control nav-probe__floating-chat" data-floating-chat hidden aria-hidden="true" tabindex="-1" aria-label="Chat preview is inactive"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Chat</span></button>
+    <button type="button" class="nav-probe__floating-search" data-floating-search aria-label="Search preview is inactive"><span class="t-small nav-probe__floating-label">Search</span></button>
+  </div>
 </div>
 
 <div id="footer-probe"></div>

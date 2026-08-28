@@ -38,7 +38,7 @@
         { label: 'Tariffs', detail: ['Prepaid', 'Postpaid', 'Compare tariffs', 'Tariffs archive'] },
         { label: 'Internet', detail: ['High volume', 'Weekly', 'Daily', 'Unlimited'] },
         { label: 'Roaming', detail: ['Roaming internet packs', 'Countries & prices', 'Travel packs'] },
-        { label: 'Services', detail: ['Payment and balance', 'Call management', '0 balance options', 'Aicell'] },
+        { label: 'Services', detail: ['Payment and balance', 'Call management', 'Messages', '0 balance options', 'Aicell', 'Other Services', 'Archive'] },
         { label: 'e-Sim', detail: ['About e-Sim', 'Buy e-Sim', 'Move number to e-SIM'] },
         { label: 'Network', detail: ['5G', 'VoLTE', 'Network support'] }
       ]
@@ -83,15 +83,27 @@
     }
   ];
 
+  var ECOMMERCE_NAV_ITEM = {
+    label: 'E-commerce',
+    mode: 'placeholder',
+    items: ['Details to be confirmed later.']
+  };
+
   var queryParams = new URLSearchParams(window.location.search);
   var variantParam = queryParams.get('variant');
   var languageParam = (queryParams.get('lang') || '').toLowerCase();
   var explicitLanguage = ['az', 'en', 'ru'].indexOf(languageParam) !== -1;
   var selectedLanguage = explicitLanguage
     ? languageParam.toUpperCase()
-    : (variantParam === 'v2' ? 'AZ' : 'EN');
-  var headerVariant = variantParam === 'v2' ? 'v2' : 'v1';
-  if (!variantParam && selectedLanguage === 'AZ') headerVariant = 'v2';
+    : (variantParam === 'v3' ? 'RU' : (variantParam === 'v2' ? 'AZ' : 'EN'));
+  var headerVariant = selectedLanguage === 'RU'
+    ? 'v3'
+    : (selectedLanguage === 'AZ' ? 'v2' : 'v1');
+  if ((explicitLanguage || variantParam !== null) && variantParam !== headerVariant) {
+    var canonicalUrl = new URL(window.location.href);
+    canonicalUrl.searchParams.set('variant', headerVariant);
+    window.history.replaceState({}, '', canonicalUrl.href);
+  }
   var APP_CATEGORIES = [
     'Self-service',
     'Yandex Plus',
@@ -150,8 +162,14 @@
     legal: ['Privacy Policy', 'Cookie Policy', 'Terms and Conditions', 'Accessibility', 'Sitemap'],
     social: ['Facebook', 'X', 'YouTube', 'Instagram'],
     v1Apps: ['Kinon', 'aKart', 'All apps'],
-    v2Apps: ['Yandex Plus', 'aKart', 'Self-development', 'Online cinema & TV', 'Micromobility', 'Other', 'All apps']
+    v2Apps: ['Yandex Plus', 'aKart', 'Self-development', 'Online cinema & TV', 'Micromobility', 'Other', 'All apps'],
+    ecommerce: ['Details to be confirmed later.']
   };
+
+  function currentNavigation() {
+    if (headerVariant !== 'v3') return NAVIGATION;
+    return NAVIGATION.slice(0, 5).concat([ECOMMERCE_NAV_ITEM], NAVIGATION.slice(5));
+  }
 
   function esc(value) {
     return String(value == null ? '' : value)
@@ -211,8 +229,8 @@
   }
 
   function renderMobileApps() {
-    if (headerVariant === 'v1') {
-      return '<div class="nav-probe__mobile-apps" data-mobile-apps="v1" aria-label="Apps">' +
+    if (headerVariant === 'v1' || headerVariant === 'v3') {
+      return '<div class="nav-probe__mobile-apps" data-mobile-apps="' + headerVariant + '" aria-label="Apps">' +
         NAVIGATION[3].items.map(function (entry) { return mobileAppItem(entry.label); }).join('') +
         '</div>';
     }
@@ -233,6 +251,9 @@
   }
 
   function renderMobilePanel(item, index) {
+    if (item.mode === 'placeholder') {
+      return '<div class="nav-probe__mobile-simple-list"><p class="t-body">' + esc(item.items[0]) + '</p></div>';
+    }
     if (item.label === 'Mobile') {
       return '<div class="nav-probe__mobile-panel-body nav-probe__mobile-inner-groups">' +
         item.items.map(function (entry, entryIndex) {
@@ -260,6 +281,7 @@
   }
 
   function renderMobileDrawer() {
+    var navigation = currentNavigation();
     return '<div class="nav-probe__mobile-drawer" id="nav-probe-mobile-drawer" data-mobile-drawer hidden aria-hidden="true">' +
       '<div class="wrap">' +
         '<div class="nav-probe__mobile-utility-row">' +
@@ -275,7 +297,7 @@
           '</div>' +
         '</div>' +
         '<div class="nav-probe__mobile-groups">' +
-          NAVIGATION.map(function (item, index) {
+          navigation.map(function (item, index) {
             return '<section class="nav-probe__mobile-group">' +
               '<button type="button" class="t-h4 nav-probe__mobile-group-toggle" data-mobile-group-toggle="' + index + '" aria-expanded="false" aria-controls="nav-probe-mobile-panel-' + index + '">' +
                 '<span>' + esc(item.label) + '</span><span aria-hidden="true">+</span>' +
@@ -316,6 +338,24 @@
       button.setAttribute('aria-expanded', 'false');
       button.removeAttribute('data-floating-active');
     });
+  }
+
+  function setFloatingControlVisibility(control, visible) {
+    if (!control) return;
+    control.hidden = !visible;
+    control.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    control.tabIndex = visible ? 0 : -1;
+  }
+
+  function syncFloatingVariant() {
+    if (!floatingBar) return;
+    var isRu = headerVariant === 'v3';
+    var kinon = floatingBar.querySelector('[data-floating-kinon]');
+    var chat = floatingBar.querySelector('[data-floating-chat]');
+    setFloatingControlVisibility(kinon, !isRu);
+    setFloatingControlVisibility(chat, isRu);
+    floatingBar.setAttribute('data-floating-variant', headerVariant);
+    if (isRu && kinon && kinon.getAttribute('aria-expanded') === 'true') closeFloatingPopover();
   }
 
   function openFloatingPopover(trigger) {
@@ -450,6 +490,13 @@
       '</div>';
   }
 
+  function renderAppsV3PlaceholderCard() {
+    return '<article class="cmp-card nav-probe__apps-promo-placeholder">' +
+      '<div class="ph ph--wide" aria-hidden="true"></div>' +
+      '<div class="cmp-card__body"><h3 class="t-h3">All apps</h3></div>' +
+      '</article>';
+  }
+
   function renderAppsV1Panel(item, index) {
     return (
       '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
@@ -461,6 +508,25 @@
               }).join('') +
             '</div>' +
             renderAppsPromo('All apps') +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderAppsV3Panel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__apps-variant nav-probe__apps-v3" data-apps-variant="v3">' +
+            '<div class="nav-probe__apps-list" role="list" aria-label="Apps">' +
+              item.items.map(function (entry) {
+                return '<button type="button" class="t-body nav-probe__text-link" data-app-trigger="' + esc(entry.label) + '">' + esc(entry.label) + '</button>';
+              }).join('') +
+            '</div>' +
+            '<div class="nav-probe__apps-promo" data-app-promo aria-hidden="true">' +
+              renderAppsV3PlaceholderCard() +
+            '</div>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -506,6 +572,7 @@
 
   function renderFooterGroup(title, labels, modifier) {
     var key = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    var nonInteractive = modifier === 'nav-probe__footer-group--placeholder';
     return '<section class="nav-probe__footer-group' + (modifier ? ' ' + modifier : '') + '">' +
       '<h3 class="t-h4 nav-probe__footer-group-heading">' + esc(title) + '</h3>' +
       '<button type="button" class="t-h4 nav-probe__footer-group-toggle" data-footer-group-toggle="' + key + '" aria-expanded="false">' +
@@ -513,7 +580,9 @@
       '</button>' +
       '<div class="nav-probe__footer-links nav-probe__footer-group-body" data-footer-group-body="' + key + '" data-open="false" role="list">' +
         labels.map(function (label) {
-          return '<button type="button" class="nav-probe__footer-link t-body" role="listitem">' + esc(label) + '</button>';
+          return nonInteractive
+            ? '<p class="nav-probe__footer-placeholder t-body" role="listitem">' + esc(label) + '</p>'
+            : '<button type="button" class="nav-probe__footer-link t-body" role="listitem">' + esc(label) + '</button>';
         }).join('') +
       '</div>' +
     '</section>';
@@ -543,6 +612,7 @@
               renderFooterGroup('MOBILE', FOOTER.mobile) +
               renderFooterGroup('APPS', apps) +
               renderFooterGroup('DEVICES', FOOTER.devices) +
+              (headerVariant === 'v3' ? renderFooterGroup('E-commerce', FOOTER.ecommerce, 'nav-probe__footer-group--placeholder') : '') +
               renderFooterGroup('CAMPAIGNS', FOOTER.campaigns) +
               renderFooterGroup('SUPPORT', FOOTER.support) +
             '</div>' +
@@ -575,8 +645,10 @@
   }
 
   function renderPanel(item, index) {
+    if (item.mode === 'placeholder') return renderPlaceholderPanel(item, index);
     if (item.label === 'TV') return renderWidePromoPanel(item, index);
     if (item.label === 'Apps') {
+      if (headerVariant === 'v3') return renderAppsV3Panel(item, index);
       return headerVariant === 'v2'
         ? renderAppsVariantPanel(item, index)
         : renderAppsV1Panel(item, index);
@@ -584,6 +656,18 @@
     return item.mode === 'list'
       ? renderListPanel(item, index)
       : renderDetailPanel(item, index);
+  }
+
+  function renderPlaceholderPanel(item, index) {
+    return (
+      '<div class="cmp-header__panel" data-menu-panel="' + index + '" id="nav-panel-' + index + '">' +
+        '<div class="wrap">' +
+          '<div class="nav-probe__panel-list">' +
+            '<p class="t-body">' + esc(item.items[0]) + '</p>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
   }
 
   function updateVariantControl() {
@@ -613,20 +697,12 @@
   }
 
   function refreshVariantDependentUI() {
-    var appsPanel = mount.querySelector('[data-menu-panel="3"]');
-    var wasOpen = appsPanel && appsPanel.getAttribute('data-open') === 'true';
+    mount.innerHTML = renderHeader();
+    footerMount.innerHTML = renderFooter();
     updateVariantControl();
     updateTransferLink();
     updateTariffCompareLinks();
-
-    if (appsPanel) {
-      var replacement = document.createElement('div');
-      replacement.innerHTML = renderPanel(NAVIGATION[3], 3);
-      var nextPanel = replacement.firstElementChild;
-      nextPanel.setAttribute('data-open', wasOpen ? 'true' : 'false');
-      appsPanel.replaceWith(nextPanel);
-    }
-    footerMount.innerHTML = renderFooter();
+    syncFloatingVariant();
     scheduleFloatingDocking();
   }
 
@@ -635,6 +711,7 @@
     selectedLanguage = language;
     if (language === 'AZ') headerVariant = 'v2';
     if (language === 'EN') headerVariant = 'v1';
+    if (language === 'RU') headerVariant = 'v3';
     var languageUrl = new URL(window.location.href);
     languageUrl.searchParams.set('lang', language.toLowerCase());
     languageUrl.searchParams.set('variant', headerVariant);
@@ -694,11 +771,15 @@
     if (!label) return;
     promo.removeAttribute('aria-hidden');
     promo.innerHTML = label === 'All apps'
-      ? '<div class="ph ph--wide" aria-hidden="true"></div>'
+      ? (panel.getAttribute('data-apps-variant') === 'v3'
+        ? renderAppsV3PlaceholderCard()
+        : '<div class="ph ph--wide" aria-hidden="true"></div>')
       : C.promoCard({ title: label, media: label });
   }
 
   function renderHeader() {
+    var navigation = currentNavigation();
+    var locationLabel = headerVariant === 'v3' ? 'Service Centers' : 'Locations';
     return (
       '<div class="nav-probe__desktop-note">' +
         '<div class="wrap"><p class="t-body">Desktop navigation probe. Mobile behaviour is deferred.</p></div>' +
@@ -711,7 +792,7 @@
               '<button type="button" class="nav-probe__utility-button">Business</button>' +
             '</div>' +
             '<div class="nav-probe__utility-group">' +
-              '<button type="button" class="nav-probe__utility-button">Locations</button>' +
+              '<button type="button" class="nav-probe__utility-button">' + esc(locationLabel) + '</button>' +
               '<div class="nav-probe__language-control" data-language-control>' +
                 '<button type="button" class="nav-probe__utility-button" id="nav-probe-language-trigger-desktop" data-header-variant-toggle data-language-trigger data-variant="v1" aria-haspopup="menu" aria-expanded="false" aria-controls="nav-probe-language-menu-desktop" aria-label="Open language menu">EN</button>' +
                 renderLanguageMenu('desktop', 'nav-probe-language-menu-desktop', 'nav-probe-language-trigger-desktop') +
@@ -724,7 +805,7 @@
             '<a class="cmp-header__logo" href="../">Azercell</a>' +
             '<nav class="cmp-header__nav" aria-label="Main">' +
               '<ul class="cmp-header__nav-list">' +
-                NAVIGATION.map(function (item, index) {
+                navigation.map(function (item, index) {
                   return (
                     '<li>' +
                       '<button type="button" class="cmp-header__nav-btn"' +
@@ -746,7 +827,7 @@
             '</div>' +
           '</div>' +
         '</div>' +
-        NAVIGATION.map(renderPanel).join('') +
+        navigation.map(renderPanel).join('') +
         renderMobileDrawer() +
       '</header>'
     );
@@ -888,6 +969,7 @@
   updateVariantControl();
   updateTransferLink();
   updateTariffCompareLinks();
+  syncFloatingVariant();
 
   mount.addEventListener('pointerover', function (event) {
     var trigger = event.target.closest('[data-detail-trigger]');

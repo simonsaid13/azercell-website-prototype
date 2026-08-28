@@ -58,6 +58,15 @@
   flex: 0 0 auto;
 }
 
+.nav-probe__floating-bar--product[data-floating-cta-state="hidden"] .nav-probe__floating-main {
+  display: none;
+}
+
+.nav-probe__floating-bar--product[data-floating-cta-state="hidden"] .nav-probe__floating-utility-group {
+  padding-left: 0;
+  border-left: 0;
+}
+
 .nav-probe__floating-transfer {
   min-height: 40px;
   padding: var(--sp-2) var(--sp-3);

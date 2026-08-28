@@ -3,6 +3,7 @@
 
   var heroCta = document.querySelector('[data-transfer-hero-cta]');
   var floatingCta = document.querySelector('[data-transfer-floating-cta]');
+  var floatingBar = document.querySelector('.nav-probe__floating-bar--product');
   if (!heroCta || !floatingCta) return;
 
   function headerHeight() {
@@ -22,6 +23,7 @@
     floatingCta.hidden = !visible;
     floatingCta.setAttribute('aria-hidden', visible ? 'false' : 'true');
     floatingCta.tabIndex = visible ? 0 : -1;
+    if (floatingBar) floatingBar.setAttribute('data-floating-cta-state', visible ? 'visible' : 'hidden');
   }
 
   var observer = null;

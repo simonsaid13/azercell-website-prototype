@@ -8,7 +8,7 @@
 <meta name="description" content="Isolated Transfer your number product-page probe.">
 <link rel="stylesheet" href="../../assets/css/styles.css">
 <link rel="stylesheet" href="../navigation.css?v=20260826-1516">
-<link rel="stylesheet" href="./transfer-number.css">
+<link rel="stylesheet" href="./transfer-number.css?v=20260828-1149">
 </head>
 <body class="nav-probe-transfer-page">
 
@@ -38,12 +38,15 @@
   </section>
 </main>
 
-<div class="nav-probe__floating-bar nav-probe__floating-bar--product" aria-label="Transfer page floating actions">
-  <div class="nav-probe__floating-main" data-floating-main role="group" aria-label="Transfer page actions">
+<div class="nav-probe__floating-bar nav-probe__floating-bar--product" data-floating-cta-state="hidden" aria-label="Transfer page floating actions">
+  <div class="nav-probe__floating-main" data-floating-main data-floating-primary-group role="group" aria-label="Transfer page actions">
     <button type="button" class="btn btn--primary nav-probe__floating-transfer" data-transfer-floating-cta hidden aria-hidden="true" tabindex="-1">Start transfer</button>
     <div class="nav-probe__floating-popover" data-floating-popover hidden aria-hidden="true"><div data-floating-popover-content></div></div>
   </div>
-  <button type="button" class="nav-probe__floating-search" data-floating-search aria-label="Search preview is inactive">Search</button>
+  <div class="nav-probe__floating-utility-group" data-floating-utility-group role="group" aria-label="Floating utilities">
+    <button type="button" class="nav-probe__floating-control nav-probe__floating-chat" data-floating-chat hidden aria-hidden="true" tabindex="-1" aria-label="Chat preview is inactive"><span class="ph ph--square nav-probe__floating-icon" aria-hidden="true"></span><span class="t-small nav-probe__floating-label">Chat</span></button>
+    <button type="button" class="nav-probe__floating-search" data-floating-search aria-label="Search preview is inactive">Search</button>
+  </div>
 </div>
 
 <div id="footer-probe"></div>
@@ -52,6 +55,6 @@
 <script src="../../assets/js/components.js"></script>
 <script src="../navigation.js?v=20260826-1516"></script>
 <script src="../../assets/js/app.js"></script>
-<script src="./transfer-number.js"></script>
+<script src="./transfer-number.js?v=20260828-1148"></script>
 </body>
 </html>
