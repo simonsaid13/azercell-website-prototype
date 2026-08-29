@@ -27,6 +27,15 @@
     '/tariffs/mobile/postpaid/alfa/'
   ];
 
+  var B2B_ROAMING_PATHS = [
+    '/business/mobile/roaming/',
+    '/business/mobile/roaming/countries-and-prices/',
+    '/business/mobile/roaming/countries-and-prices/turkiye/',
+    '/business/mobile/roaming/countries-and-prices/georgia/',
+    '/business/mobile/roaming/countries-and-prices/germany/',
+    '/business/mobile/roaming/internet-packs/'
+  ];
+
   var PERSONAL_CHROME_PATHS = [
     '/',
     '/join-azercell/transfer-number/',
@@ -162,12 +171,24 @@
     { path: '/business/mobile/internet/short-term/', title: 'Short-term packs', parent: '/business/mobile/internet/', branch: 'b2b', status: 'planned' },
     { path: '/business/mobile/internet/social/', title: 'Social network packs', parent: '/business/mobile/internet/', branch: 'b2b', status: 'planned' },
     { path: '/business/mobile/internet/archive/', title: 'Internet packs Archive', parent: '/business/mobile/internet/', branch: 'b2b', status: 'planned' },
-    { path: '/business/mobile/roaming/', title: 'Roaming', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
-    { path: '/business/mobile/roaming/countries-and-prices/', title: 'Countries and prices', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'planned' },
-    { path: '/business/mobile/roaming/countries-and-prices/turkiye/', title: 'Turkiye', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'planned' },
-    { path: '/business/mobile/roaming/countries-and-prices/georgia/', title: 'Georgia', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'planned' },
-    { path: '/business/mobile/roaming/countries-and-prices/germany/', title: 'Germany', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'planned' },
-    { path: '/business/mobile/roaming/internet-packs/', title: 'Roaming internet packs', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'planned' },
+    { path: '/business/mobile/roaming/', title: 'Roaming', parent: '/business/mobile/', branch: 'b2b', status: 'built',
+      links: ['/business/mobile/roaming/countries-and-prices/', '/business/mobile/roaming/internet-packs/',
+              'https://kabinetim.azercell.com/', 'https://support.azercell.com/'] },
+    { path: '/business/mobile/roaming/countries-and-prices/', title: 'Countries and prices', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'built',
+      links: ['/business/mobile/roaming/countries-and-prices/turkiye/', '/business/mobile/roaming/countries-and-prices/georgia/',
+              '/business/mobile/roaming/countries-and-prices/germany/', '/business/mobile/roaming/internet-packs/'] },
+    { path: '/business/mobile/roaming/countries-and-prices/turkiye/', title: 'Turkiye', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'built',
+      links: ['/business/mobile/roaming/countries-and-prices/', '/business/mobile/roaming/countries-and-prices/georgia/',
+              '/business/mobile/roaming/countries-and-prices/germany/', '/business/mobile/roaming/internet-packs/'] },
+    { path: '/business/mobile/roaming/countries-and-prices/georgia/', title: 'Georgia', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'built',
+      links: ['/business/mobile/roaming/countries-and-prices/', '/business/mobile/roaming/countries-and-prices/turkiye/',
+              '/business/mobile/roaming/countries-and-prices/germany/', '/business/mobile/roaming/internet-packs/'] },
+    { path: '/business/mobile/roaming/countries-and-prices/germany/', title: 'Germany', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'built',
+      links: ['/business/mobile/roaming/countries-and-prices/', '/business/mobile/roaming/countries-and-prices/turkiye/',
+              '/business/mobile/roaming/countries-and-prices/georgia/', '/business/mobile/roaming/internet-packs/'] },
+    { path: '/business/mobile/roaming/internet-packs/', title: 'Roaming internet packs', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'built',
+      links: ['/business/mobile/roaming/', '/business/mobile/roaming/countries-and-prices/',
+              'https://kabinetim.azercell.com/', 'https://support.azercell.com/'] },
     { path: '/business/mobile/azercell-biznes/', title: 'Azercell Biznes', parent: '/business/mobile/', branch: 'b2b', status: 'planned',
       links: ['https://biznes.azercell.com'] },
     { path: '/business/connectivity/', title: 'Connectivity', parent: '/business/', branch: 'b2b', status: 'planned',
@@ -847,7 +868,7 @@
       id: 'announcementBar',
       name: 'Announcement bar',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']),
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
       description: 'Rotating one-line notice above the header. CMS-managed messages.',
       props: { messages: SITE_CHROME.announcements }
     },
@@ -855,7 +876,7 @@
       id: 'siteHeader',
       name: 'Site header',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']),
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
       description: 'Shared responsive shell with audience-specific navigation. Business category labels navigate to landing pages; hover/focus or the adjacent chevron opens the mega menu. Mobile keeps separate link and expand controls.',
       props: {
         layout: 'personal',
@@ -874,7 +895,7 @@
       id: 'floatingBar',
       name: 'Floating bar',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']),
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
       description: 'Shortcut bar for Internet, Tariffs, Roaming and Kinon, shared with the Business homepage. On the transfer page it changes to a Start transfer action after the hero button scrolls away.',
       props: SITE_CHROME.floatingBar
     },
@@ -910,7 +931,7 @@
       id: 'siteFooter',
       name: 'Site footer',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']),
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
       description: 'Audience-specific footer in the shared responsive shell. Business adds its confirmed IA, Campaigns links, My Business Club banner and Azercell Biznes app banner.',
       props: SITE_CHROME.footer
     },
@@ -918,7 +939,7 @@
       id: 'heroBanner',
       name: 'Hero banner',
       group: 'Page openers',
-      usedOn: ['/', '/business/'],
+      usedOn: ['/', '/business/'].concat(B2B_ROAMING_PATHS),
       description: 'Any number of CMS slides — the layout does not depend on the count. Dot navigation, optional stat strip.',
       props: {
         slides: [
@@ -953,7 +974,7 @@
       id: 'quickActions',
       name: 'Quick actions',
       group: 'Navigation blocks',
-      usedOn: ['/'],
+      usedOn: ['/'].concat(B2B_ROAMING_PATHS),
       description: 'Row of frequent jobs. Each links to a page or the external portal.',
       props: {
         items: [
@@ -968,7 +989,7 @@
       id: 'sectionHead',
       name: 'Section heading',
       group: 'Layout',
-      usedOn: ['/', '/business/', '/tariffs/mobile/', '/tariffs/compare/', '/tariffs/mobile/prepaid/archive/'].concat(MOBILE_TARIFF_DETAIL_PATHS),
+      usedOn: ['/', '/business/', '/tariffs/mobile/', '/tariffs/compare/', '/tariffs/mobile/prepaid/archive/'].concat(MOBILE_TARIFF_DETAIL_PATHS).concat(B2B_ROAMING_PATHS),
       description: 'Eyebrow, title, intro and an optional action on the right.',
       props: {
         eyebrow: 'Tariffs',
@@ -1364,7 +1385,7 @@
       id: 'splitBanner',
       name: 'Split banner',
       group: 'Promotion',
-      usedOn: ['/', '/business/'],
+      usedOn: ['/', '/business/'].concat(B2B_ROAMING_PATHS),
       description: 'Copy beside a visual. Supports an inverted variant and flipped order.',
       props: {
         eyebrow: 'Kinon Plus',
@@ -1383,7 +1404,7 @@
       id: 'linkCard',
       name: 'Link card',
       group: 'Navigation blocks',
-      usedOn: ['/', '/business/'],
+      usedOn: ['/', '/business/'].concat(B2B_ROAMING_PATHS),
       description: 'Whole-card link used for service and reason tiles.',
       props: {
         media: 'Roaming',
@@ -1437,7 +1458,7 @@
       id: 'accordion',
       name: 'Accordion',
       group: 'Layout',
-      usedOn: ['/business/'],
+      usedOn: ['/business/'].concat(B2B_ROAMING_PATHS),
       description: 'Expandable question and answer list for FAQ blocks.',
       props: {
         items: [
@@ -1445,6 +1466,84 @@
           { question: 'Are prices VAT inclusive?', answer: 'Yes. All prices shown on the site include VAT unless stated otherwise.' }
         ]
       }
+    },
+    {
+      id: 'businessRoamingCountryCard',
+      name: 'Business roaming country card',
+      group: 'Products',
+      usedOn: [
+        '/business/mobile/roaming/',
+        '/business/mobile/roaming/countries-and-prices/',
+        '/business/mobile/roaming/countries-and-prices/turkiye/',
+        '/business/mobile/roaming/countries-and-prices/georgia/',
+        '/business/mobile/roaming/countries-and-prices/germany/'
+      ],
+      description: 'Corporate destination summary with operators, headline rates and a country-detail link.',
+      props: {
+        country: {
+          name: 'Turkiye',
+          operators: [{ name: 'Turkcell' }, { name: 'Turk Telekom' }, { name: 'Vodafone' }],
+          rates: { outgoingWithin: '1.00 AZN/min', incoming: '0.50 AZN/min', internet: '0.99 AZN/MB', sms: '0.15 AZN' }
+        },
+        href: href('/business/mobile/roaming/countries-and-prices/turkiye/')
+      }
+    },
+    {
+      id: 'businessRoamingRateTable',
+      name: 'Business roaming rate table',
+      group: 'Products',
+      usedOn: [
+        '/business/mobile/roaming/countries-and-prices/turkiye/',
+        '/business/mobile/roaming/countries-and-prices/georgia/',
+        '/business/mobile/roaming/countries-and-prices/germany/'
+      ],
+      description: 'Detailed corporate postpaid call, data and SMS rate table for one country.',
+      props: {
+        country: {
+          name: 'Turkiye',
+          rates: {
+            outgoingWithin: '1.00 AZN/min', outgoingAzerbaijan: '1.00 AZN/min', outgoingOther: '1.00 AZN/min',
+            incoming: '0.50 AZN/min', internet: '0.99 AZN/MB', sms: '0.15 AZN'
+          }
+        }
+      }
+    },
+    {
+      id: 'businessRoamingOperatorList',
+      name: 'Business roaming operator list',
+      group: 'Products',
+      usedOn: [
+        '/business/mobile/roaming/countries-and-prices/turkiye/',
+        '/business/mobile/roaming/countries-and-prices/georgia/',
+        '/business/mobile/roaming/countries-and-prices/germany/'
+      ],
+      description: 'Partner operator cards with the available mobile network generations.',
+      props: { operators: [{ name: 'Turkcell', networks: ['4G'] }, { name: 'Turk Telekom', networks: ['4G'] }] }
+    },
+    {
+      id: 'businessRoamingPackCard',
+      name: 'Business roaming internet pack card',
+      group: 'Products',
+      usedOn: [
+        '/business/mobile/roaming/',
+        '/business/mobile/roaming/internet-packs/',
+        '/business/mobile/roaming/countries-and-prices/turkiye/',
+        '/business/mobile/roaming/countries-and-prices/georgia/',
+        '/business/mobile/roaming/countries-and-prices/germany/'
+      ],
+      description: 'Corporate roaming pack with price, validity and real SMS/USSD activation methods.',
+      props: {
+        pack: { volume: '2GB', price: '20 AZN', validity: '10 days', keyword: '2', ussd: '*100*2#YES' },
+        kabinetimHref: 'https://kabinetim.azercell.com/'
+      }
+    },
+    {
+      id: 'businessRoamingOperatorsTable',
+      name: 'Business roaming supported operators table',
+      group: 'Products',
+      usedOn: ['/business/mobile/roaming/internet-packs/'],
+      description: 'Horizontally scrollable country, operator and network table for roaming internet packs.',
+      props: { rows: [{ country: 'Germany', operator: 'T-Mobile', networks: '2G / LTE' }] }
     },
     {
       id: 'roamingCountrySearch',

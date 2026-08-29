@@ -306,7 +306,7 @@ Business reuses the Personal menu presentation patterns and type scale: Mobile a
 | Category | Landing / children | Status |
 |----------|--------------------|--------|
 | Company | `/about/…` | PLANNED; Careers and Azercell Life external |
-| Mobile | `/business/mobile/…` | PLANNED |
+| Mobile | `/business/mobile/…` | Mixed: Roaming section CONNECTED; other destinations PLANNED |
 | Connectivity | `/business/connectivity/…` | PLANNED; Fixed service relationship on hold |
 | Digital solutions | `/business/digital-solutions/` → IoT & M2M, Fleet & field operations, Automation & management, Customer engagement | PLANNED; separate Fleet package page on hold |
 | Campaigns | `/business/campaigns/…` | PLANNED |
@@ -317,6 +317,65 @@ Business reuses the Personal menu presentation patterns and type scale: Mobile a
 ### Business footer (`SITE_CHROME.businessFooter`)
 
 Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`, Campaigns links, a My Business Club banner, and an Azercell Biznes app banner. The Mobile group contains tariff plans, internet packs and roaming; Azercell Biznes appears only in its banner. Deeper tariff, internet-pack and roaming links remain in the mega menu. Unknown store destinations are intentionally non-clickable.
+
+---
+
+## `/business/mobile/roaming/` — Business roaming overview
+
+| Section / link | Target | Status |
+|----------------|--------|--------|
+| Hero and quick actions → Countries and prices | `/business/mobile/roaming/countries-and-prices/` | CONNECTED |
+| Hero, quick actions and pack section → Internet packs | `/business/mobile/roaming/internet-packs/` | CONNECTED |
+| Destination cards → Turkiye, Georgia, Germany | Country detail routes | CONNECTED |
+| Pack cards / quick action → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
+| Support block → Online support / call centre | support.azercell.com / `tel:+994506050000` | CONNECTED (external) |
+
+**Inbound:** Business header → Mobile → Roaming; Business footer → Mobile → Roaming; Business floating bar → Roaming.
+
+---
+
+## `/business/mobile/roaming/countries-and-prices/` — Business countries and prices
+
+| Section / link | Target | Status |
+|----------------|--------|--------|
+| Country cards | Turkiye, Georgia, Germany detail routes | CONNECTED |
+| Quick actions | Roaming overview, countries, internet packs | CONNECTED |
+| Kabinetim and support actions | Confirmed external destinations | CONNECTED (external) |
+
+**Inbound:** Business roaming overview; header Mobile → Roaming detail; floating bar Roaming detail; all three country pages.
+
+---
+
+## Business roaming country pages — Turkiye, Georgia, Germany
+
+Routes:
+
+- `/business/mobile/roaming/countries-and-prices/turkiye/`
+- `/business/mobile/roaming/countries-and-prices/georgia/`
+- `/business/mobile/roaming/countries-and-prices/germany/`
+
+| Section / link | Target | Status |
+|----------------|--------|--------|
+| Hero / quick action → Countries and prices | Parent directory | CONNECTED |
+| Hero / pack section → Roaming internet packs | `/business/mobile/roaming/internet-packs/` | CONNECTED |
+| Related country cards | Two sibling country pages | CONNECTED |
+| Quick action → Roaming overview | `/business/mobile/roaming/` | CONNECTED |
+| Pack activation / support | Kabinetim, online support, call centre | CONNECTED (external) |
+
+**Inbound:** Business header and floating bar Roaming details; countries directory; sibling country cards.
+
+---
+
+## `/business/mobile/roaming/internet-packs/` — Business roaming internet packs
+
+| Section / link | Target | Status |
+|----------------|--------|--------|
+| Hero / quick actions → Roaming overview and countries | Built B2B roaming routes | CONNECTED |
+| Pack cards and activation card → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
+| Balance block → Online payment | azercell.com online payment | CONNECTED (external) |
+| Balance and support blocks → Online support / call centre | support.azercell.com / `tel:+994506050000` | CONNECTED (external) |
+
+**Inbound:** Business header and floating bar Roaming detail; overview, countries directory and every country page.
 
 ---
 
@@ -381,7 +440,7 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 | Kinon | `/apps/cinema-and-tv/kinon/` | PLANNED |
 | Business Internet | `/business/mobile/internet/…` | PLANNED |
 | Business Tariffs | `/business/mobile/tariffs/…` | PLANNED |
-| Business Roaming | `/business/mobile/roaming/…` | PLANNED |
+| Business Roaming | `/business/mobile/roaming/…` | CONNECTED |
 | Business Azercell Biznes → Top-up | `/business/mobile/azercell-biznes/top-up/` | PLANNED |
 | Business Azercell Biznes → Online Itemized Bill | `/business/support/itemized-bill/` | PLANNED |
 | Business Azercell Biznes → accented Log in to Azercell Biznes | biznes.azercell.com | CONNECTED (external) |
@@ -429,6 +488,7 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 
 | Date | Change |
 |------|--------|
+| 2026-08-29 | Built the complete B2B Roaming prototype slice: overview, countries directory, Turkiye, Georgia, Germany and roaming internet packs. Connected Business header, footer and floating bar entries; documented all internal and confirmed external links. |
 | 2026-08-27 | Matched Business category-link styling to Personal and restored dropdown arrows; removed the Mobile Azercell Biznes footer link; removed Business floating-popover headings, promoted Log in to Azercell Biznes and added three roaming countries; enlarged and separated Solution cards. |
 | 2026-08-27 | Restored arrowless Business hover dropdowns, increased visible label spacing to 16px, consolidated four categories under a Personal-Mobile-style Digital solutions menu, replaced Acquisition with a four-card Solution block and CTA subtitles, reordered Log in / Contact manager, and added a B2B floating bar. |
 | 2026-08-27 | Removed Business desktop dropdown arrows, left-aligned category links and set equal visual spacing between labels. Renamed the Business acquisition labels to Acquisition action 1–5 while preserving destinations and Personal labels. |

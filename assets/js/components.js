@@ -1854,6 +1854,112 @@
   };
 
   /* --------------------------------------------------------------------
+     Business roaming
+     -------------------------------------------------------------------- */
+
+  C.businessRoamingCountryCard = function (props) {
+    var country = props.country || {};
+    var rates = country.rates || {};
+    var operators = country.operators || [];
+    return (
+      '<article class="cmp-broam-country">' +
+        '<div class="cmp-broam-country__head">' +
+          '<div>' +
+            '<p class="t-label">Corporate roaming</p>' +
+            '<h3 class="t-h2">' + esc(country.name) + '</h3>' +
+          '</div>' +
+          '<span class="badge">' + esc(operators.length) + ' operators</span>' +
+        '</div>' +
+        '<dl class="cmp-broam-summary">' +
+          '<div><dt class="t-small t-muted">Outgoing calls</dt><dd class="t-h4">' + esc(rates.outgoingWithin) + '</dd></div>' +
+          '<div><dt class="t-small t-muted">Incoming calls</dt><dd class="t-h4">' + esc(rates.incoming) + '</dd></div>' +
+          '<div><dt class="t-small t-muted">Internet</dt><dd class="t-h4">' + esc(rates.internet) + '</dd></div>' +
+          '<div><dt class="t-small t-muted">SMS</dt><dd class="t-h4">' + esc(rates.sms) + '</dd></div>' +
+        '</dl>' +
+        '<p class="t-small t-muted">' + esc(operators.map(function (item) { return item.name; }).join(' · ')) + '</p>' +
+        actions([{ label: 'View rates', href: props.href, variant: 'primary' }], 'btn--small') +
+      '</article>'
+    );
+  };
+
+  C.businessRoamingRateTable = function (props) {
+    var country = props.country || {};
+    var rates = country.rates || {};
+    var rows = [
+      ['Outgoing call within ' + (country.name || 'the country'), rates.outgoingWithin],
+      ['Outgoing call to Azerbaijan', rates.outgoingAzerbaijan],
+      ['Outgoing call to other destinations', rates.outgoingOther],
+      ['Incoming call', rates.incoming],
+      ['Mobile internet', rates.internet],
+      ['Outgoing SMS', rates.sms]
+    ];
+    return (
+      '<div class="cmp-broam-rates">' +
+        '<div class="cmp-broam-rates__scroll" tabindex="0" aria-label="Roaming rates for ' + esc(country.name) + '">' +
+          '<table class="cmp-broam-rates__table">' +
+            '<thead><tr><th class="t-label" scope="col">Service</th><th class="t-label" scope="col">Corporate postpaid rate</th></tr></thead>' +
+            '<tbody>' + rows.map(function (row) {
+              return '<tr><th class="t-body" scope="row">' + esc(row[0]) + '</th><td class="t-h4">' + esc(row[1]) + '</td></tr>';
+            }).join('') + '</tbody>' +
+          '</table>' +
+        '</div>' +
+        '<p class="t-small t-muted">Calls are billed in 60-second increments. Mobile internet is billed in 30KB increments. Prices include VAT.</p>' +
+      '</div>'
+    );
+  };
+
+  C.businessRoamingOperatorList = function (props) {
+    var operators = props.operators || [];
+    return (
+      '<div class="cmp-broam-operators">' +
+        operators.map(function (operator) {
+          return (
+            '<article class="cmp-broam-operator">' +
+              '<h3 class="t-h3">' + esc(operator.name) + '</h3>' +
+              '<p class="t-small t-muted">Available networks: ' + esc((operator.networks || []).join(' / ')) + '</p>' +
+            '</article>'
+          );
+        }).join('') +
+      '</div>'
+    );
+  };
+
+  C.businessRoamingPackCard = function (props) {
+    var pack = props.pack || {};
+    return (
+      '<article class="cmp-broam-pack">' +
+        '<div class="cmp-broam-pack__head">' +
+          '<div><p class="t-label">Roaming internet</p><h3 class="t-h2">' + esc(pack.volume) + '</h3></div>' +
+          '<p class="t-h2">' + esc(pack.price) + '</p>' +
+        '</div>' +
+        '<dl class="cmp-broam-pack__details">' +
+          '<div><dt class="t-small t-muted">Validity</dt><dd class="t-body">' + esc(pack.validity) + '</dd></div>' +
+          '<div><dt class="t-small t-muted">SMS to 2525</dt><dd class="t-body"><strong>' + esc(pack.keyword) + '</strong></dd></div>' +
+          '<div><dt class="t-small t-muted">USSD</dt><dd class="t-body"><strong>' + esc(pack.ussd) + '</strong></dd></div>' +
+        '</dl>' +
+        actions([{ label: 'Activate in Kabinetim', href: props.kabinetimHref, variant: 'primary' }], 'btn--small btn--block') +
+      '</article>'
+    );
+  };
+
+  C.businessRoamingOperatorsTable = function (props) {
+    var rows = props.rows || [];
+    return (
+      '<div class="cmp-broam-rates">' +
+        '<p class="t-small t-muted cmp-broam-rates__hint">Swipe horizontally to see the full table.</p>' +
+        '<div class="cmp-broam-rates__scroll" tabindex="0" aria-label="Operators supporting roaming internet packs">' +
+          '<table class="cmp-broam-rates__table cmp-broam-rates__table--operators">' +
+            '<thead><tr><th class="t-label" scope="col">Country</th><th class="t-label" scope="col">Operator</th><th class="t-label" scope="col">Networks</th></tr></thead>' +
+            '<tbody>' + rows.map(function (row) {
+              return '<tr><td class="t-body">' + esc(row.country) + '</td><th class="t-body" scope="row">' + esc(row.operator) + '</th><td class="t-body">' + esc(row.networks) + '</td></tr>';
+            }).join('') + '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>'
+    );
+  };
+
+  /* --------------------------------------------------------------------
      Footer
      -------------------------------------------------------------------- */
 

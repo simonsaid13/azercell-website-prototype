@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Business roaming in Georgia — Azercell</title>
+<meta name="description" content="Corporate roaming rates and partner operators in Georgia.">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+</head>
+<body>
+<div id="page-top"></div>
+<main id="page-main"></main>
+<div id="page-bottom"></div>
+<div id="page-chat"></div>
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/business-roaming-data.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/business-roaming-page.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+/* PAGE CONNECTIONS — full map: PAGE_CONNECTIONS.md
+ * INBOUND: Business Roaming nav, countries directory, sibling country cards — CONNECTED
+ * OUTBOUND: countries directory, Turkiye, Germany, internet packs, overview — CONNECTED;
+ *           Kabinetim and support — CONNECTED external
+ */
+(function () {
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+  Components.mount('#page-top', [['announcementBar', { messages: chrome.announcements }], ['siteHeader', R.headerProps({ branch: 'business' })]]);
+  Components.mount('#page-bottom', [['siteFooter', chrome.businessFooter]]);
+  Components.mount('#page-chat', [['floatingBar', chrome.businessFloatingBar]]);
+  BusinessRoamingPage.mount('country', 'georgia');
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>
