@@ -1,6 +1,6 @@
 /* ==========================================================================
    Azercell HTML Prototype — B2B roaming content
-   Source: Azercell_Business_Roaming_Content.docx (three-country prototype scope)
+   Source: Azercell_Business_Roaming_Content.docx (three-country scope)
    ========================================================================== */
 
 (function (global) {
@@ -9,6 +9,8 @@
   var KABINETIM = 'https://kabinetim.azercell.com/';
   var SUPPORT = 'https://support.azercell.com/';
   var ONLINE_PAYMENT = 'https://www.azercell.com/en/personal/payment-and-balance/online-payment.html';
+  var SOURCE_ROAMING = 'https://www.azercell.com/en/corporate/mobile-communications/roaming.html';
+  var SOURCE_PACKS = 'https://www.azercell.com/en/corporate/mobile-communications/roaming/roaming-data-packages.html';
 
   var routes = {
     hub: '/business/mobile/roaming/',
@@ -16,72 +18,107 @@
     packs: '/business/mobile/roaming/internet-packs/'
   };
 
+  var sections = [
+    { id: 'hub', label: 'Roaming overview', path: routes.hub },
+    { id: 'countries', label: 'Countries and prices', path: routes.countries },
+    { id: 'packs', label: 'Roaming internet packs', path: routes.packs }
+  ];
+
   function countryPath(id) {
     return routes.countries + id + '/';
   }
 
+  function rate(rateValue, interval) {
+    return { rate: rateValue, interval: interval };
+  }
+
+  function searchRateSummary(rates) {
+    return {
+      outgoing: rates.outgoingWithin.rate + ' AZN/min',
+      incoming: rates.incoming.rate + ' AZN/min',
+      internetMb: rates.internet.rate + ' AZN/MB',
+      sms: rates.sms.rate + ' AZN'
+    };
+  }
+
+  function operator(name, networks, rates) {
+    var summary = searchRateSummary(rates);
+    return {
+      name: name,
+      displayName: name,
+      networks: networks,
+      internetPackSupported: true,
+      prepaid: summary,
+      postpaid: summary
+    };
+  }
+
+  function country(id, name, operatorData, rates) {
+    var item = {
+      id: id,
+      name: name,
+      route: countryPath(id),
+      planLabel: 'Corporate postpaid',
+      rates: rates,
+      consolidatedRates: searchRateSummary(rates),
+      operators: []
+    };
+    item.operators = operatorData.map(function (row) {
+      return operator(row[0], row[1], rates);
+    });
+    return item;
+  }
+
+  var turkiyeRates = {
+    outgoingWithin: rate('1.00', '60 sec'),
+    outgoingAzerbaijan: rate('1.00', '60 sec'),
+    outgoingOther: rate('1.00', '60 sec'),
+    incoming: rate('0.50', '60 sec'),
+    internet: rate('0.99', '30KB'),
+    sms: rate('0.15', 'Per message')
+  };
+
+  var georgiaRates = {
+    outgoingWithin: rate('0.80', '60 sec'),
+    outgoingAzerbaijan: rate('0.80', '60 sec'),
+    outgoingOther: rate('0.80', '60 sec'),
+    incoming: rate('0.50', '60 sec'),
+    internet: rate('0.99', '30KB'),
+    sms: rate('0.10', 'Per message')
+  };
+
+  var germanyRates = {
+    outgoingWithin: rate('1.50', '60 sec'),
+    outgoingAzerbaijan: rate('1.50', '60 sec'),
+    outgoingOther: rate('1.50', '60 sec'),
+    incoming: rate('0.50', '60 sec'),
+    internet: rate('0.99', '30KB'),
+    sms: rate('0.20', 'Per message')
+  };
+
   var countries = [
-    {
-      id: 'turkiye',
-      name: 'Turkiye',
-      route: countryPath('turkiye'),
-      operators: [
-        { name: 'Turk Telekom', networks: ['4G'] },
-        { name: 'Turkcell', networks: ['4G'] },
-        { name: 'Vodafone', networks: ['4G'] }
-      ],
-      rates: {
-        outgoingWithin: '1.00 AZN/min',
-        outgoingAzerbaijan: '1.00 AZN/min',
-        outgoingOther: '1.00 AZN/min',
-        incoming: '0.50 AZN/min',
-        internet: '0.99 AZN/MB',
-        sms: '0.15 AZN'
-      }
-    },
-    {
-      id: 'georgia',
-      name: 'Georgia',
-      route: countryPath('georgia'),
-      operators: [
-        { name: 'Magticom', networks: ['4G'] },
-        { name: 'Silknet (Geocell)', networks: ['4G'] },
-        { name: 'Cellfie Mobile', networks: ['4G'] }
-      ],
-      rates: {
-        outgoingWithin: '0.80 AZN/min',
-        outgoingAzerbaijan: '0.80 AZN/min',
-        outgoingOther: '0.80 AZN/min',
-        incoming: '0.50 AZN/min',
-        internet: '0.99 AZN/MB',
-        sms: '0.10 AZN'
-      }
-    },
-    {
-      id: 'germany',
-      name: 'Germany',
-      route: countryPath('germany'),
-      operators: [
-        { name: 'Telefonica (O2 / E-Plus)', networks: ['4G'] },
-        { name: 'T-Mobile', networks: ['4G'] },
-        { name: 'Vodafone (D2 GmbH)', networks: ['4G'] }
-      ],
-      rates: {
-        outgoingWithin: '1.50 AZN/min',
-        outgoingAzerbaijan: '1.50 AZN/min',
-        outgoingOther: '1.50 AZN/min',
-        incoming: '0.50 AZN/min',
-        internet: '0.99 AZN/MB',
-        sms: '0.20 AZN'
-      }
-    }
+    country('turkiye', 'Turkiye', [
+      ['Turk Telekom', ['4G']],
+      ['Turkcell', ['4G']],
+      ['Vodafone', ['4G']]
+    ], turkiyeRates),
+    country('georgia', 'Georgia', [
+      ['Magticom', ['4G']],
+      ['Silknet (Geocell)', ['4G']],
+      ['Cellfie Mobile', ['4G']]
+    ], georgiaRates),
+    country('germany', 'Germany', [
+      ['Telefonica (O2 / E-Plus)', ['4G']],
+      ['T-Mobile', ['4G']],
+      ['Vodafone (D2 GmbH)', ['4G']]
+    ], germanyRates)
   ];
 
   var packs = [
-    { id: '500mb', volume: '500MB', price: '10 AZN', validity: '3 days', keyword: '500', ussd: '*100*500#YES' },
-    { id: '2gb', volume: '2GB', price: '20 AZN', validity: '10 days', keyword: '2', ussd: '*100*2#YES' },
-    { id: '5gb', volume: '5GB', price: '50 AZN', validity: '30 days', keyword: '5', ussd: '*100*5#YES' },
-    { id: '10gb', volume: '10GB', price: '75 AZN', validity: '30 days', keyword: '10', ussd: '*100*10#YES' }
+    { id: '500mb', sort: 1, volume: '500MB', price: '10 AZN', priceNum: 10, validity: '3 days' },
+    { id: '2gb', sort: 2, volume: '2GB', price: '20 AZN', priceNum: 20, validity: '10 days' },
+    { id: '5gb', sort: 3, volume: '5GB', price: '50 AZN', priceNum: 50, validity: '30 days' },
+    { id: '10gb', sort: 4, volume: '10GB', price: '75 AZN', priceNum: 75, validity: '30 days' }
   ];
 
   var supportedOperators = [
@@ -97,40 +134,98 @@
     { country: 'Germany', operator: 'Telefonica (O2 / E-Plus)', networks: '2G / LTE' }
   ];
 
-  var beforeTravel = [
-    { question: 'Check the corporate balance', answer: 'Send an empty SMS to 650 or BALANS to 2525 before departure.' },
-    { question: 'Activate roaming on the number', answer: 'Ask your company contact to enable roaming for the corporate number, or send START to 8808. The SMS costs 0.01 AZN.' },
-    { question: 'Prepare the device', answer: 'Enable data roaming. After arrival, read the welcome SMS and select a partner network manually if automatic registration does not work.' }
+  var howToRoaming = [
+    { step: '1', title: 'Get destination information', body: 'Search for the destination country and review the available operators and prices before travelling.' },
+    { step: '2', title: 'Activate roaming', body: 'Make sure roaming is enabled for both the corporate number and the device.' },
+    { step: '3', title: 'Activate an internet pack', body: 'Buy a roaming internet pack before or during the trip to keep the employee online abroad.' }
   ];
 
-  var onArrival = [
-    { question: 'The phone does not connect to a network', answer: 'Confirm that roaming is enabled for the line, then select one of the listed partner operators manually.' },
-    { question: 'Mobile internet does not work', answer: 'Check that data roaming is on and the APN is INTERNET. If necessary, switch the preferred network from 4G to 3G.' },
-    { question: 'How should calls be dialled?', answer: 'Use international format with the country code. Disable automatic downloads to avoid unexpected data use.' }
+  var beforeTravel = [
+    'Confirm that the corporate account has no outstanding balance. Balance can be checked with an empty SMS to 650 or BALANS to 2525.',
+    'Ask the company contact person to activate roaming for the number.',
+    'Enable data roaming in the device settings before connection is needed.'
+  ];
+
+  var uponArrival = [
+    'Read the welcome SMS from Azercell and select an operator manually when pack compatibility or pricing makes this preferable.',
+    'Verify that roaming is enabled on both the SIM line and the device.',
+    'Disable automatic photo, video, operating-system and application downloads to control usage.',
+    'If mobile data does not work, enable 3G and set the APN to INTERNET; where needed, switch from 4G to 3G to connect to a supported operator.'
+  ];
+
+  var additionalInfo = [
+    {
+      question: 'How can I activate roaming?',
+      answer: 'Send START to 8808. Each SMS to 8808 costs 0.01 AZN. Corporate number owners and subscribers with Individual entrepreneur status can also request activation through the relevant written form or support.azercell.com.'
+    },
+    {
+      question: 'How can I check the balance?',
+      answer: 'Corporate subscribers can send BALANS to 2525 or dial *100#YES. Each SMS to 2525 costs 0.01 AZN, VAT included.'
+    },
+    {
+      question: 'How can I call Customer Care while roaming?',
+      answer: 'Postpaid subscribers can call (+99450) 605 00 00. The first 45 minutes are free; further time is charged at 0.70 AZN per minute, VAT included, with one-second billing.'
+    },
+    {
+      question: 'Current price notice',
+      answer: 'The 10GB roaming internet pack has cost 75 AZN since 22 December 2025.'
+    }
+  ];
+
+  var rateReading = [
+    'All prices are shown in AZN.',
+    'Call rates are billed in 60-second intervals on the three selected country pages.',
+    'Pay-as-you-go internet is billed in 30KB intervals on the three selected country pages.',
+    'Depending on the partner network, 4G may appear as LTE on the device.'
   ];
 
   var packRules = [
-    { question: 'How can a pack be activated?', answer: 'Activate it in Kabinetim, send the pack keyword to 2525, or use the USSD code shown on the pack card.' },
-    { question: 'Can another pack be purchased immediately?', answer: 'A new roaming internet pack cannot be purchased while active data remains in the current pack.' },
-    { question: 'What happens when the data is exhausted?', answer: 'Further usage is charged according to the current roaming tariff. Pack usage is calculated in 1KB increments.' },
-    { question: 'What happens if the line is closed?', answer: 'Closing the line stops the active roaming internet pack.' }
+    'A new roaming pack cannot be purchased while internet data remains in the active roaming pack.',
+    'Usage inside a roaming internet pack is calculated in 1KB intervals.',
+    'If the included volume expires during a data session, further use is charged according to the current tariff.',
+    'If the subscriber line is closed unilaterally or bilaterally, use of the roaming internet pack stops automatically.',
+    'The 10GB pack price has been 75 AZN since 22 December 2025.'
   ];
 
-  function getCountry(id) {
-    return countries.find(function (country) { return country.id === id; }) || null;
+  function getSection(id) {
+    return sections.find(function (item) { return item.id === id; }) || null;
   }
 
-  global.BusinessRoamingData = {
+  function getCountry(id) {
+    return countries.find(function (item) { return item.id === id; }) || null;
+  }
+
+  function searchCountries(query) {
+    var value = String(query || '').trim().toLowerCase();
+    if (!value) return countries.slice();
+    return countries.filter(function (item) {
+      return item.name.toLowerCase().indexOf(value) !== -1 || item.id.indexOf(value) !== -1;
+    });
+  }
+
+  var data = {
     KABINETIM: KABINETIM,
     SUPPORT: SUPPORT,
     ONLINE_PAYMENT: ONLINE_PAYMENT,
+    SOURCE_ROAMING: SOURCE_ROAMING,
+    SOURCE_PACKS: SOURCE_PACKS,
     routes: routes,
+    sections: sections,
     countries: countries,
+    topCountries: ['turkiye', 'georgia', 'germany'],
     packs: packs,
     supportedOperators: supportedOperators,
+    howToRoaming: howToRoaming,
     beforeTravel: beforeTravel,
-    onArrival: onArrival,
+    uponArrival: uponArrival,
+    additionalInfo: additionalInfo,
+    rateReading: rateReading,
     packRules: packRules,
-    getCountry: getCountry
+    getSection: getSection,
+    getCountry: getCountry,
+    searchCountries: searchCountries
   };
+
+  global.BusinessRoamingData = data;
+  global.RoamingData = data;
 })(window);

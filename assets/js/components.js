@@ -1676,7 +1676,7 @@
     var features = props.features || [];
     if (!features.length) return '';
     return (
-      '<div class="cmp-tdetail-features" data-tdetail-features>' +
+      '<div class="' + classes('cmp-tdetail-features', props.className) + '" data-tdetail-features>' +
         '<h2 class="t-h2">' + esc(props.title || 'What is included') + '</h2>' +
         '<ul class="cmp-tdetail-features__list">' +
           features.map(function (item) {
@@ -1854,8 +1854,200 @@
   };
 
   /* --------------------------------------------------------------------
+     Internet pack and roaming catalogue components
+     -------------------------------------------------------------------- */
+
+  C.internetCategoryNav = function (props) {
+    var active = props.active || '';
+    return (
+      '<nav class="cmp-ipack-nav"' + attr('aria-label', props.ariaLabel || 'Product categories') + '>' +
+        (props.items || []).map(function (item) {
+          var isActive = item.id === active;
+          return (
+            '<a class="cmp-ipack-nav__link' + (isActive ? ' cmp-ipack-nav__link--active' : '') + '"' +
+              attr('href', registryHref(item.href)) + (isActive ? ' aria-current="page"' : '') + '>' +
+              '<span class="t-small">' + esc(item.label) + '</span>' +
+            '</a>'
+          );
+        }).join('') +
+      '</nav>'
+    );
+  };
+
+  C.internetPackFilters = function (props) {
+    return C.filterTabs({ groups: props.groups || [], urlBase: props.urlBase || '' });
+  };
+
+  function packValidity(value) {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    if (value.prepaid === value.postpaid) return value.prepaid || '';
+    return 'Prepaid: ' + (value.prepaid || '—') + ' · Postpaid: ' + (value.postpaid || '—');
+  }
+
+  C.internetPackCard = function (props) {
+    var hints = props.usageHints || [];
+    var validity = packValidity(props.validity);
+    var hasDetails = !!(props.details || props.ussd || hints.length);
+    var cardActions = [];
+    if (props.kabinetimHref) {
+      cardActions.push({ label: props.ctaLabel || 'Activate in Kabinetim', href: props.kabinetimHref, variant: 'primary' });
+    }
+    if (props.action) cardActions.push(props.action);
+    return (
+      '<article class="cmp-ipack-card"' +
+        attr('data-ipack-price', props.priceNum == null ? 0 : props.priceNum) +
+        attr('data-ipack-sort', props.sort == null ? 0 : props.sort) + '>' +
+        '<div class="cmp-ipack-card__head">' +
+          '<div><p class="t-label">Internet pack</p><h3 class="t-h3">' + esc(props.name || props.data) + '</h3></div>' +
+          '<p class="t-h3">' + esc(props.price) + '</p>' +
+        '</div>' +
+        (props.data ? '<p class="t-h1 cmp-ipack-card__data">' + esc(props.data) + '</p>' : '') +
+        (validity ? '<p class="t-body t-muted">Valid for ' + esc(validity) + '</p>' : '') +
+        (props.keyword && props.shortCode
+          ? '<p class="t-small cmp-ipack-card__activate">SMS <strong>' + esc(props.keyword) + '</strong> to <strong>' + esc(props.shortCode) + '</strong></p>'
+          : '') +
+        (cardActions.length ? '<div class="cmp-ipack-card__actions">' + actions(cardActions, 'btn--small btn--block') + '</div>' : '') +
+        (hasDetails
+          ? '<details class="cmp-ipack-card__details">' +
+              '<summary class="cmp-ipack-card__summary"><span class="t-label">Pack details</span><span class="cmp-ipack-card__summary-icon" aria-hidden="true">↓</span></summary>' +
+              '<div class="cmp-ipack-card__details-body">' +
+                (props.details ? '<p class="t-body t-muted">' + esc(props.details) + '</p>' : '') +
+                (props.ussd ? '<p class="t-body">USSD: <strong>' + esc(props.ussd) + '</strong></p>' : '') +
+                (hints.length
+                  ? '<ul class="cmp-ipack-card__hints">' + hints.map(function (hint) {
+                      return '<li class="t-small"><strong>' + esc(hint.activity) + '</strong> — ' + esc(hint.duration) + '</li>';
+                    }).join('') + '</ul>'
+                  : '') +
+              '</div>' +
+            '</details>'
+          : '') +
+      '</article>'
+    );
+  };
+
+  C.internetUpgradeBanner = function (props) {
+    return (
+      '<section class="cmp-ipack-upgrade">' +
+        '<div class="cmp-ipack-upgrade__copy">' +
+          (props.eyebrow ? '<p class="t-label">' + esc(props.eyebrow) + '</p>' : '') +
+          '<h2 class="t-h2">' + esc(props.title) + '</h2>' +
+          (props.body ? '<p class="t-body t-muted">' + esc(props.body) + '</p>' : '') +
+          actions(props.actions || []) +
+          (props.note ? '<p class="t-small t-muted">' + esc(props.note) + '</p>' : '') +
+        '</div>' +
+        '<div class="cmp-ipack-upgrade__visual">' + placeholder(props.media || 'Internet pack options', 'ph--wide') + '</div>' +
+      '</section>'
+    );
+  };
+
+  C.roamingCountrySearch = function (props) {
+    return (
+      '<div class="cmp-roam-search" data-roam-search-wrap' +
+        attr('data-roam-sync-url', props.syncUrl ? 'true' : 'false') +
+        attr('data-roam-url-base', props.urlBase || '') +
+        attr('data-roam-show-all-default', props.showAllDefault ? 'true' : 'false') +
+        attr('data-roam-pack-supported-only', props.packSupportedOnly ? 'true' : 'false') + '>' +
+        '<label class="t-h4" for="' + esc(props.inputId || 'roaming-country-search') + '">' + esc(props.label || 'Search for a country') + '</label>' +
+        (props.hint ? '<p class="t-body t-muted">' + esc(props.hint) + '</p>' : '') +
+        '<input class="input cmp-roam-search__input" type="search" autocomplete="off" data-roam-search-input' +
+          attr('id', props.inputId || 'roaming-country-search') + attr('placeholder', props.placeholder || 'Enter country name…') + '>' +
+        ((props.topCountries || []).length
+          ? '<div class="cmp-roam-search__chips" aria-label="Top countries">' +
+              (props.topCountries || []).map(function (item) {
+                return '<button type="button" class="btn btn--small" data-roam-country-id="' + esc(item.id) + '">' + esc(item.name) + '</button>';
+              }).join('') +
+            '</div>'
+          : '') +
+        '<div data-roam-results aria-live="polite"></div>' +
+      '</div>'
+    );
+  };
+
+  function roamingRates(rates) {
+    if (!rates) return '';
+    var rows = [
+      ['Outgoing calls', rates.outgoing],
+      ['Incoming calls', rates.incoming],
+      ['Internet', rates.internetMb],
+      ['SMS', rates.sms]
+    ];
+    return '<ul class="cmp-roam-results__rates">' + rows.map(function (row) {
+      return '<li><span class="t-small t-muted">' + esc(row[0]) + '</span><br><strong class="t-body">' + esc(row[1]) + '</strong></li>';
+    }).join('') + '</ul>';
+  }
+
+  function roamingOperator(operator, planType) {
+    var rates = operator[planType] || operator.postpaid || operator.prepaid || {};
+    return (
+      '<div class="cmp-roam-results__operator">' +
+        '<h4 class="t-h4">' + esc(operator.displayName || operator.name) + '</h4>' +
+        '<p class="t-small t-muted">' + esc((operator.networks || []).join(' / ')) +
+          (operator.internetPackSupported === false ? ' · Internet packs unavailable' : '') + '</p>' +
+        roamingRates(rates) +
+      '</div>'
+    );
+  }
+
+  C.roamingCountryResults = function (props) {
+    var countries = props.countries || [];
+    if (!countries.length) return '<p class="t-body t-muted cmp-roam-results">' + esc(props.emptyText || 'No countries found.') + '</p>';
+    return (
+      '<div class="cmp-roam-results">' + countries.map(function (country) {
+        return (
+          '<article class="cmp-roam-results__country">' +
+            '<div class="cmp-broam-search-result__head">' +
+              '<div><p class="t-label">' + esc(country.planLabel || (props.planType === 'postpaid' ? 'Postpaid' : 'Prepaid')) + '</p><h3 class="t-h2">' + esc(country.name) + '</h3></div>' +
+              (country.route ? '<a class="btn btn--small" href="' + esc(registryHref(country.route)) + '">Open country page</a>' : '') +
+            '</div>' +
+            (country.consolidatedRates
+              ? '<p class="t-small t-muted">' + esc(country.operators.map(function (item) { return item.name; }).join(' · ')) + '</p>' + roamingRates(country.consolidatedRates)
+              : (country.operators || []).map(function (operator) { return roamingOperator(operator, props.planType || 'prepaid'); }).join('')) +
+          '</article>'
+        );
+      }).join('') + '</div>'
+    );
+  };
+
+  C.roamingCountriesTable = function (props) {
+    return (
+      '<div class="cmp-roam-table-wrap">' +
+        '<p class="t-small t-muted">Swipe horizontally to see the full table.</p>' +
+        '<div class="cmp-roam-table-scroll" tabindex="0">' +
+          '<table class="cmp-roam-table">' +
+            '<thead><tr><th class="t-label" scope="col">Country</th><th class="t-label" scope="col">Operator</th><th class="t-label" scope="col">Networks</th></tr></thead>' +
+            '<tbody>' + (props.rows || []).map(function (row) {
+              var operatorData = typeof row.operator === 'string' ? { name: row.operator, networks: String(row.networks || '').split(' / ') } : (row.operator || {});
+              return '<tr><td class="t-body">' + esc(row.country) + '</td><th class="t-body" scope="row">' + esc(operatorData.displayName || operatorData.name) + '</th><td class="t-body">' + esc((operatorData.networks || []).join(' / ')) + '</td></tr>';
+            }).join('') + '</tbody>' +
+          '</table>' +
+        '</div>' +
+        (props.note ? '<p class="t-small t-muted">' + esc(props.note) + '</p>' : '') +
+      '</div>'
+    );
+  };
+
+  C.roamingPlanToggle = function (props) {
+    var current = props.current || 'prepaid';
+    return (
+      '<div class="cmp-tabs" role="tablist" aria-label="Subscriber type" data-roam-plan-toggle>' +
+        ['prepaid', 'postpaid'].map(function (value) {
+          return '<button type="button" class="cmp-tab" role="tab" data-roam-plan-value="' + value + '" aria-selected="' + (value === current ? 'true' : 'false') + '">' +
+            (value === 'prepaid' ? 'Prepaid' : 'Postpaid') + '</button>';
+        }).join('') +
+      '</div>'
+    );
+  };
+
+  /* --------------------------------------------------------------------
      Business roaming
      -------------------------------------------------------------------- */
+
+  function businessRateValue(value, suffix) {
+    if (value == null) return '';
+    if (typeof value === 'object') return value.rate + (suffix || '');
+    return value;
+  }
 
   C.businessRoamingCountryCard = function (props) {
     var country = props.country || {};
@@ -1871,10 +2063,10 @@
           '<span class="badge">' + esc(operators.length) + ' operators</span>' +
         '</div>' +
         '<dl class="cmp-broam-summary">' +
-          '<div><dt class="t-small t-muted">Outgoing calls</dt><dd class="t-h4">' + esc(rates.outgoingWithin) + '</dd></div>' +
-          '<div><dt class="t-small t-muted">Incoming calls</dt><dd class="t-h4">' + esc(rates.incoming) + '</dd></div>' +
-          '<div><dt class="t-small t-muted">Internet</dt><dd class="t-h4">' + esc(rates.internet) + '</dd></div>' +
-          '<div><dt class="t-small t-muted">SMS</dt><dd class="t-h4">' + esc(rates.sms) + '</dd></div>' +
+          '<div><dt class="t-small t-muted">Outgoing calls</dt><dd class="t-h4">' + esc(businessRateValue(rates.outgoingWithin, ' AZN/min')) + '</dd></div>' +
+          '<div><dt class="t-small t-muted">Incoming calls</dt><dd class="t-h4">' + esc(businessRateValue(rates.incoming, ' AZN/min')) + '</dd></div>' +
+          '<div><dt class="t-small t-muted">Internet</dt><dd class="t-h4">' + esc(businessRateValue(rates.internet, ' AZN/MB')) + '</dd></div>' +
+          '<div><dt class="t-small t-muted">SMS</dt><dd class="t-h4">' + esc(businessRateValue(rates.sms, ' AZN')) + '</dd></div>' +
         '</dl>' +
         '<p class="t-small t-muted">' + esc(operators.map(function (item) { return item.name; }).join(' · ')) + '</p>' +
         actions([{ label: 'View rates', href: props.href, variant: 'primary' }], 'btn--small') +
@@ -1886,24 +2078,25 @@
     var country = props.country || {};
     var rates = country.rates || {};
     var rows = [
-      ['Outgoing call within ' + (country.name || 'the country'), rates.outgoingWithin],
-      ['Outgoing call to Azerbaijan', rates.outgoingAzerbaijan],
-      ['Outgoing call to other destinations', rates.outgoingOther],
-      ['Incoming call', rates.incoming],
-      ['Mobile internet', rates.internet],
-      ['Outgoing SMS', rates.sms]
+      ['Outgoing calls within the country', rates.outgoingWithin],
+      ['Outgoing calls to Azerbaijan', rates.outgoingAzerbaijan],
+      ['Outgoing calls to other destinations', rates.outgoingOther],
+      ['Incoming calls', rates.incoming],
+      ['Internet', rates.internet],
+      ['SMS', rates.sms]
     ];
     return (
       '<div class="cmp-broam-rates">' +
         '<div class="cmp-broam-rates__scroll" tabindex="0" aria-label="Roaming rates for ' + esc(country.name) + '">' +
           '<table class="cmp-broam-rates__table">' +
-            '<thead><tr><th class="t-label" scope="col">Service</th><th class="t-label" scope="col">Corporate postpaid rate</th></tr></thead>' +
+            '<thead><tr><th class="t-label" scope="col">Service</th><th class="t-label" scope="col">Rate, AZN</th><th class="t-label" scope="col">Charging interval</th></tr></thead>' +
             '<tbody>' + rows.map(function (row) {
-              return '<tr><th class="t-body" scope="row">' + esc(row[0]) + '</th><td class="t-h4">' + esc(row[1]) + '</td></tr>';
+              var value = row[1] || {};
+              return '<tr><th class="t-body" scope="row">' + esc(row[0]) + '</th><td class="t-h4">' + esc(value.rate || value) + '</td><td class="t-body">' + esc(value.interval || '') + '</td></tr>';
             }).join('') + '</tbody>' +
           '</table>' +
         '</div>' +
-        '<p class="t-small t-muted">Calls are billed in 60-second increments. Mobile internet is billed in 30KB increments. Prices include VAT.</p>' +
+        '<p class="t-small t-muted">All prices are in AZN. Depending on the carrier, 4G may be indicated as LTE on the smartphone.</p>' +
       '</div>'
     );
   };
@@ -1927,18 +2120,28 @@
   C.businessRoamingPackCard = function (props) {
     var pack = props.pack || {};
     return (
-      '<article class="cmp-broam-pack">' +
-        '<div class="cmp-broam-pack__head">' +
-          '<div><p class="t-label">Roaming internet</p><h3 class="t-h2">' + esc(pack.volume) + '</h3></div>' +
-          '<p class="t-h2">' + esc(pack.price) + '</p>' +
+      '<article class="cmp-ipack-card"' + attr('data-ipack-price', pack.priceNum || 0) + attr('data-ipack-sort', pack.sort || 0) + '>' +
+        '<div class="cmp-ipack-card__head">' +
+          '<div><p class="t-label">Roaming internet pack</p><h3 class="t-h2">' + esc(pack.volume) + '</h3></div>' +
+          '<p class="t-h3">' + esc(pack.price) + '</p>' +
         '</div>' +
-        '<dl class="cmp-broam-pack__details">' +
-          '<div><dt class="t-small t-muted">Validity</dt><dd class="t-body">' + esc(pack.validity) + '</dd></div>' +
-          '<div><dt class="t-small t-muted">SMS to 2525</dt><dd class="t-body"><strong>' + esc(pack.keyword) + '</strong></dd></div>' +
-          '<div><dt class="t-small t-muted">USSD</dt><dd class="t-body"><strong>' + esc(pack.ussd) + '</strong></dd></div>' +
-        '</dl>' +
-        actions([{ label: 'Activate in Kabinetim', href: props.kabinetimHref, variant: 'primary' }], 'btn--small btn--block') +
+        '<p class="t-body t-muted">Valid for ' + esc(pack.validity) + '</p>' +
+        (props.subscribeHref ? '<div class="cmp-ipack-card__actions">' + actions([{ label: 'Subscribe', href: props.subscribeHref, variant: 'primary' }], 'btn--small btn--block') + '</div>' : '') +
       '</article>'
+    );
+  };
+
+  C.businessRoamingSteps = function (props) {
+    return (
+      '<div class="cmp-roam-steps">' + (props.items || []).map(function (item) {
+        return (
+          '<article class="cmp-roam-step">' +
+            '<p class="t-label">Step ' + esc(item.step) + '</p>' +
+            '<h3 class="t-h3">' + esc(item.title) + '</h3>' +
+            '<p class="t-body t-muted">' + esc(item.body) + '</p>' +
+          '</article>'
+        );
+      }).join('') + '</div>'
     );
   };
 
