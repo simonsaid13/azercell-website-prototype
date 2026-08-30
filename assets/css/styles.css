@@ -2199,6 +2199,10 @@ a.cmp-tab {
   background: var(--c-fill-soft);
 }
 
+.cmp-broam-tips__planning {
+  margin-top: var(--sp-6);
+}
+
 .cmp-broam-coverage-section {
   margin-top: var(--sp-7);
   padding-top: var(--sp-6);
@@ -2214,6 +2218,22 @@ a.cmp-tab {
 
 .cmp-broam-coverage__input {
   width: 100%;
+}
+
+.cmp-broam-coverage__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.cmp-broam-coverage__tags .btn {
+  border-radius: 999px; /* audit-allow-rounded: user-requested country tags */
+  background: var(--c-surface);
+}
+
+.cmp-broam-coverage__tags .btn:hover,
+.cmp-broam-coverage__tags .btn:focus-visible {
+  background: var(--c-fill-soft);
 }
 
 .cmp-broam-coverage__scroll {
@@ -2331,6 +2351,10 @@ a.cmp-tab {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--sp-3);
+}
+
+.cmp-broam-operator-tabs__panels {
+  margin-top: var(--sp-4);
 }
 
 .cmp-broam-operator {

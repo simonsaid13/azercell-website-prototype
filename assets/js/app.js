@@ -1452,7 +1452,49 @@
     }
 
     input.addEventListener('input', apply);
+    root.addEventListener('click', function (event) {
+      var tag = closest(event.target, '[data-broam-coverage-tag]');
+      if (!tag || !root.contains(tag)) return;
+      input.value = tag.getAttribute('data-broam-coverage-tag') || '';
+      apply();
+      input.focus();
+    });
     apply();
+  }
+
+  function initBusinessRoamingOperatorTabs(root) {
+    if (!root || root.getAttribute('data-broam-operator-tabs-ready') === 'true') return;
+    var tabs = all(root, '[data-broam-operator-tab]');
+    var panels = all(root, '[data-broam-operator-panel]');
+    if (!tabs.length || !panels.length) return;
+    root.setAttribute('data-broam-operator-tabs-ready', 'true');
+
+    function activate(index, focusTab) {
+      tabs.forEach(function (tab) {
+        var selected = tab.getAttribute('data-broam-operator-tab') === index;
+        tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+        tab.setAttribute('tabindex', selected ? '0' : '-1');
+        if (selected && focusTab) tab.focus();
+      });
+      panels.forEach(function (panel) {
+        panel.hidden = panel.getAttribute('data-broam-operator-panel') !== index;
+      });
+    }
+
+    root.addEventListener('click', function (event) {
+      var tab = closest(event.target, '[data-broam-operator-tab]');
+      if (!tab || !root.contains(tab)) return;
+      activate(tab.getAttribute('data-broam-operator-tab'), false);
+    });
+
+    root.addEventListener('keydown', function (event) {
+      var tab = closest(event.target, '[data-broam-operator-tab]');
+      if (!tab || !root.contains(tab) || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
+      event.preventDefault();
+      var current = tabs.indexOf(tab);
+      var next = event.key === 'ArrowRight' ? (current + 1) % tabs.length : (current - 1 + tabs.length) % tabs.length;
+      activate(tabs[next].getAttribute('data-broam-operator-tab'), true);
+    });
   }
 
   /* ----------------------------------------------------------------------
@@ -1484,6 +1526,7 @@
     all(document, '[data-carousel]').forEach(initCarousel);
     all(document, '[data-roam-search-wrap]').forEach(initRoamingCountrySearch);
     all(document, '[data-broam-coverage]').forEach(initBusinessRoamingCoverage);
+    all(document, '[data-broam-operator-tabs]').forEach(initBusinessRoamingOperatorTabs);
 
     document.addEventListener('mouseover', function (event) {
       var menuHover = closest(event.target, '[data-menu-hover]');

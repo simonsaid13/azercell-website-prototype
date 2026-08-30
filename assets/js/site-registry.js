@@ -179,8 +179,7 @@
               'https://www.azercell.com/en/corporate/mobile-communications/roaming.html',
               'https://support.azercell.com/'] },
     { path: '/business/mobile/roaming/countries-and-prices/', title: 'Countries and prices', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'built',
-      links: ['/business/mobile/roaming/countries-and-prices/turkiye/', '/business/mobile/roaming/countries-and-prices/georgia/',
-              '/business/mobile/roaming/countries-and-prices/germany/'] },
+      links: [] },
     { path: '/business/mobile/roaming/countries-and-prices/turkiye/', title: 'Turkiye', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'built',
       links: ['/business/mobile/roaming/internet-packs/'] },
     { path: '/business/mobile/roaming/countries-and-prices/georgia/', title: 'Georgia', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'built',
@@ -1518,12 +1517,26 @@
       name: 'Business roaming operator list',
       group: 'Products',
       usedOn: [
-        '/business/mobile/roaming/countries-and-prices/turkiye/',
         '/business/mobile/roaming/countries-and-prices/georgia/',
         '/business/mobile/roaming/countries-and-prices/germany/'
       ],
       description: 'Partner operator cards with the available mobile network generations.',
       props: { operators: [{ name: 'Turkcell', networks: ['4G'] }, { name: 'Turk Telekom', networks: ['4G'] }] }
+    },
+    {
+      id: 'businessRoamingOperatorTabs',
+      name: 'Business roaming operator tabs',
+      group: 'Products',
+      usedOn: ['/business/mobile/roaming/countries-and-prices/turkiye/'],
+      description: 'Keyboard-accessible operator tabs that switch the visible roaming rate table.',
+      props: {
+        country: {
+          id: 'turkiye',
+          name: 'Turkiye',
+          operators: [{ name: 'Turk Telekom' }, { name: 'Turkcell' }, { name: 'Vodafone' }],
+          rates: {}
+        }
+      }
     },
     {
       id: 'businessRoamingPackCard',
@@ -1565,7 +1578,8 @@
         rows: [
           { country: 'Turkiye', operator: 'Turkcell', displayName: 'TR TCELL; TURKCELL; TR TURKCELL', networks: '2G / 3G / LTE' },
           { country: 'Germany', operator: 'T-Mobile', displayName: 'T-D1; D1; T-Mobile D', networks: '2G / LTE' }
-        ]
+        ],
+        tags: [{ label: 'Turkiye', value: 'Turkiye' }, { label: 'Germany', value: 'Germany' }]
       }
     },
     {
@@ -1580,7 +1594,7 @@
       id: 'roamingCountrySearch',
       name: 'Roaming country search',
       group: 'Products',
-      usedOn: ['/tariffs/roaming/', '/tariffs/roaming/countries-and-prices/', '/business/mobile/roaming/', '/business/mobile/roaming/countries-and-prices/'],
+      usedOn: ['/tariffs/roaming/', '/tariffs/roaming/countries-and-prices/', '/business/mobile/roaming/'],
       description: 'Client-side country lookup with optional URL sync via ?country= and quick destination chips.',
       props: {
         label: 'Search for a country',
@@ -1593,7 +1607,7 @@
       id: 'roamingCountryResults',
       name: 'Roaming country results',
       group: 'Products',
-      usedOn: ['/tariffs/roaming/', '/tariffs/roaming/countries-and-prices/', '/business/mobile/roaming/', '/business/mobile/roaming/countries-and-prices/'],
+      usedOn: ['/tariffs/roaming/', '/tariffs/roaming/countries-and-prices/', '/business/mobile/roaming/'],
       description: 'Operator cards with networks, pack support flag, and pay-as-you-go rates.',
       props: { planType: 'prepaid', countries: [] }
     },

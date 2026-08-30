@@ -44,7 +44,9 @@
       inputId: inputId,
       rows: D.supportedOperators,
       label: 'Enter country or operator name',
-      note: 'This prototype contains Turkiye, Georgia and Germany from the wider international operator catalogue.'
+      tags: topCountryChips().map(function (country) {
+        return { label: country.name, value: country.name };
+      })
     });
   }
 
@@ -86,13 +88,6 @@
           { label: 'More information about the internet packs', href: D.routes.packs }
         ])
       ),
-      section(C.render('splitBanner', {
-        eyebrow: 'Roaming tips',
-        title: 'Planning a trip?',
-        body: 'Download the roaming tips before departure so the essential setup and support information is available offline.',
-        media: 'Roaming tips',
-        actions: [{ label: 'Download roaming tips', href: D.SOURCE_ROAMING, variant: 'primary' }]
-      })),
       section(
         C.render('sectionHead', { eyebrow: 'Before travel', title: 'How to use Azercell roaming?' }) +
         C.render('businessRoamingSteps', {
@@ -109,7 +104,14 @@
         '<div class="grid grid--2 cmp-broam-guide-grid">' +
           featureList('Before travel', D.beforeTravel) +
           featureList('Upon arrival', D.uponArrival) +
-        '</div>'
+        '</div>' +
+        '<div class="cmp-broam-tips__planning">' + C.render('splitBanner', {
+          eyebrow: 'Roaming tips',
+          title: 'Planning a trip?',
+          body: 'Download the roaming tips before departure so the essential setup and support information is available offline.',
+          media: 'Roaming tips',
+          actions: [{ label: 'Download roaming tips', href: D.SOURCE_ROAMING, variant: 'primary' }]
+        }) + '</div>'
       ),
       section(C.render('splitBanner', {
         eyebrow: 'Roaming essentials',
@@ -132,7 +134,7 @@
       section(
         C.render('sectionHead', {
           eyebrow: 'Roaming help',
-          title: 'Additional information'
+          title: 'Questions and Answers'
         }) +
         '<div style="margin-top:var(--sp-5)">' + C.render('accordion', { items: D.additionalInfo }) + '</div>' +
         actionRow([{ label: 'Open support.azercell.com', href: D.SUPPORT }])
@@ -142,7 +144,6 @@
 
   function mountCountries() {
     var C = global.Components;
-    var href = hrefFn();
 
     C.mount('#page-main', [
       section(C.render('sectionHead', {
@@ -151,19 +152,11 @@
         body: 'Search a destination to view the available partner networks and pay-as-you-go rates for calls, mobile internet and SMS.'
       })),
       section(
-        '<div id="roaming-catalog" data-roam-page>' +
+        '<div id="roaming-catalog">' +
           C.render('sectionHead', {
-            eyebrow: 'Country directory',
-            title: 'Top countries'
+            title: 'Countries where internet packs are available'
           }) +
-          countrySearch(href, 'business-roaming-directory-search', { showAllDefault: true }) +
-          '<div class="cmp-broam-coverage-section" id="supported-operators">' +
-            C.render('sectionHead', {
-              eyebrow: 'Internet packages in roaming',
-              title: 'Countries where internet packs are available'
-            }) +
-            coverageTable('business-roaming-country-coverage-search') +
-          '</div>' +
+          coverageTable('business-roaming-country-coverage-search') +
         '</div>'
       )
     ]);
@@ -173,32 +166,35 @@
     var C = global.Components;
     var country = D.getCountry(countryId);
     if (!country) return mountCountries();
+    var usesOperatorTabs = country.id === 'turkiye';
+    var operatorDetails = C.render('sectionHead', {
+      eyebrow: 'Partner networks',
+      title: 'Available operators'
+    }) + (usesOperatorTabs
+      ? C.render('businessRoamingOperatorTabs', { country: country })
+      : C.render('businessRoamingOperatorList', { operators: country.operators }) +
+        C.render('sectionHead', {
+          eyebrow: 'Postpaid',
+          title: 'Rates'
+        }) +
+        C.render('businessRoamingRateTable', { country: country }));
 
     C.mount('#page-main', [
       section(C.render('sectionHead', {
         eyebrow: 'Roaming · Countries and prices',
         title: country.name,
-        body: 'Postpaid | Available operators'
+        body: usesOperatorTabs ? '' : 'Postpaid | Available operators'
       })),
       section(
         '<div id="roaming-country-details">' +
-          C.render('sectionHead', {
-            eyebrow: 'Partner networks',
-            title: 'Available operators'
-          }) +
-          C.render('businessRoamingOperatorList', { operators: country.operators }) +
-          C.render('sectionHead', {
-            eyebrow: 'Postpaid',
-            title: 'Rates'
-          }) +
-          C.render('businessRoamingRateTable', { country: country }) +
+          operatorDetails +
         '</div>'
       ),
       section(
         C.render('sectionHead', {
           eyebrow: 'Internet packages in roaming',
           title: 'Available roaming internet packs',
-          body: '500MB — 10 AZN / 3 days · 2GB — 20 AZN / 10 days · 5GB — 50 AZN / 30 days · 10GB — 75 AZN / 30 days'
+          body: usesOperatorTabs ? '' : '500MB — 10 AZN / 3 days · 2GB — 20 AZN / 10 days · 5GB — 50 AZN / 30 days · 10GB — 75 AZN / 30 days'
         }) +
         packCards() +
         actionRow([{ label: 'More details', href: D.routes.packs, variant: 'primary' }])
@@ -233,7 +229,6 @@
         actions: [{ label: 'Azercell Kabinetim', href: D.KABINETIM, variant: 'primary' }]
       })),
       section(
-        C.render('sectionHead', { eyebrow: 'Package rules', title: 'Important conditions' }) +
         featureList('Before subscribing', D.packRules)
       ),
       section(
@@ -246,7 +241,7 @@
         '</div>'
       ),
       section(
-        C.render('sectionHead', { eyebrow: 'Roaming internet packs', title: 'Additional information' }) +
+        C.render('sectionHead', { eyebrow: 'Roaming internet packs', title: 'Questions and Answers' }) +
         '<div style="margin-top:var(--sp-5)">' + C.render('accordion', { items: D.packAdditionalInfo }) + '</div>'
       )
     ]);

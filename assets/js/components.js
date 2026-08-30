@@ -2088,7 +2088,7 @@
     ];
     return (
       '<div class="cmp-broam-rates">' +
-        '<div class="cmp-broam-rates__scroll" tabindex="0" aria-label="Roaming rates for ' + esc(country.name) + '">' +
+        '<div class="cmp-broam-rates__scroll" tabindex="0" aria-label="Roaming rates for ' + esc(props.operatorName ? props.operatorName + ' in ' + country.name : country.name) + '">' +
           '<table class="cmp-broam-rates__table">' +
             '<thead><tr><th class="t-label" scope="col">Service</th><th class="t-label" scope="col">Rate, AZN</th><th class="t-label" scope="col">Charging interval</th></tr></thead>' +
             '<tbody>' + rows.map(function (row) {
@@ -2114,6 +2114,27 @@
             '</article>'
           );
         }).join('') +
+      '</div>'
+    );
+  };
+
+  C.businessRoamingOperatorTabs = function (props) {
+    var country = props.country || {};
+    var operators = country.operators || [];
+    return (
+      '<div class="cmp-broam-operator-tabs" data-broam-operator-tabs>' +
+        '<div class="cmp-tabs" role="tablist" aria-label="Available operators in ' + esc(country.name) + '">' +
+          operators.map(function (operator, index) {
+            var id = 'broam-' + esc(country.id) + '-operator-' + index;
+            return '<button class="cmp-tab" type="button" role="tab" id="' + id + '-tab" aria-controls="' + id + '-panel" aria-selected="' + (index === 0 ? 'true' : 'false') + '" tabindex="' + (index === 0 ? '0' : '-1') + '" data-broam-operator-tab="' + index + '">' + esc(operator.name) + '</button>';
+          }).join('') +
+        '</div>' +
+        '<div class="cmp-broam-operator-tabs__panels">' + operators.map(function (operator, index) {
+          var id = 'broam-' + esc(country.id) + '-operator-' + index;
+          return '<div role="tabpanel" id="' + id + '-panel" aria-labelledby="' + id + '-tab" data-broam-operator-panel="' + index + '"' + (index === 0 ? '' : ' hidden') + '>' +
+            C.businessRoamingRateTable({ country: country, operatorName: operator.name }) +
+          '</div>';
+        }).join('') + '</div>' +
       '</div>'
     );
   };
@@ -2153,6 +2174,11 @@
       '<div class="cmp-broam-coverage" data-broam-coverage>' +
         '<label class="t-h4" for="' + esc(inputId) + '">' + esc(props.label || 'Enter country or operator name') + '</label>' +
         '<input class="input cmp-broam-coverage__input" id="' + esc(inputId) + '" type="search" autocomplete="off" placeholder="' + esc(props.placeholder || 'Enter country or operator name…') + '" data-broam-coverage-input>' +
+        ((props.tags || []).length
+          ? '<div class="cmp-broam-coverage__tags" aria-label="Country filters">' + (props.tags || []).map(function (tag) {
+              return '<button class="btn btn--small" type="button" data-broam-coverage-tag="' + esc(tag.value || tag.label) + '">' + esc(tag.label) + '</button>';
+            }).join('') + '</div>'
+          : '') +
         '<p class="t-body t-muted" data-broam-coverage-empty hidden>No matching country or operator found.</p>' +
         '<div class="cmp-broam-coverage__scroll" tabindex="0" aria-label="Countries and operators where roaming internet packs are available">' +
           '<table class="cmp-broam-coverage__table">' +

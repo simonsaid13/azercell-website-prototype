@@ -329,7 +329,7 @@ Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`
 | More information about internet packs | `/business/mobile/roaming/internet-packs/` | CONNECTED |
 | Planning and online-support actions | Current Azercell Business roaming page | CONNECTED (external) |
 | Balance actions | Kabinetim and Azercell online payment | CONNECTED (external) |
-| Additional information → Support | support.azercell.com | CONNECTED (external) |
+| Questions and Answers → Support | support.azercell.com | CONNECTED (external) |
 
 **Inbound:** Business header → Mobile → Roaming; Business footer → Mobile → Roaming; Business floating bar → Roaming.
 
@@ -339,7 +339,7 @@ Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`
 
 | Section / link | Target | Status |
 |----------------|--------|--------|
-| Country search results | Turkiye, Georgia, Germany detail routes | CONNECTED |
+| Country tags | Filter the inline table to Turkiye, Georgia or Germany | CONNECTED |
 | Searchable pack-coverage table | Inline Turkiye, Georgia and Germany operator catalogue | CONNECTED |
 
 **Inbound:** Business roaming overview; header Mobile → Roaming detail; floating bar Roaming detail; all three country pages.
@@ -358,6 +358,8 @@ Routes:
 |----------------|--------|--------|
 | Internet-pack summary → More details | `/business/mobile/roaming/internet-packs/` | CONNECTED |
 
+Turkiye uses operator tabs to switch the visible rate table. Georgia and Germany retain their operator summaries followed by the shared rate table.
+
 **Inbound:** Business header and floating bar Roaming details; countries directory and overview search.
 
 ---
@@ -369,7 +371,7 @@ Routes:
 | Pack list → Subscribe | Current Azercell Business roaming-pack page | CONNECTED (external) |
 | Activation → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
 | Searchable pack-coverage table | Inline Turkiye, Georgia and Germany operator catalogue | CONNECTED |
-| Additional information | Six source-based FAQ items in an accordion | CONNECTED |
+| Questions and Answers | Six source-based FAQ items in an accordion | CONNECTED |
 
 **Inbound:** Business header and floating bar Roaming detail; overview, countries directory and every country page.
 
@@ -484,6 +486,7 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 
 | Date | Change |
 |------|--------|
+| 2026-08-30 | Renamed B2B roaming FAQ sections to Questions and Answers; simplified Countries and prices to one tagged coverage search; moved Planning a trip below Useful tips; removed package-rule headings; added operator tabs on Turkiye and removed its redundant rate/pack summary headings. |
 | 2026-08-30 | Added complete source-based Additional Information blocks to Business Roaming overview and internet packs; moved the country search into Step 1; moved pack coverage inline under Top countries; removed B2B roaming quick actions and local category navigation; rounded destination chips. |
 | 2026-08-29 | Reworked the complete B2B Roaming prototype from the full content handoff, using the established B2C roaming composition: overview, searchable country directory, exact Turkiye/Georgia/Germany rates and operators, internet packs, activation rules, travel guidance and support information. |
 | 2026-08-29 | Built the complete B2B Roaming prototype slice: overview, countries directory, Turkiye, Georgia, Germany and roaming internet packs. Connected Business header, footer and floating bar entries; documented all internal and confirmed external links. |
