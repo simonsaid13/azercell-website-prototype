@@ -1943,10 +1943,11 @@
 
   C.roamingCountrySearch = function (props) {
     return (
-      '<div class="cmp-roam-search" data-roam-search-wrap' +
+      '<div class="cmp-roam-search' + (props.className ? ' ' + esc(props.className) : '') + '" data-roam-search-wrap' +
         attr('data-roam-sync-url', props.syncUrl ? 'true' : 'false') +
         attr('data-roam-url-base', props.urlBase || '') +
         attr('data-roam-show-all-default', props.showAllDefault ? 'true' : 'false') +
+        attr('data-roam-hide-default-results', props.hideDefaultResults ? 'true' : 'false') +
         attr('data-roam-pack-supported-only', props.packSupportedOnly ? 'true' : 'false') + '>' +
         '<label class="t-h4" for="' + esc(props.inputId || 'roaming-country-search') + '">' + esc(props.label || 'Search for a country') + '</label>' +
         (props.hint ? '<p class="t-body t-muted">' + esc(props.hint) + '</p>' : '') +
@@ -2133,15 +2134,37 @@
 
   C.businessRoamingSteps = function (props) {
     return (
-      '<div class="cmp-roam-steps">' + (props.items || []).map(function (item) {
+      '<div class="cmp-roam-steps' + (props.firstStepContent ? ' cmp-roam-steps--with-search' : '') + '">' + (props.items || []).map(function (item, index) {
         return (
           '<article class="cmp-roam-step">' +
             '<p class="t-label">Step ' + esc(item.step) + '</p>' +
             '<h3 class="t-h3">' + esc(item.title) + '</h3>' +
             '<p class="t-body t-muted">' + esc(item.body) + '</p>' +
+            (index === 0 && props.firstStepContent ? '<div class="cmp-roam-step__search">' + props.firstStepContent + '</div>' : '') +
           '</article>'
         );
       }).join('') + '</div>'
+    );
+  };
+
+  C.businessRoamingCoverageTable = function (props) {
+    var inputId = props.inputId || 'business-roaming-coverage-search';
+    return (
+      '<div class="cmp-broam-coverage" data-broam-coverage>' +
+        '<label class="t-h4" for="' + esc(inputId) + '">' + esc(props.label || 'Enter country or operator name') + '</label>' +
+        '<input class="input cmp-broam-coverage__input" id="' + esc(inputId) + '" type="search" autocomplete="off" placeholder="' + esc(props.placeholder || 'Enter country or operator name…') + '" data-broam-coverage-input>' +
+        '<p class="t-body t-muted" data-broam-coverage-empty hidden>No matching country or operator found.</p>' +
+        '<div class="cmp-broam-coverage__scroll" tabindex="0" aria-label="Countries and operators where roaming internet packs are available">' +
+          '<table class="cmp-broam-coverage__table">' +
+            '<thead><tr><th class="t-label" scope="col">Country</th><th class="t-label" scope="col">Operator</th><th class="t-label" scope="col">Display name</th><th class="t-label" scope="col">Supported networks</th></tr></thead>' +
+            '<tbody>' + (props.rows || []).map(function (row) {
+              var searchText = [row.country, row.operator, row.displayName, row.networks].join(' ').toLowerCase();
+              return '<tr data-broam-coverage-row data-search-text="' + esc(searchText) + '"><td class="t-body">' + esc(row.country) + '</td><th class="t-body" scope="row">' + esc(row.operator) + '</th><td class="t-body">' + esc(row.displayName || '—') + '</td><td class="t-body">' + esc(row.networks) + '</td></tr>';
+            }).join('') + '</tbody>' +
+          '</table>' +
+        '</div>' +
+        (props.note ? '<p class="t-small t-muted">' + esc(props.note) + '</p>' : '') +
+      '</div>'
     );
   };
 

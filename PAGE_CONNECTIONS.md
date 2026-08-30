@@ -324,8 +324,9 @@ Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`
 
 | Section / link | Target | Status |
 |----------------|--------|--------|
-| Country search → Turkiye, Georgia, Germany | Country detail routes | CONNECTED |
-| Category navigation and pack section → Internet packs | `/business/mobile/roaming/internet-packs/` and supported-operators anchor | CONNECTED |
+| Step 1 country search → Turkiye, Georgia, Germany | Country detail routes | CONNECTED |
+| “Check in which countries internet packs can be used” | `/business/mobile/roaming/countries-and-prices/` | CONNECTED |
+| More information about internet packs | `/business/mobile/roaming/internet-packs/` | CONNECTED |
 | Planning and online-support actions | Current Azercell Business roaming page | CONNECTED (external) |
 | Balance actions | Kabinetim and Azercell online payment | CONNECTED (external) |
 | Additional information → Support | support.azercell.com | CONNECTED (external) |
@@ -339,8 +340,7 @@ Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`
 | Section / link | Target | Status |
 |----------------|--------|--------|
 | Country search results | Turkiye, Georgia, Germany detail routes | CONNECTED |
-| Category navigation | Roaming overview, countries, internet packs | CONNECTED |
-| Quick action → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
+| Searchable pack-coverage table | Inline Turkiye, Georgia and Germany operator catalogue | CONNECTED |
 
 **Inbound:** Business roaming overview; header Mobile → Roaming detail; floating bar Roaming detail; all three country pages.
 
@@ -356,9 +356,7 @@ Routes:
 
 | Section / link | Target | Status |
 |----------------|--------|--------|
-| Category navigation → Overview and countries | Parent B2B roaming routes | CONNECTED |
 | Internet-pack summary → More details | `/business/mobile/roaming/internet-packs/` | CONNECTED |
-| Quick action → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
 
 **Inbound:** Business header and floating bar Roaming details; countries directory and overview search.
 
@@ -368,10 +366,10 @@ Routes:
 
 | Section / link | Target | Status |
 |----------------|--------|--------|
-| Category navigation → Roaming overview and countries | Built B2B roaming routes | CONNECTED |
 | Pack list → Subscribe | Current Azercell Business roaming-pack page | CONNECTED (external) |
 | Activation → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
-| Supported operators anchor | `#supported-operators` on the same page | CONNECTED |
+| Searchable pack-coverage table | Inline Turkiye, Georgia and Germany operator catalogue | CONNECTED |
+| Additional information | Six source-based FAQ items in an accordion | CONNECTED |
 
 **Inbound:** Business header and floating bar Roaming detail; overview, countries directory and every country page.
 
@@ -486,6 +484,7 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 
 | Date | Change |
 |------|--------|
+| 2026-08-30 | Added complete source-based Additional Information blocks to Business Roaming overview and internet packs; moved the country search into Step 1; moved pack coverage inline under Top countries; removed B2B roaming quick actions and local category navigation; rounded destination chips. |
 | 2026-08-29 | Reworked the complete B2B Roaming prototype from the full content handoff, using the established B2C roaming composition: overview, searchable country directory, exact Turkiye/Georgia/Germany rates and operators, internet packs, activation rules, travel guidance and support information. |
 | 2026-08-29 | Built the complete B2B Roaming prototype slice: overview, countries directory, Turkiye, Georgia, Germany and roaming internet packs. Connected Business header, footer and floating bar entries; documented all internal and confirmed external links. |
 | 2026-08-27 | Matched Business category-link styling to Personal and restored dropdown arrows; removed the Mobile Azercell Biznes footer link; removed Business floating-popover headings, promoted Log in to Azercell Biznes and added three roaming countries; enlarged and separated Solution cards. |

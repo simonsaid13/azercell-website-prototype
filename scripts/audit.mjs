@@ -67,7 +67,7 @@ for (const file of [...cssFiles, ...htmlFiles]) {
   const text = readFileSync(file, 'utf8');
   text.split('\n').forEach((line, i) => {
     const radius = line.match(/border-radius\s*:\s*([^;]+)/);
-    if (radius && !/^0\b/.test(radius[1].trim())) {
+    if (radius && !line.includes('audit-allow-rounded') && !/^0\b/.test(radius[1].trim())) {
       fail(file, i + 1, `Non-zero border-radius: ${radius[1].trim()}`);
     }
     if (/box-shadow\s*:\s*(?!none)/.test(line)) {

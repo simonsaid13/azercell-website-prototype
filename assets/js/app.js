@@ -1313,6 +1313,7 @@
       syncUrl: wrap.getAttribute('data-roam-sync-url') === 'true',
       urlBase: wrap.getAttribute('data-roam-url-base') || '',
       showAllDefault: wrap.getAttribute('data-roam-show-all-default') === 'true',
+      hideDefaultResults: wrap.getAttribute('data-roam-hide-default-results') === 'true',
       packSupportedOnly: wrap.getAttribute('data-roam-pack-supported-only') === 'true'
     };
 
@@ -1379,6 +1380,12 @@
         return;
       }
 
+      if (config.hideDefaultResults) {
+        resultsEl.innerHTML = '';
+        if (!opts.fromUrl) syncCountryUrl(null);
+        return;
+      }
+
       renderResults(topCountriesList());
       if (!opts.fromUrl) syncCountryUrl(null);
     }
@@ -1425,6 +1432,29 @@
     });
   }
 
+  function initBusinessRoamingCoverage(root) {
+    if (!root || root.getAttribute('data-broam-coverage-ready') === 'true') return;
+    var input = root.querySelector('[data-broam-coverage-input]');
+    var rows = all(root, '[data-broam-coverage-row]');
+    var empty = root.querySelector('[data-broam-coverage-empty]');
+    if (!input || !rows.length) return;
+    root.setAttribute('data-broam-coverage-ready', 'true');
+
+    function apply() {
+      var query = (input.value || '').trim().toLowerCase();
+      var visible = 0;
+      rows.forEach(function (row) {
+        var match = !query || (row.getAttribute('data-search-text') || '').indexOf(query) !== -1;
+        row.hidden = !match;
+        if (match) visible += 1;
+      });
+      if (empty) empty.hidden = visible > 0;
+    }
+
+    input.addEventListener('input', apply);
+    apply();
+  }
+
   /* ----------------------------------------------------------------------
      Init after components mount
      ---------------------------------------------------------------------- */
@@ -1453,6 +1483,7 @@
 
     all(document, '[data-carousel]').forEach(initCarousel);
     all(document, '[data-roam-search-wrap]').forEach(initRoamingCountrySearch);
+    all(document, '[data-broam-coverage]').forEach(initBusinessRoamingCoverage);
 
     document.addEventListener('mouseover', function (event) {
       var menuHover = closest(event.target, '[data-menu-hover]');

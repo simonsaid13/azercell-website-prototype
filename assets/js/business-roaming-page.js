@@ -16,26 +16,6 @@
     return global.SiteRegistry ? global.SiteRegistry.href : function (path) { return path; };
   }
 
-  function categoryNav(href, activeId) {
-    return global.Components.render('internetCategoryNav', {
-      items: D.sections.map(function (item) {
-        return { id: item.id, label: item.label, href: href(item.path) };
-      }),
-      active: activeId,
-      ariaLabel: 'Business roaming section'
-    });
-  }
-
-  function quickActions(href) {
-    return global.Components.render('quickActions', {
-      items: [
-        { icon: '01', label: 'Countries and prices', href: href(D.routes.countries) },
-        { icon: '02', label: 'Roaming internet packs', href: href(D.routes.packs) },
-        { icon: '03', label: 'Azercell Kabinetim', href: D.KABINETIM }
-      ]
-    });
-  }
-
   function topCountryChips() {
     return D.topCountries.map(function (id) {
       var country = D.getCountry(id);
@@ -43,16 +23,28 @@
     }).filter(Boolean);
   }
 
-  function countrySearch(href, inputId, showAllDefault) {
+  function countrySearch(href, inputId, options) {
+    var opts = options || {};
     return global.Components.render('roamingCountrySearch', {
-      label: 'Enter country name',
-      hint: 'Search a destination to view the available partner networks and pay-as-you-go rates for calls, mobile internet and SMS.',
+      label: opts.label || 'Enter country name',
+      hint: opts.hint || 'Search a destination to view the available partner networks and pay-as-you-go rates for calls, mobile internet and SMS.',
       placeholder: 'Enter country name…',
       inputId: inputId,
       syncUrl: true,
       urlBase: href(D.routes.countries),
       topCountries: topCountryChips(),
-      showAllDefault: !!showAllDefault
+      showAllDefault: !!opts.showAllDefault,
+      hideDefaultResults: !!opts.hideDefaultResults,
+      className: 'cmp-broam-country-search'
+    });
+  }
+
+  function coverageTable(inputId) {
+    return global.Components.render('businessRoamingCoverageTable', {
+      inputId: inputId,
+      rows: D.supportedOperators,
+      label: 'Enter country or operator name',
+      note: 'This prototype contains Turkiye, Georgia and Germany from the wider international operator catalogue.'
     });
   }
 
@@ -83,20 +75,6 @@
         title: 'Stay connected anywhere in the world',
         body: 'Azercell Business offers practical internet pack options and pay-as-you-go roaming information for employees travelling abroad.'
       })),
-      section(quickActions(href), 'section--tight'),
-      section(
-        '<div class="cmp-roam-layout" id="roaming-catalog" data-roam-page>' +
-          categoryNav(href, 'hub') +
-          '<div class="cmp-roam-layout__body">' +
-            C.render('sectionHead', {
-              eyebrow: 'Roaming',
-              title: 'Country search',
-              body: 'Enter a destination to see available operators and current prices for calls, mobile internet and SMS.'
-            }) +
-            countrySearch(href, 'business-roaming-country-search', false) +
-          '</div>' +
-        '</div>'
-      ),
       section(
         C.render('sectionHead', {
           eyebrow: 'Roaming',
@@ -104,7 +82,7 @@
         }) +
         packCards() +
         actionRow([
-          { label: 'Check where internet packs can be used', href: D.routes.packs + '#supported-operators', variant: 'primary' },
+          { label: 'Check in which countries internet packs can be used', href: D.routes.countries, variant: 'primary' },
           { label: 'More information about the internet packs', href: D.routes.packs }
         ])
       ),
@@ -117,7 +95,14 @@
       })),
       section(
         C.render('sectionHead', { eyebrow: 'Before travel', title: 'How to use Azercell roaming?' }) +
-        C.render('businessRoamingSteps', { items: D.howToRoaming })
+        C.render('businessRoamingSteps', {
+          items: D.howToRoaming,
+          firstStepContent: countrySearch(href, 'business-roaming-country-search', {
+            label: 'Find country',
+            hint: 'Enter the destination to see available operators and current prices.',
+            hideDefaultResults: true
+          })
+        })
       ),
       section(
         C.render('sectionHead', { eyebrow: 'Roaming', title: 'Useful tips' }) +
@@ -165,29 +150,27 @@
         title: 'Countries and prices',
         body: 'Search a destination to view the available partner networks and pay-as-you-go rates for calls, mobile internet and SMS.'
       })),
-      section(quickActions(href), 'section--tight'),
       section(
-        '<div class="cmp-roam-layout" id="roaming-catalog" data-roam-page>' +
-          categoryNav(href, 'countries') +
-          '<div class="cmp-roam-layout__body">' +
+        '<div id="roaming-catalog" data-roam-page>' +
+          C.render('sectionHead', {
+            eyebrow: 'Country directory',
+            title: 'Top countries'
+          }) +
+          countrySearch(href, 'business-roaming-directory-search', { showAllDefault: true }) +
+          '<div class="cmp-broam-coverage-section" id="supported-operators">' +
             C.render('sectionHead', {
-              eyebrow: 'Country directory',
-              title: 'Top countries'
+              eyebrow: 'Internet packages in roaming',
+              title: 'Countries where internet packs are available'
             }) +
-            countrySearch(href, 'business-roaming-directory-search', true) +
+            coverageTable('business-roaming-country-coverage-search') +
           '</div>' +
         '</div>'
-      ),
-      section(
-        C.render('sectionHead', { eyebrow: 'Rates', title: 'How to read the rates' }) +
-        featureList('Rate information', D.rateReading)
       )
     ]);
   }
 
   function mountCountry(countryId) {
     var C = global.Components;
-    var href = hrefFn();
     var country = D.getCountry(countryId);
     if (!country) return mountCountries();
 
@@ -197,22 +180,18 @@
         title: country.name,
         body: 'Postpaid | Available operators'
       })),
-      section(quickActions(href), 'section--tight'),
       section(
-        '<div class="cmp-roam-layout" id="roaming-country-details">' +
-          categoryNav(href, 'countries') +
-          '<div class="cmp-roam-layout__body">' +
-            C.render('sectionHead', {
-              eyebrow: 'Partner networks',
-              title: 'Available operators'
-            }) +
-            C.render('businessRoamingOperatorList', { operators: country.operators }) +
-            C.render('sectionHead', {
-              eyebrow: 'Postpaid',
-              title: 'Rates'
-            }) +
-            C.render('businessRoamingRateTable', { country: country }) +
-          '</div>' +
+        '<div id="roaming-country-details">' +
+          C.render('sectionHead', {
+            eyebrow: 'Partner networks',
+            title: 'Available operators'
+          }) +
+          C.render('businessRoamingOperatorList', { operators: country.operators }) +
+          C.render('sectionHead', {
+            eyebrow: 'Postpaid',
+            title: 'Rates'
+          }) +
+          C.render('businessRoamingRateTable', { country: country }) +
         '</div>'
       ),
       section(
@@ -229,7 +208,6 @@
 
   function mountPacks() {
     var C = global.Components;
-    var href = hrefFn();
 
     C.mount('#page-main', [
       section(C.render('sectionHead', {
@@ -237,18 +215,14 @@
         title: 'Roaming internet packs list',
         body: 'Choose the roaming internet pack that fits the trip duration and expected data use.'
       })),
-      section(quickActions(href), 'section--tight'),
       section(
-        '<div class="cmp-roam-layout" id="roaming-catalog">' +
-          categoryNav(href, 'packs') +
-          '<div class="cmp-roam-layout__body">' +
-            C.render('sectionHead', {
-              eyebrow: 'Internet packages in roaming',
-              title: 'Choose a pack'
-            }) +
-            packCards() +
-            actionRow([{ label: 'Subscribe', href: D.SOURCE_PACKS, variant: 'primary' }]) +
-          '</div>' +
+        '<div id="roaming-catalog">' +
+          C.render('sectionHead', {
+            eyebrow: 'Internet packages in roaming',
+            title: 'Choose a pack'
+          }) +
+          packCards() +
+          actionRow([{ label: 'Subscribe', href: D.SOURCE_PACKS, variant: 'primary' }]) +
         '</div>'
       ),
       section(C.render('splitBanner', {
@@ -265,15 +239,15 @@
       section(
         '<div id="supported-operators">' +
           C.render('sectionHead', {
-            eyebrow: 'Countries where internet packs are available',
-            title: 'Supported operators',
-            body: 'The source contains a broader international operator catalogue. This prototype shows only the three countries requested for the current scope.'
+            eyebrow: 'Internet packages in roaming',
+            title: 'Countries where internet packs are available'
           }) +
-          C.render('roamingCountriesTable', {
-            rows: D.supportedOperators,
-            note: 'Only Turkiye, Georgia and Germany are included in this prototype.'
-          }) +
+          coverageTable('business-roaming-pack-coverage-search') +
         '</div>'
+      ),
+      section(
+        C.render('sectionHead', { eyebrow: 'Roaming internet packs', title: 'Additional information' }) +
+        '<div style="margin-top:var(--sp-5)">' + C.render('accordion', { items: D.packAdditionalInfo }) + '</div>'
       )
     ]);
   }

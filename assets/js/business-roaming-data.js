@@ -122,16 +122,16 @@
   ];
 
   var supportedOperators = [
-    { country: 'Turkiye', operator: 'Turkcell', networks: '2G / 3G / LTE' },
-    { country: 'Turkiye', operator: 'Turk Telekom', networks: '2G / 3G / LTE' },
-    { country: 'Turkiye', operator: 'Vodafone', networks: '2G / 3G / LTE' },
-    { country: 'Georgia', operator: 'Veon Georgia (Mobitel / Beeline)', networks: '2G / 3G / LTE' },
-    { country: 'Georgia', operator: 'Magticom', networks: '2G / 3G / LTE' },
-    { country: 'Georgia', operator: 'Cellfie Mobile', networks: '3G / LTE' },
-    { country: 'Georgia', operator: 'Silknet (Geocell)', networks: '2G / 3G / LTE' },
-    { country: 'Germany', operator: 'T-Mobile', networks: '2G / LTE' },
-    { country: 'Germany', operator: 'Vodafone (D2 GmbH)', networks: '2G / LTE' },
-    { country: 'Germany', operator: 'Telefonica (O2 / E-Plus)', networks: '2G / LTE' }
+    { country: 'Turkiye', operator: 'Turkcell', displayName: 'TR TCELL; TURKCELL; TR TURKCELL', networks: '2G / 3G / LTE' },
+    { country: 'Turkiye', operator: 'Turk Telekom', displayName: 'Turk Telekom', networks: '2G / 3G / LTE' },
+    { country: 'Turkiye', operator: 'Vodafone', displayName: 'VODAFONE TR', networks: '2G / 3G / LTE' },
+    { country: 'Georgia', operator: 'Veon Georgia (Mobitel / Beeline)', displayName: 'Beeline GE; GEO 04', networks: '2G / 3G / LTE' },
+    { country: 'Georgia', operator: 'Magticom', displayName: 'MagtiCom; 28202', networks: '2G / 3G / LTE' },
+    { country: 'Georgia', operator: 'Cellfie Mobile', displayName: 'Beeline GE; GEO 04', networks: '3G / LTE' },
+    { country: 'Georgia', operator: 'Silknet (Geocell)', displayName: 'Geocell; Geo-Geocell; 282 01', networks: '2G / 3G / LTE' },
+    { country: 'Germany', operator: 'T-Mobile', displayName: 'T-D1; D1; T-Mobile D; telekom.de; D1-Telekom', networks: '2G / LTE' },
+    { country: 'Germany', operator: 'Vodafone (D2 GmbH)', displayName: 'Vodafone.de; Vodafone', networks: '2G / LTE' },
+    { country: 'Germany', operator: 'Telefonica (O2 / E-Plus)', displayName: 'o2-de; Interkom; 26207', networks: '2G / LTE' }
   ];
 
   var howToRoaming = [
@@ -156,19 +156,62 @@
   var additionalInfo = [
     {
       question: 'How can I activate roaming?',
-      answer: 'Send START to 8808. Each SMS to 8808 costs 0.01 AZN. Corporate number owners and subscribers with Individual entrepreneur status can also request activation through the relevant written form or support.azercell.com.'
+      answer: 'Send START to 8808. Each SMS to 8808 costs 0.01 AZN. Corporate number owners and subscribers with Individual entrepreneur status can also activate roaming by completing the relevant opening or closing form or by contacting support.azercell.com. The application must be submitted in writing with an identity card.'
     },
     {
-      question: 'How can I check the balance?',
+      question: 'Where can I find information about roaming tariffs?',
+      answer: 'Enter the destination country in the search field to see its available operators and tariffs.'
+    },
+    {
+      question: 'What precautions should be taken to avoid roaming issues before travelling?',
+      answer: 'Check that Azercell has a roaming partner in the destination country. Postpaid subscribers should also confirm that the account has no outstanding charges; an empty SMS can be sent to 650 for 0.02 AZN. If connection problems occur abroad, disable 4G and select 3G because some partner networks do not support 4G or LTE.'
+    },
+    {
+      question: 'How can I check the number balance in roaming?',
       answer: 'Corporate subscribers can send BALANS to 2525 or dial *100#YES. Each SMS to 2525 costs 0.01 AZN, VAT included.'
     },
     {
-      question: 'How can I call Customer Care while roaming?',
-      answer: 'Postpaid subscribers can call (+99450) 605 00 00. The first 45 minutes are free; further time is charged at 0.70 AZN per minute, VAT included, with one-second billing.'
+      question: 'What are the rules for making calls in roaming?',
+      answer: 'Use the international dialing format: + [country code] [city code or mobile operator code] [number].'
     },
     {
-      question: 'Current price notice',
-      answer: 'The 10GB roaming internet pack has cost 75 AZN since 22 December 2025.'
+      question: 'How can I call the Customer Care Center in roaming?',
+      answer: 'Azercell postpaid subscribers can call (+99450) 605 00 00. The first 45 minutes are free; further time is charged at 0.70 AZN per minute, VAT included, with a one-second charging interval.'
+    },
+    {
+      question: 'Which actions should be taken if the internet is not working in roaming?',
+      answer: 'Check the balance, confirm roaming status in the device menu, activate 3G and add INTERNET in uppercase to the APN settings. Prepaid subscribers should also check that at least 1 AZN is available on the balance.'
+    },
+    {
+      question: 'What change took effect from 22.12.2025?',
+      answer: 'Starting from 22 December 2025, the 10GB roaming internet package costs 75 AZN.'
+    }
+  ];
+
+  var packAdditionalInfo = [
+    {
+      question: 'Is it possible to activate an Internet package while roaming abroad?',
+      answer: 'Azercell subscribers can activate an Internet package while roaming by SMS, USSD code or through the Azercell Kabinetim application.'
+    },
+    {
+      question: 'Is it possible to purchase multiple roaming internet packages at the same time?',
+      answer: 'A new roaming data pack cannot be purchased while internet data remains in the current roaming pack.'
+    },
+    {
+      question: 'How is internet data usage calculated on a roaming data pack?',
+      answer: 'The charging interval for internet usage is 1 kB.'
+    },
+    {
+      question: 'How is internet usage calculated when the package volume is exhausted?',
+      answer: 'If the included internet volume expires during a session, further use is charged according to the current tariff.'
+    },
+    {
+      question: 'Is the use of the roaming Internet package limited in case of two-way line closure?',
+      answer: 'When the subscriber line is closed unilaterally or bilaterally, use of the roaming Internet package stops automatically.'
+    },
+    {
+      question: 'What change took effect from 22.12.2025?',
+      answer: 'Starting from 22 December 2025, the 10GB roaming internet package costs 75 AZN.'
     }
   ];
 
@@ -219,6 +262,7 @@
     beforeTravel: beforeTravel,
     uponArrival: uponArrival,
     additionalInfo: additionalInfo,
+    packAdditionalInfo: packAdditionalInfo,
     rateReading: rateReading,
     packRules: packRules,
     getSection: getSection,

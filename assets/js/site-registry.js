@@ -180,20 +180,15 @@
               'https://support.azercell.com/'] },
     { path: '/business/mobile/roaming/countries-and-prices/', title: 'Countries and prices', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'built',
       links: ['/business/mobile/roaming/countries-and-prices/turkiye/', '/business/mobile/roaming/countries-and-prices/georgia/',
-              '/business/mobile/roaming/countries-and-prices/germany/', '/business/mobile/roaming/',
-              '/business/mobile/roaming/internet-packs/', 'https://kabinetim.azercell.com/'] },
+              '/business/mobile/roaming/countries-and-prices/germany/'] },
     { path: '/business/mobile/roaming/countries-and-prices/turkiye/', title: 'Turkiye', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'built',
-      links: ['/business/mobile/roaming/', '/business/mobile/roaming/countries-and-prices/',
-              '/business/mobile/roaming/internet-packs/', 'https://kabinetim.azercell.com/'] },
+      links: ['/business/mobile/roaming/internet-packs/'] },
     { path: '/business/mobile/roaming/countries-and-prices/georgia/', title: 'Georgia', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'built',
-      links: ['/business/mobile/roaming/', '/business/mobile/roaming/countries-and-prices/',
-              '/business/mobile/roaming/internet-packs/', 'https://kabinetim.azercell.com/'] },
+      links: ['/business/mobile/roaming/internet-packs/'] },
     { path: '/business/mobile/roaming/countries-and-prices/germany/', title: 'Germany', parent: '/business/mobile/roaming/countries-and-prices/', branch: 'b2b', status: 'built',
-      links: ['/business/mobile/roaming/', '/business/mobile/roaming/countries-and-prices/',
-              '/business/mobile/roaming/internet-packs/', 'https://kabinetim.azercell.com/'] },
+      links: ['/business/mobile/roaming/internet-packs/'] },
     { path: '/business/mobile/roaming/internet-packs/', title: 'Roaming internet packs', parent: '/business/mobile/roaming/', branch: 'b2b', status: 'built',
-      links: ['/business/mobile/roaming/', '/business/mobile/roaming/countries-and-prices/',
-              'https://kabinetim.azercell.com/',
+      links: ['https://kabinetim.azercell.com/',
               'https://www.azercell.com/en/corporate/mobile-communications/roaming/roaming-data-packages.html'] },
     { path: '/business/mobile/azercell-biznes/', title: 'Azercell Biznes', parent: '/business/mobile/', branch: 'b2b', status: 'planned',
       links: ['https://biznes.azercell.com'] },
@@ -980,7 +975,7 @@
       id: 'quickActions',
       name: 'Quick actions',
       group: 'Navigation blocks',
-      usedOn: ['/'].concat(B2B_ROAMING_PATHS),
+      usedOn: ['/'],
       description: 'Row of frequent jobs. Each links to a page or the external portal.',
       props: {
         items: [
@@ -1319,7 +1314,7 @@
       name: 'Internet category nav',
       group: 'Navigation blocks',
       usedOn: ['/tariffs/internet/', '/tariffs/internet/monthly/', '/tariffs/internet/weekly/', '/tariffs/internet/daily/', '/tariffs/internet/unlimited/',
-        '/tariffs/roaming/', '/tariffs/roaming/internet-packs/', '/tariffs/roaming/travel-packs/', '/tariffs/roaming/countries-and-prices/'].concat(B2B_ROAMING_PATHS),
+        '/tariffs/roaming/', '/tariffs/roaming/internet-packs/', '/tariffs/roaming/travel-packs/', '/tariffs/roaming/countries-and-prices/'],
       description: 'Links between internet pack hub and category pages, or roaming section tabs.',
       props: {
         active: 'monthly',
@@ -1561,6 +1556,19 @@
       }
     },
     {
+      id: 'businessRoamingCoverageTable',
+      name: 'Business roaming internet-pack coverage',
+      group: 'Products',
+      usedOn: ['/business/mobile/roaming/countries-and-prices/', '/business/mobile/roaming/internet-packs/'],
+      description: 'Searchable, vertically and horizontally scrollable operator table matching the live Business roaming coverage block.',
+      props: {
+        rows: [
+          { country: 'Turkiye', operator: 'Turkcell', displayName: 'TR TCELL; TURKCELL; TR TURKCELL', networks: '2G / 3G / LTE' },
+          { country: 'Germany', operator: 'T-Mobile', displayName: 'T-D1; D1; T-Mobile D', networks: '2G / LTE' }
+        ]
+      }
+    },
+    {
       id: 'businessRoamingOperatorsTable',
       name: 'Business roaming supported operators table',
       group: 'Products',
@@ -1593,7 +1601,7 @@
       id: 'roamingCountriesTable',
       name: 'Roaming supported countries table',
       group: 'Products',
-      usedOn: ['/tariffs/roaming/internet-packs/', '/business/mobile/roaming/internet-packs/'],
+      usedOn: ['/tariffs/roaming/internet-packs/'],
       description: 'Horizontally scrollable table of operators where roaming internet packs work.',
       props: { rows: [], note: 'Sample list for prototype.' }
     },
