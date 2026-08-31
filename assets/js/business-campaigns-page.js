@@ -59,6 +59,8 @@
       hero('hub'),
       legend(),
       section(copy({ eyebrow: 'Current offers', title: 'Start with an active offer or benefit' }) + cards(page.primary, 3)),
+      section(copy({ eyebrow: 'New campaigns', title: 'Latest corporate device campaign', source: 'site' }) + cards(page.newCampaigns, 2)),
+      section(copy({ eyebrow: 'Ended campaigns', title: 'Recently ended offers', source: 'site' }) + cards(page.endedTeasers, 2) + copy({ actions: [{ label: 'See all', href: D.routes.archive, variant: 'primary' }] })),
       section(copy({ eyebrow: 'Campaign catalogue', title: 'Explore every campaign group' }) + cards(page.campaignGroups, 3))
     ];
   }
@@ -69,8 +71,15 @@
       hero('why'),
       legend(),
       section(copy({ eyebrow: 'General information', title: 'A digital solutions partner', paragraphs: page.intro, source: 'site' })),
+      section(table('Contact details', [
+        { label: 'Azercell subscribers', value: '6050', source: 'site' },
+        { label: 'Other operators', value: '*6050', source: 'site' },
+        { label: 'Email', value: 'business@azercell.com', source: 'site' }
+      ], { source: 'site' }) + copy({ actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }] })),
       section(copy({ eyebrow: 'How we work', title: 'Built around business customers', source: 'site' }) + cards(page.reasons, 3)),
-      section(copy({ eyebrow: 'Our partners', title: 'More than 4,000 companies trust us with their business', paragraphs: ['Azercell supports corporate customers with connectivity, digital services and account support designed for day-to-day operations.'], source: 'site' })),
+      section(table('Presentation proof points', page.proofPoints, { source: 'deck' })),
+      section(copy({ eyebrow: 'Our partners', title: 'More than 4000 companies trust us their businesses.', paragraphs: ['Web pages, sections and articles creation, control over all photo content and pages’ look when they are available on the social network and other features'], image: 'https://www.azercell.com/assets/images/b2b/why-azercell-business/logos1.png', imageAlt: 'Companies that work with Azercell Business', source: 'site', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }] }) + copy({ title: 'Partner logo wall from the presentation', items: page.partnerNames, source: 'deck' })),
+      section(copy({ eyebrow: 'Need a digital solution?', title: 'Azercell Business can help!', paragraphs: ['Contact us for a personalised solution for your specific needs or pick a readymade offers. The possibilities are endless.'], source: 'site', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }] })),
       section(copy({ title: 'Fair use and security conditions', paragraphs: page.fairUse, source: 'site' }))
     ];
   }
@@ -81,6 +90,7 @@
       hero('wifi'),
       legend(),
       section(copy({ eyebrow: 'General information', title: 'Internet without fixed infrastructure', paragraphs: page.intro, source: 'site' }) + cards(page.benefits, 3)),
+      section(copy({ eyebrow: 'Devices', title: 'Choose the connection format', source: 'site' }) + cards(page.deviceDescriptions, 2)),
       section(
         '<div class="grid grid--2">' +
           table('Mi-Fi', page.mifi, { labelHeading: 'Internet volume', valueHeading: 'Monthly fee, AZN', source: 'site' }) +
@@ -88,6 +98,9 @@
         '</div>' +
         copy({ paragraphs: [page.note], source: 'site', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }] })
       ),
+      section(copy({ eyebrow: 'Presentation conditions', title: 'Commercial terms from the offer deck', items: page.deckConditions, source: 'deck' })),
+      section(copy({ eyebrow: 'Need technical support?', title: 'We’re here to help!', paragraphs: ['Not sure about a ready-made solution or require a customised one? Our professional customer care consultants have all the answers.'], source: 'site', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }] })),
+      section(copy({ title: 'To the attention of Azercell corporate subscribers!', paragraphs: [page.suspensionNotice], source: 'site' })),
       section(render('campaignFaq', { title: 'Additional information', items: page.faq }))
     ];
   }
@@ -145,7 +158,8 @@
         table('Illustrative device list', page.devices, { labelHeading: 'Device', valueHeading: 'Illustrative payment', source: 'dummy' }) +
         table('Illustrative eligibility and terms', page.terms, { source: 'dummy' }) +
       '</div>'),
-      section(render('campaignSteps', { title: 'Illustrative application process', items: page.steps, source: 'dummy' }))
+      section(render('campaignSteps', { title: 'Illustrative application process', items: page.steps, source: 'dummy' })),
+      section(copy({ actions: page.actions, source: 'deck' }))
     ];
   }
 
@@ -166,7 +180,8 @@
       hero('club'),
       legend(),
       section(copy({ eyebrow: 'General information', title: 'A business loyalty ecosystem', paragraphs: page.intro, source: 'site' })),
-      section(copy({ eyebrow: 'Member benefits', title: 'More value from the relationship', source: 'site' }) + cards(page.cards, 2))
+      section(copy({ eyebrow: 'Member benefits', title: 'More value from the relationship', source: 'site' }) + cards(page.cards, 2)),
+      section(copy({ eyebrow: 'Need a digital solution?', title: 'Azercell Business can help!', paragraphs: ['Contact us for a personalised solution for your specific needs or pick a readymade offers. The possibilities are endless.'], source: 'site', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }] }))
     ];
   }
 

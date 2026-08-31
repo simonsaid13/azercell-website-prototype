@@ -30,14 +30,25 @@
     hub: {
       hero: {
         eyebrow: 'Campaigns',
-        title: 'Business-oriented limited-time offers',
+        title: 'Business-oriented limited-time offers for SMEs and corporations',
         body: 'Special corporate offers available only to our valued business clients. Discover how Azercell can help your business connect and grow.',
-        source: 'site'
+        source: 'site',
+        image: 'https://www.azercell.com/assets/cache/webp/theme/images/B2B/tariffs/background_new.jpg.webp',
+        imageAlt: 'Azercell Business campaigns'
       },
       primary: [
         { eyebrow: 'Start here', title: 'Why Azercell Business?', body: 'See how Azercell supports business connectivity and digital transformation.', href: routes.why, source: 'site' },
-        { eyebrow: 'Active campaign', title: 'My Business Wi-Fi', body: 'Mi-Fi and WTTx internet offers from 40 AZN per month.', href: routes.wifi, source: 'site' },
+        { eyebrow: 'Active campaign', title: 'My Business Wi-Fi', body: 'Mi-Fi and WTTx internet offers from 40 AZN per month.', image: 'https://www.azercell.com/assets/images/b2b/home-page/wifi/updated/desktop.jpg', imageAlt: 'My Business Wi-Fi', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }, { label: 'More details', href: routes.wifi }], source: 'site' },
         { eyebrow: 'Loyalty', title: 'My Business Club', body: 'Privileges, academy discounts and corporate event invitations.', href: routes.club, source: 'site' }
+      ],
+      newCampaigns: [
+        { title: 'iPhone 16 and iPhone 17 Campaigns for Corporate Customers', body: 'Special device conditions for corporate customers.', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/korporativ-metrilr-ecen-yeni-iphone-16-kampaniyasi.html', image: 'https://www.azercell.com/assets/cache/webpb2b/ended-campaigns/b2b_iphone17_450x240.jpg.webp', imageAlt: 'iPhone 16 and iPhone 17 campaign', source: 'site' }
+      ],
+      endedTeasers: [
+        { title: '20GB 20 AZN (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/20-gb-20-azn.html', source: 'site' },
+        { title: 'New company campaign - GM (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/campaign-new-company-gm.html', source: 'site' },
+        { title: 'General Mobile (Ended campaign) Android One', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/general-mobile-android-one.html', source: 'site' },
+        { title: 'Lenovo (Ended campaign) A2016 (LTE)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/lenovo-a2016-lte.html', source: 'site' }
       ],
       campaignGroups: [
         { title: 'Acquisition campaigns', body: 'MNP bundles with 60GB or 80GB and inclusive minutes.', href: routes.acquisition, source: 'deck' },
@@ -54,6 +65,8 @@
         title: "Future's close to you",
         body: 'Digital technology, voice, data, Internet of Things and communications that help enterprises stay connected and grow.',
         source: 'site',
+        image: 'https://www.azercell.com/theme/images/B2B/why-azercell/background.jpg?v=1',
+        imageAlt: 'Azercell Business digital solutions',
         actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }]
       },
       intro: [
@@ -62,10 +75,20 @@
         'We are a large team with a 23-year success story, opening new opportunities for business customers in a rapidly changing digital world.'
       ],
       reasons: [
-        { title: 'Customer centric', body: 'Customers are what we are here for. We tailor solutions to SMEs, professionals and large enterprises.', source: 'site' },
-        { title: 'One stop shop', body: 'A broad product portfolio helps businesses bring connectivity and digital services together.', source: 'site' },
-        { title: 'Simple', body: 'Stay focused on your core business while Azercell keeps the connection trouble-free and easy to use.', source: 'site' }
+        { title: 'Customer centric', body: 'Customers are what we are here for. We always broaden our product portfolio to meet the demand of businesses. We tailor solutions to SMEs, professionals and large enterprises.', image: 'https://www.azercell.com/theme/images/B2B/why-azercell/mockups-2.png', imageAlt: 'Customer-centric business experience', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }], source: 'site' },
+        { title: 'One stop shop', body: 'We always broaden our product portfolio to meet the demand of businesses. We tailor solutions to SMEs, professionals and large enterprises.', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }], source: 'site' },
+        { title: 'Simple', body: 'Just stay focused on your core business as we always ensure trouble-free operation with the connection. Our services are highly innovative technologies yet simple in use.', image: 'https://www.azercell.com/assets/images/b2b/why-azercell-business/simple(2).png', imageAlt: 'Simple Azercell Business services', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }], source: 'site' }
       ],
+      contact: ['6050 for Azercell subscribers', '*6050 for subscribers of other operators', 'business@azercell.com'],
+      proofPoints: [
+        { label: 'Market leadership', value: '29 years', source: 'deck' },
+        { label: 'NPS', value: '80%', source: 'deck' },
+        { label: 'Market share', value: '48%', source: 'deck' },
+        { label: 'B2B share', value: '52%', source: 'deck' },
+        { label: 'Geographical coverage', value: '94.6%', source: 'deck' },
+        { label: 'Population coverage', value: '98.4%', source: 'deck' }
+      ],
+      partnerNames: ['Government organisations', 'SOCAR', 'AZPETROL', 'Schlumberger', 'LUKOIL', 'Azerbaijan Airlines', 'Silk Way', 'Pasha Holding', 'Leading banks'],
       fairUse: [
         'Azercell Telecom may fully or partially restrict or suspend a service when subscriber activity violates fair-use or security requirements, involves fraud, threatens financial interests or business reputation, or falls under other cases in legislation or the agreement.',
         'Suspicious transactions and security threats may be monitored, and subscribers may be informed by phone, SMS or other means. Restrictions may be lifted after an investigation based on the subscriber’s request.'
@@ -78,6 +101,8 @@
         title: 'Keep your business connected',
         body: 'Share mobile internet with customers or employees through a portable Mi-Fi or fixed WTTx modem, without physical infrastructure.',
         source: 'site',
+        image: 'https://www.azercell.com/assets/cache/webpb2b/home-page/wifi/hero(2).jpg.webp',
+        imageAlt: 'My Business Wi-Fi modem offer',
         stats: [
           { value: 'From 40 AZN', label: 'Monthly fee' },
           { value: 'Up to 210GB', label: 'Internet' },
@@ -87,7 +112,8 @@
       },
       intro: [
         'Azercell Business offers My Business Wi-Fi to corporate subscribers using Mi-Fi and WTTx modems. Flexible data packs suit small, medium and individual enterprises and can be changed during the 12-month period.',
-        'Mi-Fi is a portable modem that shares Wi-Fi with up to 10 devices. WTTx shares internet with up to 32 devices and is designed for plug-and-play installation.'
+        'Mi-Fi is a portable USB modem capable of sharing the internet between 10 devices via Wi-Fi. It can operate autonomously without plugging into any device or port.',
+        'WTTx shares internet with up to 32 devices via Wi-Fi. It operates autonomously, is easy to install with plug and play, requires no additional technical equipment and is an ideal solution for areas with weak network coverage or no network cables.'
       ],
       benefits: [
         { title: 'Advantageous', body: 'Receive the device without pre-payment when the selected internet package is paid.', source: 'site' },
@@ -103,12 +129,22 @@
         { label: '110 GB', value: '50 AZN' },
         { label: '210 GB', value: '70 AZN' }
       ],
+      deviceDescriptions: [
+        { title: 'Mi-Fi', body: 'Portable USB modem · up to 10 connected devices · autonomous operation without a device or port.', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }], source: 'site' },
+        { title: 'WTTx', body: 'Up to 32 connected devices · autonomous plug-and-play installation · no extra technical equipment · suitable for weak coverage and locations without network cables.', actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }], source: 'site' }
+      ],
+      deckConditions: [
+        'By paying a monthly fee, the subscriber can obtain an internet package and one of the 4G devices.',
+        'When the package is used up, internet service is suspended until the 30-day renewal date. The package can also be renewed automatically without waiting.',
+        'The leasing period is 12 months; fixed monthly prices include VAT.'
+      ],
       note: 'The campaign applies only to new subscribers activated after 02.06.2025; existing terms remain unchanged for current customers.',
+      suspensionNotice: 'From March 31, 2022, the provision of Wi-Fi USB (4G USB modem) devices to corporate subscribers is suspended as part of the My Business Wi-Fi offers.',
       faq: [
         { question: 'Will I need a new number?', answer: 'One prepaid line on the Data tariff is provided with every device. The offer applies only to the number supplied with that device.', source: 'site' },
         { question: 'What happens when the included data is used up?', answer: 'Internet access stops until the next renewal period.', source: 'site' },
         { question: 'Can I purchase an additional internet pack?', paragraphs: ['Yes. Subscribers may purchase non-recurrent packs.', 'If an additional pack is ordered, the most recently ordered pack is activated. Monthly recurring and short-time packages are not available with the offer.'], source: 'site' },
-        { question: 'Who provides technical assistance?', paragraphs: ['Akhundoff Networks', 'Phone: +994 51 259 81 42 or +994 50 704 24 24. Address: AZ1000, Bul-Bul Avenue 8a.'], source: 'site' }
+        { question: 'Who provides technical assistance?', paragraphs: ['Akhundoff Networks', 'Phone: +994512 598 14 26 or +99450 704 24 24. Address: AZ1000, Bul-Bul Avenue 8a.'], source: 'site' }
       ]
     },
 
@@ -121,8 +157,8 @@
         actions: [{ label: 'Check eligibility', href: 'mailto:business@azercell.com', variant: 'primary' }]
       },
       cards: [
-        { title: 'MNP 60GB Campaign', body: '60GB, 2,000 all-net minutes, 50 international minutes and unlimited corporate calls.', meta: ['26 AZN per billing cycle', 'Not a mass offer'], href: routes.mnp60, source: 'deck' },
-        { title: 'MNP 80GB Campaign', body: '80GB, 5,000 all-net minutes, 100 international minutes and unlimited corporate calls.', meta: ['46 AZN per billing cycle', 'Not a mass offer'], href: routes.mnp80, source: 'deck' }
+        { title: 'MNP 60GB Campaign', body: '60GB, 2,000 all-net minutes, 50 international minutes and unlimited corporate calls.', meta: ['26 AZN per billing cycle', 'Billing period: 1 billcycle', 'Not a mass offer'], href: routes.mnp60, source: 'deck' },
+        { title: 'MNP 80GB Campaign', body: '80GB, 5,000 all-net minutes, 100 international minutes and unlimited corporate calls.', meta: ['46 AZN per billing cycle', 'Billing period: 1 billcycle', 'Not a mass offer'], href: routes.mnp80, source: 'deck' }
       ],
       snapshot: [
         { label: 'Eligibility', value: 'Companies porting at least 5 active business numbers to Azercell.', source: 'dummy' },
@@ -152,6 +188,7 @@
         { label: 'Corporate calls', value: 'Unlimited', source: 'deck' },
         { label: 'Availability', value: 'Not a mass offer', source: 'deck' },
         { label: 'Launch', value: 'Summer 2025', source: 'deck' },
+        { label: 'Billing period', value: '1 billcycle', source: 'deck' },
         { label: 'Eligibility', value: 'Business customers porting 5 or more active numbers.', source: 'dummy' },
         { label: 'Campaign period', value: 'Applications accepted until 31 December 2026.', source: 'dummy' },
         { label: 'Commitment', value: '12-month minimum term per number; early cancellation fee equals the remaining monthly fees, capped at 78 AZN.', source: 'dummy' }
@@ -182,6 +219,7 @@
         { label: 'International minutes', value: '100', source: 'deck' },
         { label: 'Corporate calls', value: 'Unlimited', source: 'deck' },
         { label: 'Availability', value: 'Not a mass offer', source: 'deck' },
+        { label: 'Billing period', value: '1 billcycle', source: 'deck' },
         { label: 'Launch date', value: '15 September 2026.', source: 'dummy' },
         { label: 'Eligibility', value: 'Business customers porting 10 or more active numbers.', source: 'dummy' },
         { label: 'Campaign period', value: '15 September 2026–31 January 2027.', source: 'dummy' },
@@ -202,8 +240,8 @@
         source: 'dummy'
       },
       cards: [
-        { title: 'iPhone 16 campaign for B2B', body: 'Apple devices with zero initial payment and interest-free instalments.', meta: ['My Business 12GB–100GB', '12 or 24 months'], href: routes.iphone16, source: 'deck' },
-        { title: 'iPhone 17 campaign for B2B', body: 'Current-generation Apple devices combined with a My Business tariff.', meta: ['My Business 12GB–100GB', '12 or 24 months'], href: routes.iphone17, source: 'deck' },
+        { title: 'iPhone 16 campaign for B2B', body: 'Apple devices with zero initial payment and interest-free instalments.', meta: ['My Business 12GB–100GB', '12 or 24 months', 'For new and existing customers'], href: routes.iphone16, source: 'deck' },
+        { title: 'iPhone 17 campaign for B2B', body: 'Current-generation Apple devices combined with a My Business tariff.', meta: ['My Business 12GB–100GB', '12 or 24 months', 'For new and existing customers'], href: routes.iphone17, source: 'deck' },
         { title: 'Smartphone Leasing Campaign', body: 'Selected Business Family plans with a structured credit mechanism.', meta: ['Corporate customers', '12–24 months'], href: routes.leasing, source: 'deck' }
       ]
     },
@@ -216,12 +254,13 @@
         source: 'site'
       },
       paragraphs: [
+        'This campaign offers users reliable connectivity, a variety of tariff options, and interest-free payment opportunities tailored to their needs. At the same time, it enriches the user experience through products and services that provide additional value.',
         'iPhone 16 models are offered under special and favourable conditions. Subscribers can obtain a device with zero initial payment and interest-free monthly instalments.',
         'Companies choose a relevant My Business tariff package. Included internet and voice minutes help employees stay connected and support effective business processes.'
       ],
       bullets: [
         'iPhone 16, iPhone 16 Plus, iPhone 16 Pro and iPhone 16 Pro Max.',
-        'My Business 12GB, 20GB, 60GB or 100GB tariff plans.',
+        { text: 'My Business 12GB, 20GB, 60GB or 100GB tariff plans.', href: 'https://www.azercell.com/en/corporate/mobile-communications/business-tariffs.html' },
         'Contract options for 12 or 24 months.'
       ]
     },
@@ -234,12 +273,13 @@
         source: 'site'
       },
       paragraphs: [
+        'This campaign offers users reliable connectivity, a variety of tariff options, and interest-free payment opportunities tailored to their needs. At the same time, it enriches the user experience through products and services that provide additional value.',
         'iPhone 17 models are offered under special and favourable conditions. Subscribers can obtain a device with zero initial payment and interest-free monthly instalments.',
         'Companies choose a relevant My Business tariff package. Included internet and voice minutes help employees stay connected and support effective business processes.'
       ],
       bullets: [
         'iPhone 17, iPhone 17 Pro, iPhone 17 Pro Max and iPhone Air.',
-        'My Business 12GB, 20GB, 60GB or 100GB tariff plans.',
+        { text: 'My Business 12GB, 20GB, 60GB or 100GB tariff plans.', href: 'https://www.azercell.com/en/corporate/mobile-communications/business-tariffs.html' },
         'Contract options for 12 or 24 months.'
       ]
     },
@@ -267,13 +307,14 @@
         { title: 'Choose devices', body: 'Select the model, quantity and eligible tariff lines.', source: 'dummy' },
         { title: 'Complete the credit check', body: 'Provide the company extract, director ID and signed application.', source: 'dummy' },
         { title: 'Collect and activate', body: 'Sign the device schedule and collect devices from the selected office.', source: 'dummy' }
-      ]
+      ],
+      actions: [{ label: 'Contact Azercell Business', href: 'mailto:business@azercell.com', variant: 'primary' }]
     },
 
     discounts: {
       hero: {
-        eyebrow: 'My Business tariff discounts',
-        title: 'Flexible discounts for eligible corporate lines',
+        eyebrow: 'B2B Discounts',
+        title: 'My Business Tariffs Flexible and SN code discounts',
         body: 'Discounts may apply to My Business tariffs with or without a penalty mechanism.',
         source: 'deck'
       },
@@ -300,6 +341,8 @@
         title: 'The privilege you deserve',
         body: 'An exclusive programme for corporate clients with special discounts, learning opportunities and event invitations.',
         source: 'site',
+        image: 'https://www.azercell.com/assets/cache/webpb2b/phonescreenen.png.webp',
+        imageAlt: 'My Business Club on a smartphone',
         actions: [{ label: 'Contact us', href: 'mailto:business@azercell.com', variant: 'primary' }]
       },
       intro: [
@@ -309,7 +352,7 @@
       ],
       cards: [
         { title: 'My Business Loyalty', body: 'Special member discounts across selected Azercell Business offers.', source: 'site' },
-        { title: 'Azercell Academy', body: 'Exclusive discounts on professional learning opportunities.', source: 'site' },
+        { title: 'Azercell Academy', body: 'Exclusive discounts on professional learning opportunities.', href: 'https://www.azercell.com/en/about-us/azercell_academy.html', linkLabel: 'Visit Azercell Academy', source: 'site' },
         { title: 'Corporate events', body: 'Invitations to selected events for the business community.', source: 'site' },
         { title: 'Virtual Wallet', body: 'Invoice-based bonuses that can later support bill or device payments.', href: routes.wallet, source: 'deck' }
       ]
@@ -349,13 +392,13 @@
         source: 'site'
       },
       items: [
-        { title: 'Lenovo (Ended campaign) A2016 (LTE)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/lenovo-a2016-lte.html', linkLabel: 'Original page', source: 'site' },
-        { title: 'General Mobile (Ended campaign) Android One', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/general-mobile-android-one.html', linkLabel: 'Original page', source: 'site' },
-        { title: '20GB 20 AZN (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/20-gb-20-azn.html', linkLabel: 'Original page', source: 'site' },
-        { title: 'iPhone 16 and iPhone 17 Campaigns for Corporate Customers', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/korporativ-metrilr-ecen-yeni-iphone-16-kampaniyasi.html', linkLabel: 'Original page', source: 'site' },
-        { title: 'My Business Wi-Fi (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/biznesim-wifi.html', linkLabel: 'Original page', source: 'site' },
-        { title: 'New company campaign - GM (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/campaign-new-company-gm.html', linkLabel: 'Original page', source: 'site' },
-        { title: 'New company campaign - Lenovo (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/campaign-new-company-lenovo.html', linkLabel: 'Original page', source: 'site' }
+        { title: 'Lenovo (Ended campaign) A2016 (LTE)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/lenovo-a2016-lte.html', image: 'https://www.azercell.com/assets/cache/webpb2b/ended-campaigns/lenovo-1.png.webp', imageAlt: 'Lenovo A2016 LTE', linkLabel: 'Original page', source: 'site' },
+        { title: 'General Mobile (Ended campaign) Android One', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/general-mobile-android-one.html', image: 'https://www.azercell.com/assets/cache/webpb2b/ended-campaigns/general-mobile.png.webp', imageAlt: 'General Mobile Android One', linkLabel: 'Original page', source: 'site' },
+        { title: '20GB 20 AZN (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/20-gb-20-azn.html', image: 'https://www.azercell.com/assets/cache/webpb2b/ended-campaigns/20-gb-20-azn.png.webp', imageAlt: '20GB for 20 AZN', linkLabel: 'Original page', source: 'site' },
+        { title: 'iPhone 16 and iPhone 17 Campaigns for Corporate Customers', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/korporativ-metrilr-ecen-yeni-iphone-16-kampaniyasi.html', image: 'https://www.azercell.com/assets/cache/webpb2b/ended-campaigns/b2b_iphone17_450x240.jpg.webp', imageAlt: 'iPhone campaign', linkLabel: 'Original page', source: 'site' },
+        { title: 'My Business Wi-Fi (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/biznesim-wifi.html', image: 'https://www.azercell.com/assets/cache/webpb2b/home-page/wifi/252x322_v1(1).png.webp', imageAlt: 'My Business Wi-Fi', linkLabel: 'Original page', source: 'site' },
+        { title: 'New company campaign - GM (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/campaign-new-company-gm.html', image: 'https://www.azercell.com/assets/cache/webpb2b/ended-campaigns/new-company-gm.png.webp', imageAlt: 'New company campaign General Mobile', linkLabel: 'Original page', source: 'site' },
+        { title: 'New company campaign - Lenovo (Ended campaign)', href: 'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/campaign-new-company-lenovo.html', image: 'https://www.azercell.com/assets/cache/webpb2b/ended-campaigns/new-company-lenovo.png.webp', imageAlt: 'New company campaign Lenovo', linkLabel: 'Original page', source: 'site' }
       ]
     }
   };

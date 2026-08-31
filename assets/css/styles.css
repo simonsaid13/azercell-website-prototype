@@ -4647,6 +4647,20 @@ body:has(.cmp-nav__footer--inverse) #page-main > :first-child :focus-visible,
 
 .cmp-campaign-hero__body { max-width: 52rem; }
 
+.cmp-campaign-hero__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.cmp-campaign-hero__image {
+  width: 100%;
+  max-height: 320px;
+  border: 1px solid currentColor;
+  object-fit: cover;
+  aspect-ratio: 16 / 10;
+}
+
 .cmp-campaign-hero__back {
   width: max-content;
   padding-bottom: var(--sp-1);
@@ -4704,6 +4718,27 @@ body:has(.cmp-nav__footer--inverse) #page-main > :first-child :focus-visible,
 .cmp-campaign-card:hover,
 .cmp-campaign-card:focus-visible { background: var(--c-fill-soft); }
 
+.cmp-campaign-card__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid currentColor;
+  object-fit: cover;
+}
+
+.cmp-campaign-card .actions { margin-top: auto; }
+
+.cmp-campaign-card.campaign-source--deck .btn,
+.cmp-campaign-copy.campaign-source--deck .btn {
+  border-color: currentColor;
+  color: var(--c-source-deck);
+}
+
+.cmp-campaign-card.campaign-source--dummy .btn,
+.cmp-campaign-copy.campaign-source--dummy .btn {
+  border-color: currentColor;
+  color: var(--c-source-dummy);
+}
+
 .cmp-campaign-card__meta,
 .cmp-campaign-copy__list {
   display: flex;
@@ -4735,6 +4770,20 @@ body:has(.cmp-nav__footer--inverse) #page-main > :first-child :focus-visible,
   flex-direction: column;
   gap: var(--sp-4);
   max-width: 64rem;
+}
+
+.cmp-campaign-copy__image {
+  width: 100%;
+  max-height: 28rem;
+  border: 1px solid currentColor;
+  object-fit: contain;
+  background: var(--c-fill-soft);
+}
+
+.cmp-campaign-copy__list a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .cmp-campaign-table {

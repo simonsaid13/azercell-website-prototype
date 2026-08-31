@@ -2390,10 +2390,13 @@
             (props.body ? '<p class="t-lead cmp-campaign-hero__body">' + esc(props.body) + '</p>' : '') +
             actions(props.actions) +
           '</div>' +
-          (props.stats && props.stats.length
-            ? '<dl class="cmp-campaign-hero__stats">' + props.stats.map(function (item) {
+          ((props.image || (props.stats && props.stats.length))
+            ? '<div class="cmp-campaign-hero__aside">' +
+              (props.image ? '<img class="cmp-campaign-hero__image" src="' + esc(props.image) + '" alt="' + esc(props.imageAlt || '') + '" loading="eager">' : '') +
+              (props.stats && props.stats.length ? '<dl class="cmp-campaign-hero__stats">' + props.stats.map(function (item) {
                 return '<div><dt class="t-small">' + esc(item.label) + '</dt><dd class="t-h2">' + esc(item.value) + '</dd></div>';
-              }).join('') + '</dl>'
+              }).join('') + '</dl>' : '') +
+              '</div>'
             : '') +
         '</div>' +
       '</section>'
@@ -2422,6 +2425,7 @@
           var external = href && /^https?:/.test(href);
           var sourceClass = campaignSourceClass(item.source);
           var inner =
+            (item.image ? '<img class="cmp-campaign-card__image" src="' + esc(item.image) + '" alt="' + esc(item.imageAlt || '') + '" loading="lazy">' : '') +
             '<div class="stack">' +
               (item.eyebrow ? '<p class="t-label">' + esc(item.eyebrow) + '</p>' : '') +
               '<h3 class="t-h2">' + esc(item.title) + '</h3>' +
@@ -2432,6 +2436,7 @@
                   }).join('') + '</ul>'
                 : '') +
             '</div>' +
+            (!href && item.actions ? actions(item.actions) : '') +
             (href ? '<span class="t-label cmp-campaign-card__link">' + esc(item.linkLabel || 'View details') + ' &#8594;</span>' : '');
           if (!href) return '<article class="cmp-campaign-card ' + sourceClass + '">' + inner + '</article>';
           return '<a class="cmp-campaign-card ' + sourceClass + '" href="' + esc(href) + '"' +
@@ -2445,6 +2450,7 @@
     var sourceClass = campaignSourceClass(props.source);
     return (
       '<div class="cmp-campaign-copy ' + sourceClass + '">' +
+        (props.image ? '<img class="cmp-campaign-copy__image" src="' + esc(props.image) + '" alt="' + esc(props.imageAlt || '') + '" loading="lazy">' : '') +
         (props.eyebrow ? '<p class="t-label">' + esc(props.eyebrow) + '</p>' : '') +
         (props.title ? '<h2 class="t-h1">' + esc(props.title) + '</h2>' : '') +
         (props.subtitle ? '<h3 class="t-h2">' + esc(props.subtitle) + '</h3>' : '') +
@@ -2453,7 +2459,11 @@
         }).join('') +
         (props.items && props.items.length
           ? '<ul class="cmp-campaign-copy__list">' + props.items.map(function (item) {
-              return '<li class="t-body ' + campaignSourceClass(item.source || props.source) + '">' + esc(item.text || item) + '</li>';
+              var label = item && item.text ? item.text : item;
+              var href = item && item.href ? registryHref(item.href) : '';
+              return '<li class="t-body ' + campaignSourceClass((item && item.source) || props.source) + '">' +
+                (href ? '<a href="' + esc(href) + '"' + (/^https?:/.test(href) ? ' target="_blank" rel="noopener"' : '') + '>' + esc(label) + '</a>' : esc(label)) +
+              '</li>';
             }).join('') + '</ul>'
           : '') +
         actions(props.actions) +
