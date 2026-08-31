@@ -36,6 +36,23 @@
     '/business/mobile/roaming/internet-packs/'
   ];
 
+  var B2B_CAMPAIGN_PATHS = [
+    '/business/campaigns/',
+    '/business/campaigns/why-azercell-business/',
+    '/business/campaigns/my-business-wifi/',
+    '/business/campaigns/acquisition-campaigns/',
+    '/business/campaigns/acquisition-campaigns/mnp-60gb/',
+    '/business/campaigns/acquisition-campaigns/mnp-80gb/',
+    '/business/campaigns/devices-and-financing/',
+    '/business/campaigns/devices-and-financing/iphone-16-for-b2b/',
+    '/business/campaigns/devices-and-financing/iphone-17-for-b2b/',
+    '/business/campaigns/devices-and-financing/smartphone-leasing/',
+    '/business/campaigns/my-business-tariff-discounts/',
+    '/business/campaigns/my-business-club/',
+    '/business/campaigns/my-business-club/virtual-wallet/',
+    '/business/campaigns/archive/'
+  ];
+
   var PERSONAL_CHROME_PATHS = [
     '/',
     '/join-azercell/transfer-number/',
@@ -162,6 +179,7 @@
       links: ['/', '/about/', '/business/mobile/', '/business/connectivity/', '/business/digital-solutions/', '/business/iot/',
               '/business/fleet-field-operations/', '/business/automation-management/',
               '/business/customer-engagement/', '/business/campaigns/', '/business/support/',
+              '/business/campaigns/my-business-wifi/', '/business/campaigns/devices-and-financing/',
               'https://biznes.azercell.com'] },
     { path: '/business/mobile/', title: 'Mobile', parent: '/business/', branch: 'b2b', status: 'planned' },
     { path: '/business/mobile/tariffs/', title: 'My Business tariff plans', parent: '/business/mobile/', branch: 'b2b', status: 'planned' },
@@ -215,11 +233,49 @@
     { path: '/business/customer-engagement/mobile-marketing/', title: 'Mobile Marketing', parent: '/business/customer-engagement/', branch: 'b2b', status: 'planned' },
     { path: '/business/customer-engagement/bulk-sms/', title: 'Bulk & Profile SMS', parent: '/business/customer-engagement/', branch: 'b2b', status: 'planned' },
     { path: '/business/customer-engagement/content-services/', title: 'Call Signature / Content Services', parent: '/business/customer-engagement/', branch: 'b2b', status: 'planned' },
-    { path: '/business/campaigns/', title: 'Campaigns', parent: '/business/', branch: 'b2b', status: 'planned' },
-    { path: '/business/campaigns/my-business-wifi/', title: 'My Business Wi-Fi', parent: '/business/campaigns/', branch: 'b2b', status: 'planned' },
-    { path: '/business/campaigns/my-business-club/', title: 'My Business Club', parent: '/business/campaigns/', branch: 'b2b', status: 'planned' },
-    { path: '/business/campaigns/archive/', title: 'Campaigns archive', parent: '/business/campaigns/', branch: 'b2b', status: 'planned' },
-    { path: '/business/campaigns/why-azercell-business/', title: 'Why Azercell Business?', parent: '/business/campaigns/', branch: 'b2b', status: 'planned' },
+    { path: '/business/campaigns/', title: 'Campaigns', parent: '/business/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/why-azercell-business/', '/business/campaigns/my-business-wifi/',
+              '/business/campaigns/acquisition-campaigns/', '/business/campaigns/devices-and-financing/',
+              '/business/campaigns/my-business-tariff-discounts/', '/business/campaigns/my-business-club/',
+              '/business/campaigns/my-business-club/virtual-wallet/', '/business/campaigns/archive/'] },
+    { path: '/business/campaigns/why-azercell-business/', title: 'Why Azercell Business?', parent: '/business/campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/my-business-wifi/', title: 'My Business Wi-Fi', parent: '/business/campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/acquisition-campaigns/', title: 'Acquisition campaigns', parent: '/business/campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/', '/business/campaigns/acquisition-campaigns/mnp-60gb/',
+              '/business/campaigns/acquisition-campaigns/mnp-80gb/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/acquisition-campaigns/mnp-60gb/', title: 'MNP 60GB Campaign', parent: '/business/campaigns/acquisition-campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/acquisition-campaigns/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/acquisition-campaigns/mnp-80gb/', title: 'MNP 80GB Campaign', parent: '/business/campaigns/acquisition-campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/acquisition-campaigns/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/devices-and-financing/', title: 'Devices & financing', parent: '/business/campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/', '/business/campaigns/devices-and-financing/iphone-16-for-b2b/',
+              '/business/campaigns/devices-and-financing/iphone-17-for-b2b/',
+              '/business/campaigns/devices-and-financing/smartphone-leasing/'] },
+    { path: '/business/campaigns/devices-and-financing/iphone-16-for-b2b/', title: 'iPhone 16 campaign for B2B', parent: '/business/campaigns/devices-and-financing/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/devices-and-financing/', '/business/campaigns/devices-and-financing/iphone-17-for-b2b/',
+              '/business/campaigns/devices-and-financing/smartphone-leasing/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/devices-and-financing/iphone-17-for-b2b/', title: 'iPhone 17 campaign for B2B', parent: '/business/campaigns/devices-and-financing/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/devices-and-financing/', '/business/campaigns/devices-and-financing/iphone-16-for-b2b/',
+              '/business/campaigns/devices-and-financing/smartphone-leasing/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/devices-and-financing/smartphone-leasing/', title: 'Smartphone Leasing Campaign', parent: '/business/campaigns/devices-and-financing/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/devices-and-financing/'] },
+    { path: '/business/campaigns/my-business-tariff-discounts/', title: 'My Business tariff discounts', parent: '/business/campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/my-business-club/', title: 'My Business Club', parent: '/business/campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/', '/business/campaigns/my-business-club/virtual-wallet/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/my-business-club/virtual-wallet/', title: 'Virtual Wallet', parent: '/business/campaigns/my-business-club/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/my-business-club/', 'mailto:business@azercell.com'] },
+    { path: '/business/campaigns/archive/', title: 'Campaigns archive', parent: '/business/campaigns/', branch: 'b2b', status: 'built',
+      links: ['/business/campaigns/',
+              'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/lenovo-a2016-lte.html',
+              'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/general-mobile-android-one.html',
+              'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/20-gb-20-azn.html',
+              'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/korporativ-metrilr-ecen-yeni-iphone-16-kampaniyasi.html',
+              'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/biznesim-wifi.html',
+              'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/campaign-new-company-gm.html',
+              'https://www.azercell.com/en/corporate/mobile-communications/campaigns/ended-campaigns/campaign-new-company-lenovo.html'] },
     { path: '/business/support/', title: 'Support', parent: '/business/', branch: 'b2b', status: 'planned' },
     { path: '/business/support/help/', title: 'Help', parent: '/business/support/', branch: 'b2b', status: 'planned' },
     { path: '/business/support/talk-to-support/', title: 'Talk to Support', parent: '/business/support/', branch: 'b2b', status: 'planned' },
@@ -650,6 +706,9 @@
         items: [
           { label: 'Why Azercell Business?', href: href('/business/campaigns/why-azercell-business/') },
           { label: 'My Business Wi-Fi', href: href('/business/campaigns/my-business-wifi/') },
+          { label: 'Acquisition campaigns', href: href('/business/campaigns/acquisition-campaigns/') },
+          { label: 'Devices & financing', href: href('/business/campaigns/devices-and-financing/') },
+          { label: 'My Business tariff discounts', href: href('/business/campaigns/my-business-tariff-discounts/') },
           { label: 'My Business Club', href: href('/business/campaigns/my-business-club/') },
           { label: 'Campaigns archive', href: href('/business/campaigns/archive/') }
         ],
@@ -812,6 +871,8 @@
         ] },
         { title: 'Campaigns', links: [
           { label: 'All campaigns', href: href('/business/campaigns/') },
+          { label: 'Why Azercell Business?', href: href('/business/campaigns/why-azercell-business/') },
+          { label: 'My Business Wi-Fi', href: href('/business/campaigns/my-business-wifi/') },
           { label: 'My Business Club', href: href('/business/campaigns/my-business-club/') },
           { label: 'Campaigns archive', href: href('/business/campaigns/archive/') }
         ] },
@@ -862,7 +923,7 @@
       id: 'announcementBar',
       name: 'Announcement bar',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS).concat(B2B_CAMPAIGN_PATHS),
       description: 'Rotating one-line notice above the header. CMS-managed messages.',
       props: { messages: SITE_CHROME.announcements }
     },
@@ -870,7 +931,7 @@
       id: 'siteHeader',
       name: 'Site header',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS).concat(B2B_CAMPAIGN_PATHS),
       description: 'Shared responsive shell with audience-specific navigation. Business category labels navigate to landing pages; hover/focus or the adjacent chevron opens the mega menu. Mobile keeps separate link and expand controls.',
       props: {
         layout: 'personal',
@@ -889,7 +950,7 @@
       id: 'floatingBar',
       name: 'Floating bar',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS).concat(B2B_CAMPAIGN_PATHS),
       description: 'Shortcut bar for Internet, Tariffs, Roaming and Kinon, shared with the Business homepage. On the transfer page it changes to a Start transfer action after the hero button scrolls away.',
       props: SITE_CHROME.floatingBar
     },
@@ -922,10 +983,98 @@
       props: { label: 'Transfer content', media: 'Placeholder' }
     },
     {
+      id: 'campaignHero',
+      name: 'Business campaign hero',
+      group: 'Page openers',
+      usedOn: B2B_CAMPAIGN_PATHS.slice(),
+      description: 'Inverse Business page opener with source-aware text, stats and actions.',
+      props: {
+        eyebrow: 'Campaigns',
+        title: 'Offers built for business',
+        body: 'Limited-time connectivity, device and loyalty offers for corporate customers.',
+        stats: [{ value: '60GB', label: 'Internet' }, { value: '26 AZN', label: 'Monthly fee' }]
+      }
+    },
+    {
+      id: 'campaignSourceLegend',
+      name: 'Campaign content source legend',
+      group: 'Content',
+      usedOn: B2B_CAMPAIGN_PATHS.slice(),
+      description: 'Explains the original-site, presentation/spreadsheet and dummy prototype colours.',
+      props: { deckLabel: 'Presentation / spreadsheet content', dummyLabel: 'Dummy content for prototype' }
+    },
+    {
+      id: 'campaignCardGrid',
+      name: 'Campaign card grid',
+      group: 'Products',
+      usedOn: ['/business/campaigns/', '/business/campaigns/why-azercell-business/',
+               '/business/campaigns/my-business-wifi/', '/business/campaigns/acquisition-campaigns/',
+               '/business/campaigns/devices-and-financing/',
+               '/business/campaigns/devices-and-financing/iphone-16-for-b2b/',
+               '/business/campaigns/devices-and-financing/iphone-17-for-b2b/',
+               '/business/campaigns/my-business-club/', '/business/campaigns/archive/'],
+      description: 'Source-aware campaign cards used on hubs, benefits and related-content sections.',
+      props: {
+        items: [
+          { title: 'MNP 60GB Campaign', body: '60GB and inclusive calls.', href: href('/business/campaigns/acquisition-campaigns/mnp-60gb/'), source: 'deck' },
+          { title: 'My Business Wi-Fi', body: 'Portable and fixed hotspot offers.', href: href('/business/campaigns/my-business-wifi/'), source: 'site' }
+        ]
+      }
+    },
+    {
+      id: 'campaignCopyBlock',
+      name: 'Campaign copy block',
+      group: 'Content',
+      usedOn: B2B_CAMPAIGN_PATHS.filter(function (path) { return path !== '/business/campaigns/archive/'; }),
+      description: 'Heading, paragraphs, bullet points and optional actions with source-aware colour.',
+      props: { title: 'Campaign details', paragraphs: ['A concise description of the campaign.'], items: ['First condition', 'Second condition'] }
+    },
+    {
+      id: 'campaignInfoTable',
+      name: 'Campaign information table',
+      group: 'Products',
+      usedOn: ['/business/campaigns/my-business-wifi/', '/business/campaigns/acquisition-campaigns/',
+               '/business/campaigns/acquisition-campaigns/mnp-60gb/',
+               '/business/campaigns/acquisition-campaigns/mnp-80gb/',
+               '/business/campaigns/devices-and-financing/smartphone-leasing/',
+               '/business/campaigns/my-business-tariff-discounts/',
+               '/business/campaigns/my-business-club/virtual-wallet/'],
+      description: 'Responsive two-column facts table; individual rows can carry different source colours.',
+      props: { title: 'Offer details', rows: [{ label: 'Monthly fee', value: '26 AZN', source: 'deck' }, { label: 'Eligibility', value: 'Illustrative condition', source: 'dummy' }] }
+    },
+    {
+      id: 'campaignSteps',
+      name: 'Campaign steps',
+      group: 'Content',
+      usedOn: ['/business/campaigns/acquisition-campaigns/mnp-60gb/',
+               '/business/campaigns/acquisition-campaigns/mnp-80gb/',
+               '/business/campaigns/devices-and-financing/smartphone-leasing/',
+               '/business/campaigns/my-business-tariff-discounts/',
+               '/business/campaigns/my-business-club/virtual-wallet/'],
+      description: 'Responsive numbered steps for application, activation and redemption flows.',
+      props: { title: 'How to join', source: 'dummy', items: [{ title: 'Apply', body: 'Send company details.' }, { title: 'Confirm', body: 'Complete eligibility checks.' }] }
+    },
+    {
+      id: 'campaignFaq',
+      name: 'Campaign FAQ',
+      group: 'Content',
+      usedOn: ['/business/campaigns/my-business-wifi/'],
+      description: 'Native details/summary FAQ for campaign conditions and support information.',
+      props: { title: 'Additional information', items: [{ question: 'Who can join?', answer: 'Eligible corporate subscribers.' }] }
+    },
+    {
+      id: 'campaignArchive',
+      name: 'Campaign archive',
+      group: 'Products',
+      usedOn: ['/business/campaigns/archive/'],
+      description: 'Shareable archive pagination with functional 6, 12 and 24 item page-size controls.',
+      props: { baseHref: '/business/campaigns/archive/', perPage: 6, page: 1, items: [{ title: 'Ended campaign', href: 'https://www.azercell.com/' }] }
+    },
+    {
       id: 'siteFooter',
       name: 'Site footer',
       group: 'Global chrome',
-      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
+      usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS).concat(B2B_CAMPAIGN_PATHS),
       description: 'Audience-specific footer in the shared responsive shell. Business adds its confirmed IA and the Azercell Biznes app banner.',
       props: SITE_CHROME.footer
     },

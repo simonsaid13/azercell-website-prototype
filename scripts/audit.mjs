@@ -38,6 +38,7 @@ const jsFiles = files.filter((f) => extname(f) === '.js');
 // Negative lookbehind skips HTML numeric entities such as &#8594;
 const HEX = /(?<!&)#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
 const COLOUR_FN = /\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\s*\(/g;
+const ALLOWED_SOURCE_COLOURS = new Set(['#f0f', '#8000ff80']);
 
 function isGrey(hex) {
   const body = hex.slice(1);
@@ -52,7 +53,9 @@ for (const file of [...cssFiles, ...htmlFiles, ...jsFiles]) {
   const text = readFileSync(file, 'utf8');
   text.split('\n').forEach((line, i) => {
     for (const hex of line.match(HEX) || []) {
-      if (!isGrey(hex)) fail(file, i + 1, `Non-grey colour ${hex}`);
+      if (!isGrey(hex) && !ALLOWED_SOURCE_COLOURS.has(hex.toLowerCase())) {
+        fail(file, i + 1, `Non-grey colour ${hex}`);
+      }
     }
     for (const fn of line.match(COLOUR_FN) || []) {
       // rect(0 0 0 0) style clip values are not colours; only flag colour functions

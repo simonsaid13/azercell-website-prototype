@@ -80,6 +80,12 @@
     return '<div class="' + classes('ph', modifier) + '">' + esc(label) + '</div>';
   }
 
+  function campaignSourceClass(source) {
+    if (source === 'deck') return 'campaign-source--deck';
+    if (source === 'dummy') return 'campaign-source--dummy';
+    return '';
+  }
+
   var C = {};
 
   /* --------------------------------------------------------------------
@@ -2363,6 +2369,192 @@
         (props.label ? ' aria-label="' + esc(props.label) + '"' : '') + '>' +
         '<div class="wrap">' + placeholder(props.media || '', 'ph--wide') + '</div>' +
       '</section>'
+    );
+  };
+
+  /* --------------------------------------------------------------------
+     Business Campaigns
+     -------------------------------------------------------------------- */
+
+  C.campaignHero = function (props) {
+    var sourceClass = campaignSourceClass(props.source);
+    return (
+      '<section class="cmp-campaign-hero ' + sourceClass + '" aria-labelledby="campaign-page-title">' +
+        '<div class="wrap cmp-campaign-hero__inner">' +
+          '<div class="stack">' +
+            (props.backHref
+              ? '<a class="t-label cmp-campaign-hero__back" href="' + esc(registryHref(props.backHref)) + '">&#8592; ' + esc(props.backLabel || 'All campaigns') + '</a>'
+              : '') +
+            (props.eyebrow ? '<p class="t-label">' + esc(props.eyebrow) + '</p>' : '') +
+            '<h1 id="campaign-page-title" class="t-display">' + esc(props.title) + '</h1>' +
+            (props.body ? '<p class="t-lead cmp-campaign-hero__body">' + esc(props.body) + '</p>' : '') +
+            actions(props.actions) +
+          '</div>' +
+          (props.stats && props.stats.length
+            ? '<dl class="cmp-campaign-hero__stats">' + props.stats.map(function (item) {
+                return '<div><dt class="t-small">' + esc(item.label) + '</dt><dd class="t-h2">' + esc(item.value) + '</dd></div>';
+              }).join('') + '</dl>'
+            : '') +
+        '</div>' +
+      '</section>'
+    );
+  };
+
+  C.campaignSourceLegend = function (props) {
+    return (
+      '<aside class="cmp-campaign-legend" aria-label="Content source legend">' +
+        '<p class="t-label">Content source</p>' +
+        '<div class="cmp-campaign-legend__items">' +
+          '<span class="t-small">Original Azercell website</span>' +
+          '<span class="t-small campaign-source--deck">' + esc(props.deckLabel || 'Presentation / spreadsheet') + '</span>' +
+          '<span class="t-small campaign-source--dummy">' + esc(props.dummyLabel || 'Dummy content for prototype') + '</span>' +
+        '</div>' +
+      '</aside>'
+    );
+  };
+
+  C.campaignCardGrid = function (props) {
+    var items = props.items || [];
+    return (
+      '<div class="cmp-campaign-cards grid ' + (props.columns === 2 ? 'grid--2' : 'grid--3') + '">' +
+        items.map(function (item) {
+          var href = item.href ? registryHref(item.href) : '';
+          var external = href && /^https?:/.test(href);
+          var sourceClass = campaignSourceClass(item.source);
+          var inner =
+            '<div class="stack">' +
+              (item.eyebrow ? '<p class="t-label">' + esc(item.eyebrow) + '</p>' : '') +
+              '<h3 class="t-h2">' + esc(item.title) + '</h3>' +
+              (item.body ? '<p class="t-body">' + esc(item.body) + '</p>' : '') +
+              (item.meta && item.meta.length
+                ? '<ul class="cmp-campaign-card__meta">' + item.meta.map(function (line) {
+                    return '<li class="t-small">' + esc(line) + '</li>';
+                  }).join('') + '</ul>'
+                : '') +
+            '</div>' +
+            (href ? '<span class="t-label cmp-campaign-card__link">' + esc(item.linkLabel || 'View details') + ' &#8594;</span>' : '');
+          if (!href) return '<article class="cmp-campaign-card ' + sourceClass + '">' + inner + '</article>';
+          return '<a class="cmp-campaign-card ' + sourceClass + '" href="' + esc(href) + '"' +
+            (external ? ' target="_blank" rel="noopener"' : '') + '>' + inner + '</a>';
+        }).join('') +
+      '</div>'
+    );
+  };
+
+  C.campaignCopyBlock = function (props) {
+    var sourceClass = campaignSourceClass(props.source);
+    return (
+      '<div class="cmp-campaign-copy ' + sourceClass + '">' +
+        (props.eyebrow ? '<p class="t-label">' + esc(props.eyebrow) + '</p>' : '') +
+        (props.title ? '<h2 class="t-h1">' + esc(props.title) + '</h2>' : '') +
+        (props.subtitle ? '<h3 class="t-h2">' + esc(props.subtitle) + '</h3>' : '') +
+        (props.paragraphs || []).map(function (paragraph) {
+          return '<p class="t-body">' + esc(paragraph) + '</p>';
+        }).join('') +
+        (props.items && props.items.length
+          ? '<ul class="cmp-campaign-copy__list">' + props.items.map(function (item) {
+              return '<li class="t-body ' + campaignSourceClass(item.source || props.source) + '">' + esc(item.text || item) + '</li>';
+            }).join('') + '</ul>'
+          : '') +
+        actions(props.actions) +
+      '</div>'
+    );
+  };
+
+  C.campaignInfoTable = function (props) {
+    var rows = props.rows || [];
+    return (
+      '<div class="cmp-campaign-table">' +
+        (props.title ? '<h2 class="t-h2">' + esc(props.title) + '</h2>' : '') +
+        (props.body ? '<p class="t-body t-muted">' + esc(props.body) + '</p>' : '') +
+        '<div class="cmp-campaign-table__scroll" tabindex="0" aria-label="' + esc(props.title || 'Campaign details') + '">' +
+          '<table>' +
+            '<thead><tr><th class="t-label" scope="col">' + esc(props.labelHeading || 'Parameter') + '</th>' +
+              '<th class="t-label" scope="col">' + esc(props.valueHeading || 'Details') + '</th></tr></thead>' +
+            '<tbody>' + rows.map(function (row) {
+              var sourceClass = campaignSourceClass(row.source || props.source);
+              return '<tr class="' + sourceClass + '"><th class="t-body" scope="row">' + esc(row.label) + '</th>' +
+                '<td class="t-body">' + esc(row.value) + '</td></tr>';
+            }).join('') + '</tbody>' +
+          '</table>' +
+        '</div>' +
+        (props.note ? '<p class="t-small ' + campaignSourceClass(props.noteSource || props.source) + '">' + esc(props.note) + '</p>' : '') +
+      '</div>'
+    );
+  };
+
+  C.campaignSteps = function (props) {
+    return (
+      '<div class="cmp-campaign-steps ' + campaignSourceClass(props.source) + '">' +
+        (props.title ? '<h2 class="t-h2">' + esc(props.title) + '</h2>' : '') +
+        '<ol class="cmp-campaign-steps__grid">' + (props.items || []).map(function (item, index) {
+          return '<li class="cmp-campaign-step ' + campaignSourceClass(item.source || props.source) + '">' +
+            '<span class="t-label">Step ' + (index + 1) + '</span>' +
+            '<h3 class="t-h3">' + esc(item.title) + '</h3>' +
+            '<p class="t-body">' + esc(item.body) + '</p>' +
+          '</li>';
+        }).join('') + '</ol>' +
+      '</div>'
+    );
+  };
+
+  C.campaignFaq = function (props) {
+    return (
+      '<div class="cmp-campaign-faq">' +
+        '<h2 class="t-h2">' + esc(props.title || 'Questions and answers') + '</h2>' +
+        '<div class="cmp-campaign-faq__items">' + (props.items || []).map(function (item) {
+          return '<details class="cmp-campaign-faq__item ' + campaignSourceClass(item.source || props.source) + '">' +
+            '<summary class="t-h3">' + esc(item.question) + '</summary>' +
+            '<div class="cmp-campaign-faq__answer">' +
+              (item.paragraphs || [item.answer]).filter(Boolean).map(function (paragraph) {
+                return '<p class="t-body">' + esc(paragraph) + '</p>';
+              }).join('') +
+            '</div>' +
+          '</details>';
+        }).join('') + '</div>' +
+      '</div>'
+    );
+  };
+
+  C.campaignArchive = function (props) {
+    var items = props.items || [];
+    var page = props.page || 1;
+    var perPage = props.perPage || 6;
+    var totalPages = Math.max(1, Math.ceil(items.length / perPage));
+    var start = (page - 1) * perPage;
+    var visible = items.slice(start, start + perPage);
+    var base = props.baseHref || '/business/campaigns/archive/';
+    function pageHref(nextPage) {
+      var params = [];
+      if (perPage !== 6) params.push('perPage=' + perPage);
+      if (nextPage > 1) params.push('page=' + nextPage);
+      return base + (params.length ? '?' + params.join('&') : '');
+    }
+    return (
+      '<div class="cmp-campaign-archive">' +
+        '<form class="cmp-campaign-archive__controls" method="get" action="' + esc(base) + '">' +
+          '<label class="t-label" for="campaigns-per-page">Materials per page</label>' +
+          '<select id="campaigns-per-page" name="perPage" class="field" onchange="this.form.submit()">' +
+            [6, 12, 24].map(function (size) {
+              return '<option value="' + size + '"' + (size === perPage ? ' selected' : '') + '>' + size + '</option>';
+            }).join('') +
+          '</select>' +
+        '</form>' +
+        '<div class="cmp-campaign-cards grid grid--3">' + visible.map(function (item) {
+          return C.campaignCardGrid({ items: [item] }).replace('cmp-campaign-cards grid grid--3', 'cmp-campaign-archive__card-wrap');
+        }).join('') + '</div>' +
+        (totalPages > 1
+          ? '<nav class="cmp-campaign-archive__pagination" aria-label="Campaign archive pages">' +
+              (page > 1 ? '<a class="btn btn--small" href="' + esc(pageHref(page - 1)) + '">Previous</a>' : '') +
+              Array.from({ length: totalPages }, function (_, index) {
+                var pageNumber = index + 1;
+                return '<a class="btn btn--small' + (pageNumber === page ? ' btn--primary' : '') + '" href="' +
+                  esc(pageHref(pageNumber)) + '" aria-current="' + (pageNumber === page ? 'page' : 'false') + '">' + pageNumber + '</a>';
+              }).join('') +
+              (page < totalPages ? '<a class="btn btn--small" href="' + esc(pageHref(page + 1)) + '">Next</a>' : '') +
+            '</nav>'
+          : '') +
+      '</div>'
     );
   };
 
