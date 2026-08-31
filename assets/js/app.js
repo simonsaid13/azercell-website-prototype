@@ -1497,6 +1497,115 @@
     });
   }
 
+  function initBusinessRoamingSubscribeModal(root) {
+    if (!root || root.getAttribute('data-broam-subscribe-modal-ready') === 'true') return;
+    var dialog = root.querySelector('[role="dialog"]');
+    var tabs = all(root, '[data-broam-subscribe-tab]');
+    var panels = all(root, '[data-broam-subscribe-panel]');
+    var form = root.querySelector('[data-broam-subscribe-form]');
+    var status = root.querySelector('[data-broam-subscribe-status]');
+    var previousFocus = null;
+    if (!dialog || !tabs.length || !panels.length) return;
+    root.setAttribute('data-broam-subscribe-modal-ready', 'true');
+
+    function activateTab(value, focusTab) {
+      tabs.forEach(function (tab) {
+        var selected = tab.getAttribute('data-broam-subscribe-tab') === value;
+        tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+        tab.setAttribute('tabindex', selected ? '0' : '-1');
+        if (selected && focusTab) tab.focus();
+      });
+      panels.forEach(function (panel) {
+        panel.hidden = panel.getAttribute('data-broam-subscribe-panel') !== value;
+      });
+    }
+
+    function closeModal() {
+      root.hidden = true;
+      document.body.classList.remove('broam-modal-open');
+      if (status) status.hidden = true;
+      if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
+      previousFocus = null;
+    }
+
+    function openModal(trigger) {
+      var packId = trigger.getAttribute('data-broam-subscribe');
+      var pack = window.BusinessRoamingData && window.BusinessRoamingData.getPack
+        ? window.BusinessRoamingData.getPack(packId)
+        : null;
+      if (!pack) return;
+      var volume = root.querySelector('[data-broam-subscribe-volume]');
+      var ussd = root.querySelector('[data-broam-subscribe-ussd]');
+      var keyword = root.querySelector('[data-broam-subscribe-keyword]');
+      if (volume) volume.textContent = pack.volume;
+      if (ussd) ussd.textContent = pack.ussd;
+      if (keyword) keyword.textContent = pack.keyword;
+      previousFocus = trigger;
+      activateTab('phone', false);
+      root.hidden = false;
+      document.body.classList.add('broam-modal-open');
+      var close = root.querySelector('[data-broam-subscribe-close]');
+      if (close) close.focus();
+    }
+
+    document.addEventListener('click', function (event) {
+      var trigger = closest(event.target, '[data-broam-subscribe]');
+      if (!trigger) return;
+      openModal(trigger);
+    });
+
+    root.addEventListener('click', function (event) {
+      var close = closest(event.target, '[data-broam-subscribe-close]');
+      var tab = closest(event.target, '[data-broam-subscribe-tab]');
+      if (close || event.target === root) {
+        closeModal();
+        return;
+      }
+      if (tab && root.contains(tab)) activateTab(tab.getAttribute('data-broam-subscribe-tab'), false);
+    });
+
+    root.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeModal();
+        return;
+      }
+      var tab = closest(event.target, '[data-broam-subscribe-tab]');
+      if (tab && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+        event.preventDefault();
+        var current = tabs.indexOf(tab);
+        var next = event.key === 'ArrowRight' ? (current + 1) % tabs.length : (current - 1 + tabs.length) % tabs.length;
+        activateTab(tabs[next].getAttribute('data-broam-subscribe-tab'), true);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      var focusable = all(dialog, 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])').filter(function (node) {
+        return !node.hidden && node.offsetParent !== null;
+      });
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    if (form) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        if (status) {
+          status.textContent = 'Prototype only: no verification code was sent.';
+          status.hidden = false;
+        }
+      });
+    }
+  }
+
   /* ----------------------------------------------------------------------
      Init after components mount
      ---------------------------------------------------------------------- */
@@ -1527,6 +1636,7 @@
     all(document, '[data-roam-search-wrap]').forEach(initRoamingCountrySearch);
     all(document, '[data-broam-coverage]').forEach(initBusinessRoamingCoverage);
     all(document, '[data-broam-operator-tabs]').forEach(initBusinessRoamingOperatorTabs);
+    all(document, '[data-broam-subscribe-modal]').forEach(initBusinessRoamingSubscribeModal);
 
     document.addEventListener('mouseover', function (event) {
       var menuHover = closest(event.target, '[data-menu-hover]');

@@ -316,7 +316,9 @@ Business reuses the Personal menu presentation patterns and type scale: Mobile a
 
 ### Business footer (`SITE_CHROME.businessFooter`)
 
-Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`, Campaigns links, a My Business Club banner, and an Azercell Biznes app banner. The Mobile group contains tariff plans, internet packs and roaming; Azercell Biznes appears only in its banner. Deeper tariff, internet-pack and roaming links remain in the mega menu. Unknown store destinations are intentionally non-clickable.
+Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`, Campaigns links and the Azercell Biznes app banner. The footer is rendered in the inverse dark theme on every built Business page; the former My Business Club feature banner is removed. The Mobile group contains tariff plans, internet packs and roaming; Azercell Biznes appears only in its banner. Deeper tariff, internet-pack and roaming links remain in the mega menu. Unknown store destinations are intentionally non-clickable.
+
+Every built Business page also renders its opening hero in the inverse dark theme with light typography, controls and divider lines.
 
 ---
 
@@ -327,6 +329,7 @@ Uses the responsive Personal footer shell with the confirmed B2B groups, `*6050`
 | Step 1 country search → Turkiye, Georgia, Germany | Country detail routes | CONNECTED |
 | “Check in which countries internet packs can be used” | `/business/mobile/roaming/countries-and-prices/` | CONNECTED |
 | More information about internet packs | `/business/mobile/roaming/internet-packs/` | CONNECTED |
+| Each internet pack → Subscribe | Two-tab phone / SMS-USSD subscription modal | CONNECTED (prototype interaction) |
 | Planning and online-support actions | Current Azercell Business roaming page | CONNECTED (external) |
 | Balance actions | Kabinetim and Azercell online payment | CONNECTED (external) |
 | Questions and Answers → Support | support.azercell.com | CONNECTED (external) |
@@ -357,6 +360,7 @@ Routes:
 | Section / link | Target | Status |
 |----------------|--------|--------|
 | Internet-pack summary → More details | `/business/mobile/roaming/internet-packs/` | CONNECTED |
+| Each internet pack → Subscribe | Two-tab phone / SMS-USSD subscription modal with pack-specific codes | CONNECTED (prototype interaction) |
 
 Turkiye uses operator tabs to switch the visible rate table. Georgia and Germany retain their operator summaries followed by the shared rate table.
 
@@ -368,7 +372,8 @@ Turkiye uses operator tabs to switch the visible rate table. Georgia and Germany
 
 | Section / link | Target | Status |
 |----------------|--------|--------|
-| Pack list → Subscribe | Current Azercell Business roaming-pack page | CONNECTED (external) |
+| Each pack → Subscribe | Two-tab phone / SMS-USSD subscription modal with pack-specific codes | CONNECTED (prototype interaction) |
+| Activate abroad → How to activate Internet Packs | Website, USSD/SMS and Kabinetim methods from the current corporate source | CONNECTED |
 | Activation → Kabinetim | kabinetim.azercell.com | CONNECTED (external) |
 | Searchable pack-coverage table | Inline Turkiye, Georgia and Germany operator catalogue | CONNECTED |
 | Questions and Answers | Six source-based FAQ items in an accordion | CONNECTED |
@@ -486,6 +491,7 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 
 | Date | Change |
 |------|--------|
+| 2026-08-31 | Added a per-card Subscribe action and responsive two-tab subscription modal to every B2B roaming pack surface; connected pack-specific USSD/SMS codes; expanded Activate abroad with the three official activation methods; reordered the overview sections; inverted all built Business heroes and footers; removed the My Business Club footer feature banner. |
 | 2026-08-30 | Renamed B2B roaming FAQ sections to Questions and Answers; simplified Countries and prices to one tagged coverage search; moved Planning a trip below Useful tips; removed package-rule headings; added operator tabs on Turkiye and removed its redundant rate/pack summary headings. |
 | 2026-08-30 | Added complete source-based Additional Information blocks to Business Roaming overview and internet packs; moved the country search into Step 1; moved pack coverage inline under Top countries; removed B2B roaming quick actions and local category navigation; rounded destination chips. |
 | 2026-08-29 | Reworked the complete B2B Roaming prototype from the full content handoff, using the established B2C roaming composition: overview, searchable country directory, exact Turkiye/Georgia/Germany rates and operators, internet packs, activation rules, travel guidance and support information. |

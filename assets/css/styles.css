@@ -2376,6 +2376,167 @@ a.cmp-tab {
   border: 1px solid var(--c-line);
 }
 
+.cmp-broam-activation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.cmp-broam-activation__grid {
+  align-items: stretch;
+}
+
+.cmp-broam-activation__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  height: 100%;
+  padding: var(--sp-5);
+  border: 1px solid var(--c-line);
+}
+
+.cmp-broam-activation__card .btn {
+  margin-top: auto;
+}
+
+.broam-modal-open {
+  overflow: hidden;
+}
+
+.cmp-broam-subscribe-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+  overflow-y: auto;
+  background: #111111e6;
+}
+
+.cmp-broam-subscribe-modal__dialog {
+  position: relative;
+  width: min(100%, 46rem);
+  max-height: calc(100vh - (var(--sp-4) * 2));
+  overflow-y: auto;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 24px; /* audit-allow-rounded: subscription modal follows the supplied reference */
+  background: var(--c-surface);
+  color: var(--c-ink);
+}
+
+.cmp-broam-subscribe-modal__close {
+  position: absolute;
+  top: var(--sp-4);
+  right: var(--sp-4);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--c-muted);
+}
+
+.cmp-broam-subscribe-modal__close:hover {
+  color: var(--c-ink);
+  background: var(--c-fill-soft);
+}
+
+.cmp-broam-subscribe-modal__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-7) var(--sp-5) var(--sp-5);
+  padding-right: var(--sp-8);
+}
+
+.cmp-broam-subscribe-modal__tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-bottom: 1px solid var(--c-line);
+}
+
+.cmp-broam-subscribe-modal__tab {
+  min-height: 64px;
+  padding: var(--sp-3);
+  border-bottom: 3px solid transparent;
+  color: var(--c-muted);
+  font-weight: 700;
+  text-align: center;
+}
+
+.cmp-broam-subscribe-modal__tab[aria-selected="true"] {
+  border-color: var(--c-line-strong);
+  color: var(--c-ink);
+}
+
+.cmp-broam-subscribe-modal__body {
+  padding: var(--sp-5);
+}
+
+.cmp-broam-subscribe-modal__form,
+.cmp-broam-subscribe-modal__methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.cmp-broam-subscribe-modal__phone {
+  min-height: 64px;
+  border-radius: 16px; /* audit-allow-rounded: phone field follows the supplied reference */
+}
+
+.cmp-broam-subscribe-modal__join {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--c-line);
+}
+
+.cmp-broam-subscribe-modal__method {
+  padding: var(--sp-4);
+  border: 1px solid var(--c-line);
+  border-radius: 16px; /* audit-allow-rounded: method cards follow the supplied reference */
+}
+
+.cmp-broam-subscribe-modal__method strong {
+  display: inline-block;
+  margin: var(--sp-1);
+  padding: var(--sp-2);
+  background: var(--c-fill);
+}
+
+.cmp-broam-subscribe-modal__or {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.cmp-broam-subscribe-modal__or::before,
+.cmp-broam-subscribe-modal__or::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: var(--c-line);
+}
+
+@media (min-width: 768px) {
+  .cmp-broam-subscribe-modal {
+    padding: var(--sp-6);
+  }
+
+  .cmp-broam-subscribe-modal__head {
+    padding: var(--sp-8) var(--sp-7) var(--sp-6);
+    padding-right: var(--sp-9);
+  }
+
+  .cmp-broam-subscribe-modal__body {
+    padding: var(--sp-6) var(--sp-7) var(--sp-7);
+  }
+}
+
 #supported-operators {
   scroll-margin-top: calc(var(--chrome-h) + var(--sp-4));
 }
@@ -3255,6 +3416,105 @@ html[data-nav-variant="v2"] [data-apps-v1] {
 .cmp-nav__footer-language,
 .cmp-nav__footer-copyright {
   margin: 0;
+}
+
+/* Business pages use a dark opening hero and dark footer. The inverse footer
+   modifier is also the stable page-level marker for the Business shell. */
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child {
+  border-color: var(--c-muted);
+  background: var(--c-inverse-bg);
+  color: var(--c-inverse-ink);
+}
+
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child .t-muted,
+.cmp-nav__footer--inverse .t-muted,
+.cmp-footer--inverse .t-muted {
+  color: var(--c-line);
+}
+
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child .btn {
+  border-color: var(--c-inverse-ink);
+  background: transparent;
+  color: var(--c-inverse-ink);
+}
+
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child .btn--primary {
+  background: var(--c-inverse-ink);
+  color: var(--c-inverse-bg);
+}
+
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child .cmp-hero__stats,
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child .cmp-hero__stat + .cmp-hero__stat,
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child .cmp-hero__dot {
+  border-color: var(--c-muted);
+}
+
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child .cmp-hero__dot[aria-current="true"] {
+  background: var(--c-inverse-ink);
+}
+
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child .ph {
+  border-color: var(--c-muted);
+  background: var(--c-ink-soft);
+  color: var(--c-line);
+}
+
+.cmp-nav__footer--inverse,
+.cmp-footer--inverse {
+  border-color: var(--c-muted);
+  background: var(--c-inverse-bg);
+  color: var(--c-inverse-ink);
+}
+
+.cmp-nav__footer--inverse .cmp-nav__footer-top,
+.cmp-nav__footer--inverse .cmp-nav__footer-main,
+.cmp-nav__footer--inverse .cmp-nav__footer-bottom,
+.cmp-footer--inverse .cmp-footer__bar {
+  border-color: var(--c-muted);
+}
+
+.cmp-nav__footer--inverse .input {
+  border-color: var(--c-muted);
+  background: transparent;
+  color: var(--c-inverse-ink);
+}
+
+.cmp-nav__footer--inverse .input::placeholder {
+  color: var(--c-line);
+}
+
+.cmp-nav__footer--inverse .btn,
+.cmp-footer--inverse .btn {
+  border-color: var(--c-inverse-ink);
+  background: transparent;
+  color: var(--c-inverse-ink);
+}
+
+.cmp-nav__footer--inverse .btn:hover,
+.cmp-footer--inverse .btn:hover {
+  background: var(--c-ink-soft);
+}
+
+.cmp-nav__footer--inverse .cmp-card {
+  border-color: var(--c-muted);
+  background: var(--c-inverse-bg);
+}
+
+.cmp-nav__footer--inverse .ph {
+  border-color: var(--c-muted);
+  background: var(--c-ink-soft);
+  color: var(--c-line);
+}
+
+.cmp-nav__footer--inverse .cmp-nav__footer-link--featured {
+  background: var(--c-inverse-ink);
+  color: var(--c-inverse-bg);
+}
+
+body:has(.cmp-nav__footer--inverse) #page-main > :first-child :focus-visible,
+.cmp-nav__footer--inverse :focus-visible,
+.cmp-footer--inverse :focus-visible {
+  outline-color: var(--c-inverse-ink);
 }
 
 .cmp-nav__floating-bar {

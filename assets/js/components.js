@@ -689,7 +689,7 @@
     var featureCards = props.featureCards || [appCard];
     var includeAppsGroup = props.includeAppsGroup !== false;
     return (
-      '<footer class="cmp-nav__footer" aria-label="Site footer">' +
+      '<footer class="cmp-nav__footer' + (props.inverse ? ' cmp-nav__footer--inverse' : '') + '" aria-label="Site footer">' +
         '<div class="wrap">' +
           '<div class="cmp-nav__footer-top">' +
             '<div class="cmp-nav__footer-brand">' +
@@ -2148,8 +2148,84 @@
           '<p class="t-h3">' + esc(pack.price) + '</p>' +
         '</div>' +
         '<p class="t-body t-muted">Valid for ' + esc(pack.validity) + '</p>' +
-        (props.subscribeHref ? '<div class="cmp-ipack-card__actions">' + actions([{ label: 'Subscribe', href: props.subscribeHref, variant: 'primary' }], 'btn--small btn--block') + '</div>' : '') +
+        (props.subscribe
+          ? '<div class="cmp-ipack-card__actions">' +
+              '<button class="btn btn--primary btn--small btn--block" type="button" data-broam-subscribe="' + esc(pack.id) + '">Subscribe</button>' +
+            '</div>'
+          : '') +
       '</article>'
+    );
+  };
+
+  C.businessRoamingSubscribeModal = function (props) {
+    var joinHref = registryHref(props.joinHref || '/join-azercell/');
+    var kabinetimHref = props.kabinetimHref || 'https://kabinetim.azercell.com/';
+    return (
+      '<div class="cmp-broam-subscribe-modal" data-broam-subscribe-modal hidden>' +
+        '<section class="cmp-broam-subscribe-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="broam-subscribe-title" aria-describedby="broam-subscribe-description">' +
+          '<button class="cmp-broam-subscribe-modal__close" type="button" aria-label="Close subscription window" data-broam-subscribe-close>×</button>' +
+          '<div class="cmp-broam-subscribe-modal__head">' +
+            '<h2 class="t-display" id="broam-subscribe-title" data-broam-subscribe-volume>Roaming internet pack</h2>' +
+            '<p class="t-lead t-muted" id="broam-subscribe-description">Subscribe by one of the following methods:</p>' +
+          '</div>' +
+          '<div class="cmp-broam-subscribe-modal__tabs" role="tablist" aria-label="Subscription methods">' +
+            '<button class="cmp-broam-subscribe-modal__tab" type="button" role="tab" id="broam-subscribe-phone-tab" aria-controls="broam-subscribe-phone-panel" aria-selected="true" tabindex="0" data-broam-subscribe-tab="phone">Phone number</button>' +
+            '<button class="cmp-broam-subscribe-modal__tab" type="button" role="tab" id="broam-subscribe-other-tab" aria-controls="broam-subscribe-other-panel" aria-selected="false" tabindex="-1" data-broam-subscribe-tab="other">Other Methods</button>' +
+          '</div>' +
+          '<div class="cmp-broam-subscribe-modal__body">' +
+            '<div role="tabpanel" id="broam-subscribe-phone-panel" aria-labelledby="broam-subscribe-phone-tab" data-broam-subscribe-panel="phone">' +
+              '<form class="cmp-broam-subscribe-modal__form" data-broam-subscribe-form>' +
+                '<label class="field" for="broam-subscribe-phone">' +
+                  '<span class="t-body t-muted">Enter mobile number</span>' +
+                  '<input class="input cmp-broam-subscribe-modal__phone" id="broam-subscribe-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+994 (__) ___ __ __" required>' +
+                '</label>' +
+                '<button class="btn btn--primary btn--block" type="submit">Get the code</button>' +
+                '<p class="t-body t-muted">The service will be activated within 15 minutes.</p>' +
+                '<p class="t-small" role="status" data-broam-subscribe-status hidden></p>' +
+              '</form>' +
+              '<p class="t-body cmp-broam-subscribe-modal__join">Don’t have an Azercell number? <a class="link-inline" href="' + esc(joinHref) + '">Join Azercell</a></p>' +
+            '</div>' +
+            '<div role="tabpanel" id="broam-subscribe-other-panel" aria-labelledby="broam-subscribe-other-tab" data-broam-subscribe-panel="other" hidden>' +
+              '<div class="cmp-broam-subscribe-modal__methods">' +
+                '<p class="t-body cmp-broam-subscribe-modal__method">Fast activation code <strong data-broam-subscribe-ussd>—</strong></p>' +
+                '<p class="t-body cmp-broam-subscribe-modal__method">Send the keyword <strong data-broam-subscribe-keyword>—</strong> to the number <strong>2525</strong></p>' +
+                '<div class="stack">' +
+                  '<p class="t-small t-muted">*SMS is free for Prepaid subscribers.</p>' +
+                  '<p class="t-small t-muted">*The price of SMS is 0.01 AZN for Postpaid subscribers.</p>' +
+                '</div>' +
+                '<div class="cmp-broam-subscribe-modal__or"><span class="t-body t-muted">or</span></div>' +
+                '<p class="t-body">Activate via <a class="link-inline" href="' + esc(kabinetimHref) + '" target="_blank" rel="noopener">Azercell Kabinetim app</a></p>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</section>' +
+      '</div>'
+    );
+  };
+
+  C.businessRoamingActivationMethods = function (props) {
+    return (
+      '<div class="cmp-broam-activation">' +
+        '<h3 class="t-h2">How to activate Internet Packs</h3>' +
+        '<div class="grid grid--3 cmp-broam-activation__grid">' +
+          '<article class="cmp-broam-activation__card">' +
+            '<p class="t-label">Directly on the website</p>' +
+            '<h4 class="t-h3">Choose a pack and enter the number</h4>' +
+            '<p class="t-body t-muted">Select Subscribe on the preferred pack, enter the Azercell mobile number and confirm the one-time code. The pack is activated within 15 minutes.</p>' +
+          '</article>' +
+          '<article class="cmp-broam-activation__card">' +
+            '<p class="t-label">USSD or SMS</p>' +
+            '<h4 class="t-h3">Use the pack activation code</h4>' +
+            '<p class="t-body t-muted">Dial *100*internet pack code#YES or send the corresponding pack code by SMS to 2525.</p>' +
+          '</article>' +
+          '<article class="cmp-broam-activation__card">' +
+            '<p class="t-label">Azercell Kabinetim</p>' +
+            '<h4 class="t-h3">Activate in the application</h4>' +
+            '<p class="t-body t-muted">Open the Internet section, choose Roaming and activate the appropriate internet pack.</p>' +
+            '<a class="btn btn--small" href="' + esc(props.kabinetimHref || 'https://kabinetim.azercell.com/') + '" target="_blank" rel="noopener">Open Azercell Kabinetim</a>' +
+          '</article>' +
+        '</div>' +
+      '</div>'
     );
   };
 
@@ -2217,7 +2293,7 @@
 
   function classicSiteFooter(props) {
     return (
-      '<footer class="cmp-footer">' +
+      '<footer class="cmp-footer' + (props.inverse ? ' cmp-footer--inverse' : '') + '">' +
         '<div class="wrap">' +
           (props.search ? '<div style="margin-bottom:var(--sp-6)">' + C.searchBar(props.search) + '</div>' : '') +
           '<div class="cmp-footer__grid">' +

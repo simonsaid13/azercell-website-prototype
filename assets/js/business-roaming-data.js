@@ -115,10 +115,10 @@
   ];
 
   var packs = [
-    { id: '500mb', sort: 1, volume: '500MB', price: '10 AZN', priceNum: 10, validity: '3 days' },
-    { id: '2gb', sort: 2, volume: '2GB', price: '20 AZN', priceNum: 20, validity: '10 days' },
-    { id: '5gb', sort: 3, volume: '5GB', price: '50 AZN', priceNum: 50, validity: '30 days' },
-    { id: '10gb', sort: 4, volume: '10GB', price: '75 AZN', priceNum: 75, validity: '30 days' }
+    { id: '500mb', sort: 1, volume: '500MB', price: '10 AZN', priceNum: 10, validity: '3 days', keyword: '501', ussd: '*100*501#YES' },
+    { id: '2gb', sort: 2, volume: '2GB', price: '20 AZN', priceNum: 20, validity: '10 days', keyword: '2020', ussd: '*100*2020#YES' },
+    { id: '5gb', sort: 3, volume: '5GB', price: '50 AZN', priceNum: 50, validity: '30 days', keyword: '5001', ussd: '*100*5001#YES' },
+    { id: '10gb', sort: 4, volume: '10GB', price: '75 AZN', priceNum: 75, validity: '30 days', keyword: '10001', ussd: '*100*10001#YES' }
   ];
 
   var supportedOperators = [
@@ -238,6 +238,10 @@
     return countries.find(function (item) { return item.id === id; }) || null;
   }
 
+  function getPack(id) {
+    return packs.find(function (item) { return item.id === id; }) || null;
+  }
+
   function searchCountries(query) {
     var value = String(query || '').trim().toLowerCase();
     if (!value) return countries.slice();
@@ -267,6 +271,7 @@
     packRules: packRules,
     getSection: getSection,
     getCountry: getCountry,
+    getPack: getPack,
     searchCountries: searchCountries
   };
 

@@ -760,6 +760,7 @@
        architecture. Unknown app-store destinations remain non-clickable. */
     businessFooter: {
       layout: 'personal',
+      inverse: true,
       brand: { title: 'Azercell', tagline: 'Every connection opens a possibility' },
       subscribe: {
         label: 'Subscribe for updates',
@@ -825,13 +826,6 @@
         ] }
       ],
       featureCards: [
-        {
-          title: 'My Business Club',
-          media: 'My Business Club',
-          actions: [
-            { label: 'Explore My Business Club', href: href('/business/campaigns/my-business-club/') }
-          ]
-        },
         {
           title: 'Manage your Business with Azercell Biznes app',
           media: 'Azercell Biznes app',
@@ -932,7 +926,7 @@
       name: 'Site footer',
       group: 'Global chrome',
       usedOn: PERSONAL_CHROME_PATHS.concat(['/business/']).concat(B2B_ROAMING_PATHS),
-      description: 'Audience-specific footer in the shared responsive shell. Business adds its confirmed IA, Campaigns links, My Business Club banner and Azercell Biznes app banner.',
+      description: 'Audience-specific footer in the shared responsive shell. Business adds its confirmed IA and the Azercell Biznes app banner.',
       props: SITE_CHROME.footer
     },
     {
@@ -1549,10 +1543,36 @@
         '/business/mobile/roaming/countries-and-prices/georgia/',
         '/business/mobile/roaming/countries-and-prices/germany/'
       ],
-      description: 'Corporate roaming pack with price, validity and real SMS/USSD activation methods.',
+      description: 'Corporate roaming pack with price, validity and a per-pack Subscribe action.',
       props: {
-        pack: { volume: '2GB', price: '20 AZN', priceNum: 20, sort: 2, validity: '10 days' }
+        pack: { id: '2gb', volume: '2GB', price: '20 AZN', priceNum: 20, sort: 2, validity: '10 days' },
+        subscribe: true
       }
+    },
+    {
+      id: 'businessRoamingSubscribeModal',
+      name: 'Business roaming pack subscription modal',
+      group: 'Products',
+      usedOn: [
+        '/business/mobile/roaming/',
+        '/business/mobile/roaming/internet-packs/',
+        '/business/mobile/roaming/countries-and-prices/turkiye/',
+        '/business/mobile/roaming/countries-and-prices/georgia/',
+        '/business/mobile/roaming/countries-and-prices/germany/'
+      ],
+      description: 'Accessible two-tab subscription dialog opened from an individual roaming pack card.',
+      props: {
+        joinHref: href('/join-azercell/'),
+        kabinetimHref: 'https://kabinetim.azercell.com/'
+      }
+    },
+    {
+      id: 'businessRoamingActivationMethods',
+      name: 'Business roaming activation methods',
+      group: 'Content',
+      usedOn: ['/business/mobile/roaming/internet-packs/'],
+      description: 'Website, USSD/SMS and Azercell Kabinetim activation guidance from the corporate roaming pack source.',
+      props: { kabinetimHref: 'https://kabinetim.azercell.com/' }
     },
     {
       id: 'businessRoamingSteps',

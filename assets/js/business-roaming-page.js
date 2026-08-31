@@ -52,8 +52,15 @@
 
   function packCards() {
     return '<div class="grid grid--2 cmp-ipack-grid">' + D.packs.map(function (pack) {
-      return '<div>' + global.Components.render('businessRoamingPackCard', { pack: pack }) + '</div>';
+      return '<div>' + global.Components.render('businessRoamingPackCard', { pack: pack, subscribe: true }) + '</div>';
     }).join('') + '</div>';
+  }
+
+  function subscribeModal() {
+    return global.Components.render('businessRoamingSubscribeModal', {
+      joinHref: '/join-azercell/',
+      kabinetimHref: D.KABINETIM
+    });
   }
 
   function actionRow(links, legal) {
@@ -78,17 +85,6 @@
         body: 'Azercell Business offers practical internet pack options and pay-as-you-go roaming information for employees travelling abroad.'
       })),
       section(
-        C.render('sectionHead', {
-          eyebrow: 'Roaming',
-          title: 'Internet packages in roaming'
-        }) +
-        packCards() +
-        actionRow([
-          { label: 'Check in which countries internet packs can be used', href: D.routes.countries, variant: 'primary' },
-          { label: 'More information about the internet packs', href: D.routes.packs }
-        ])
-      ),
-      section(
         C.render('sectionHead', { eyebrow: 'Before travel', title: 'How to use Azercell roaming?' }) +
         C.render('businessRoamingSteps', {
           items: D.howToRoaming,
@@ -99,6 +95,27 @@
           })
         })
       ),
+      section(
+        C.render('sectionHead', {
+          eyebrow: 'Roaming',
+          title: 'Internet packages in roaming'
+        }) +
+        packCards() +
+        actionRow([
+          { label: 'Check in which countries internet packs can be used', href: D.routes.countries, variant: 'primary' },
+          { label: 'More information about the internet packs', href: D.routes.packs }
+        ])
+      ),
+      section(C.render('splitBanner', {
+        eyebrow: 'Roaming essentials',
+        title: 'Calling and balance abroad',
+        body: 'Use the international format + [country code] [operator or city code] [number]. Balance can be topped up through Azercell Kabinetim, online payment or a scratch card. For a scratch card, dial *131*[13-digit code]#YES.',
+        media: 'Calling and balance abroad',
+        actions: [
+          { label: 'Azercell Kabinetim', href: D.KABINETIM, variant: 'primary' },
+          { label: 'Online payment', href: D.ONLINE_PAYMENT }
+        ]
+      })),
       section(
         C.render('sectionHead', { eyebrow: 'Roaming', title: 'Useful tips' }) +
         '<div class="grid grid--2 cmp-broam-guide-grid">' +
@@ -114,16 +131,6 @@
         }) + '</div>'
       ),
       section(C.render('splitBanner', {
-        eyebrow: 'Roaming essentials',
-        title: 'Calling and balance abroad',
-        body: 'Use the international format + [country code] [operator or city code] [number]. Balance can be topped up through Azercell Kabinetim, online payment or a scratch card. For a scratch card, dial *131*[13-digit code]#YES.',
-        media: 'Calling and balance abroad',
-        actions: [
-          { label: 'Azercell Kabinetim', href: D.KABINETIM, variant: 'primary' },
-          { label: 'Online payment', href: D.ONLINE_PAYMENT }
-        ]
-      })),
-      section(C.render('splitBanner', {
         inverse: true,
         eyebrow: 'Online support',
         title: 'Need help? Chat with us!',
@@ -138,7 +145,8 @@
         }) +
         '<div style="margin-top:var(--sp-5)">' + C.render('accordion', { items: D.additionalInfo }) + '</div>' +
         actionRow([{ label: 'Open support.azercell.com', href: D.SUPPORT }])
-      )
+      ),
+      subscribeModal()
     ]);
   }
 
@@ -198,7 +206,8 @@
         }) +
         packCards() +
         actionRow([{ label: 'More details', href: D.routes.packs, variant: 'primary' }])
-      )
+      ),
+      subscribeModal()
     ]);
   }
 
@@ -218,16 +227,16 @@
             title: 'Choose a pack'
           }) +
           packCards() +
-          actionRow([{ label: 'Subscribe', href: D.SOURCE_PACKS, variant: 'primary' }]) +
         '</div>'
       ),
-      section(C.render('splitBanner', {
-        eyebrow: 'Activation',
-        title: 'Activate abroad',
-        body: 'A roaming internet pack can be activated abroad by SMS, USSD code or through the Azercell Kabinetim application.',
-        media: 'Pack activation',
-        actions: [{ label: 'Azercell Kabinetim', href: D.KABINETIM, variant: 'primary' }]
-      })),
+      section(
+        C.render('sectionHead', {
+          eyebrow: 'Activation',
+          title: 'Activate abroad',
+          body: 'A roaming internet pack can be activated before travelling or while abroad.'
+        }) +
+        C.render('businessRoamingActivationMethods', { kabinetimHref: D.KABINETIM })
+      ),
       section(
         featureList('Before subscribing', D.packRules)
       ),
@@ -243,7 +252,8 @@
       section(
         C.render('sectionHead', { eyebrow: 'Roaming internet packs', title: 'Questions and Answers' }) +
         '<div style="margin-top:var(--sp-5)">' + C.render('accordion', { items: D.packAdditionalInfo }) + '</div>'
-      )
+      ),
+      subscribeModal()
     ]);
   }
 
