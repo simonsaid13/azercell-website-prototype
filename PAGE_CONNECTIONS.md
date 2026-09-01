@@ -660,6 +660,27 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 
 ---
 
+## `/business2/` — Business homepage concept 2
+
+This route is an unlinked review concept based on `Azercell_Business_Homepage_Content_(temporary).docx`. It reuses the shared Business header, footer and floating bar without modifying their content or behavior.
+
+| Section / link | Target | Status |
+|----------------|--------|--------|
+| Hero → Explore business solutions | `/business/digital-solutions/` | PLANNED |
+| Hero → Talk to sales | `#contact-sales` | CONNECTED (in-page) |
+| Digital Solutions cards | Four B2B solution category routes | PLANNED |
+| Tariffs, internet and connectivity gateways | Registered B2B routes | PLANNED |
+| Roaming gateways | Built B2B roaming routes | CONNECTED |
+| Active campaigns | Built B2B Campaigns routes | CONNECTED |
+| Azercell Biznes | biznes.azercell.com | CONNECTED (external) |
+| Online Itemized Bill | Current Azercell corporate page | CONNECTED (external) |
+| Support shortcuts | `tel:*6050`, FAQ/location routes, itemized bill | Mixed |
+| Lead form | Local validation plus support/contact handoff | CONNECTED (prototype handoff) |
+
+**Inbound:** Direct review URL only. It is intentionally absent from shared navigation.
+
+---
+
 ## Gaps worth deciding (ask user before wiring)
 
 | Gap | Question |
@@ -673,6 +694,7 @@ Personal keeps Internet, Tariffs, Roaming and Kinon. Business and B2B planned pl
 
 | Date | Change |
 |------|--------|
+| 2026-09-01 | Added the unlinked `/business2/` homepage concept from the temporary content document, preserving shared chrome and applying `#f0f` / `#8000FF80` source markers. |
 | 2026-08-31 | Completed the separate B2B Campaigns connection audit for all 14 routes: documented every public inbound and route-specific outbound, synchronized page comments, corrected Campaigns `PAGE_REGISTRY.links`, and made campaign component `usedOn` lists match actual rendering. No Campaigns connection gaps remain. |
 | 2026-08-31 | Added a per-card Subscribe action and responsive two-tab subscription modal to every B2B roaming pack surface; connected pack-specific USSD/SMS codes; expanded Activate abroad with the three official activation methods; reordered the overview sections; inverted all built Business heroes and footers; removed the My Business Club footer feature banner. |
 | 2026-08-30 | Renamed B2B roaming FAQ sections to Questions and Answers; simplified Countries and prices to one tagged coverage search; moved Planning a trip below Useful tips; removed package-rule headings; added operator tabs on Turkiye and removed its redundant rate/pack summary headings. |

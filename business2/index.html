@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azercell — Business homepage concept 2</title>
+<meta name="description" content="A second Azercell Business homepage prototype based on the approved temporary content document.">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script src="/assets/js/hotjar.js"></script>
+<style>
+  .business2-source--deck,
+  .business2-source--deck *,
+  .business2-source--deck .t-muted { color: #f0f !important; }
+  .business2-source--dummy,
+  .business2-source--dummy *,
+  .business2-source--dummy .t-muted { color: #8000FF80 !important; }
+  .business2-form .section__title-group,
+  .business2-form .section__title-group *,
+  .business2-form .cmp-form__foot > p,
+  .business2-form [data-lead-handoff],
+  .business2-form [data-lead-handoff] *,
+  .business2-form [data-field="need"],
+  .business2-form [data-field="need"] * { color: #8000FF80 !important; }
+</style>
+</head>
+<body>
+
+<div id="page-top"></div>
+<main id="page-main"></main>
+<div id="page-bottom"></div>
+<div id="page-chat"></div>
+
+<script src="/assets/js/site-registry.js"></script>
+<script src="/assets/js/business-campaigns-data.js"></script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(function () {
+  var R = SiteRegistry;
+  var chrome = R.SITE_CHROME;
+  var href = R.href;
+  var render = Components.render;
+  var BIZNES = 'https://biznes.azercell.com';
+  var ITEMIZED_BILL = 'https://www.azercell.com/en/corporate/mobile-communications/online-itemized-bill.html';
+  var campaigns = BusinessCampaignsData.pages.hub.primary;
+
+  Components.mount('#page-top', [
+    ['announcementBar', { messages: chrome.announcements }],
+    ['siteHeader', R.headerProps({ branch: 'business' })]
+  ]);
+  Components.mount('#page-bottom', [['siteFooter', chrome.businessFooter]]);
+  Components.mount('#page-chat', [['floatingBar', chrome.businessFloatingBar]]);
+
+  function section(inner, modifier) {
+    return '<section class="section' + (modifier ? ' ' + modifier : '') + '"><div class="wrap">' + inner + '</div></section>';
+  }
+
+  function marked(inner, source) {
+    return '<div class="business2-source--' + source + '">' + inner + '</div>';
+  }
+
+  function sourceClass(source) {
+    return source ? ' business2-source--' + source : '';
+  }
+
+  function markedCard(props) {
+    return '<a class="cmp-card cmp-card--quiet" href="' + props.href + '">' +
+      '<div class="cmp-card__body">' +
+        '<h3 class="t-h3' + sourceClass(props.titleSource) + '">' + props.title + '</h3>' +
+        '<p class="t-body t-muted' + sourceClass(props.bodySource) + '">' + props.body + '</p>' +
+      '</div>' +
+      '<div class="cmp-card__foot"><span class="t-label' + sourceClass(props.linkSource) + '">' + props.linkLabel + ' &#8594;</span></div>' +
+    '</a>';
+  }
+
+  var hero = marked(render('heroBanner', {
+    slides: [{
+      eyebrow: 'Azercell Business',
+      title: 'One partner for every way your business connects',
+      body: 'Bring mobile, workplace connectivity and digital operations together with solutions that scale from a growing team to a nationwide enterprise.',
+      media: 'Azercell Business solutions',
+      actions: [
+        { label: 'Explore business solutions', href: href('/planned/?path=/business/digital-solutions/'), variant: 'primary' },
+        { label: 'Talk to sales', href: '#contact-sales' },
+        { label: 'View My Business tariff plans', href: href('/business/mobile/tariffs/') },
+        { label: 'Log in to Azercell Biznes', href: BIZNES }
+      ]
+    }]
+  }), 'dummy');
+
+  var digitalSolutions = marked(render('acquisitionBlock', {
+    title: 'Digital solutions',
+    variant: 'solutions',
+    items: [
+      { label: 'IoT & M2M', body: 'Connect devices and automate data exchange', href: href('/business/iot/') },
+      { label: 'Fleet & field operations', body: 'Track vehicles, teams and field work', href: href('/business/fleet-field-operations/') },
+      { label: 'Automation & management', body: 'Streamline workflows and manage devices', href: href('/business/automation-management/') },
+      { label: 'Customer engagement', body: 'Reach customers across every channel', href: href('/business/customer-engagement/') }
+    ]
+  }), 'deck');
+
+  var sourceLegend = section(render('campaignSourceLegend', {
+    deckLabel: 'Presentation / spreadsheet / new IA content (#f0f)',
+    dummyLabel: 'Dummy content added to complete the prototype (#8000FF80)'
+  }));
+
+  var quickActions = section(
+    marked(render('sectionHead', {
+      title: 'What does your business need today?',
+      body: 'Start with a common task or tell the Business team about a more specific challenge.'
+    }), 'dummy') +
+    marked('<div class="grid grid--4">' +
+      markedCard({ title: 'Manage company numbers', body: 'View numbers, billing and packages in Azercell Biznes.', linkLabel: 'Open Azercell Biznes', href: BIZNES }) +
+      markedCard({ title: 'Choose a mobile plan', body: 'Compare My Business tariffs for different roles, data needs and team sizes.', linkLabel: 'Compare tariff plans', href: href('/business/mobile/tariffs/') }) +
+      markedCard({ title: 'Connect an office or branch', body: 'Explore dedicated internet and wireless workplace connectivity.', linkLabel: 'Explore connectivity', href: href('/business/connectivity/') }) +
+      markedCard({ title: 'Build a tailored solution', body: 'Tell us about the challenge and let a business consultant recommend the next step.', linkLabel: 'Talk to sales', href: '#contact-sales' }) +
+    '</div>', 'dummy')
+  );
+
+  var tariffCards = [
+    { name: 'My Business 4GB', price: '15 AZN', data: '4GB', badge: 'Entry plan' },
+    { name: 'My Business 20GB', price: '36 AZN', data: '20GB' },
+    { name: 'My Business 100GB', price: '80 AZN', data: '100GB', badge: 'High data' }
+  ].map(function (plan) {
+    return render('planCard', {
+      name: plan.name,
+      type: 'Per line, monthly',
+      badge: plan.badge,
+      tiers: [{
+        price: plan.price,
+        specs: [
+          { value: plan.data, label: 'Data' },
+          { value: 'Unlimited', label: 'On-net calls' },
+          { value: 'Tiered', label: 'Cross-net minutes' }
+        ],
+        validity: 'Billed monthly per line'
+      }],
+      actions: [{ label: 'Plan details', href: href('/business/mobile/tariffs/') }]
+    });
+  }).join('');
+
+  var mobileOffers = section(
+    marked(render('sectionHead', {
+      eyebrow: 'Mobile',
+      title: 'My Business tariff plans for every kind of team',
+      body: 'Start with the right amount of data and minutes, then manage every line from one business account.',
+      action: { label: 'Compare all tariff plans', href: href('/business/mobile/tariffs/') }
+    }), 'dummy') +
+    '<div class="grid grid--3">' + tariffCards + '</div>'
+  );
+
+  var internet = section(
+    marked(render('sectionHead', {
+      title: 'Internet for the way your team works',
+      body: 'Choose steady monthly data, short bursts or app-focused packs for field teams.'
+    }), 'dummy') +
+    '<div class="grid grid--4">' +
+      markedCard({ title: 'Monthly internet packs', body: 'Reliable data allowances for regular business use, with clear renewal options.', linkLabel: 'View monthly packs', href: href('/business/mobile/internet/monthly/'), bodySource: 'dummy' }) +
+      markedCard({ title: 'Short-term packs', body: 'Extra data for a busy hour, an event or a temporary workload spike.', linkLabel: 'View short-term packs', href: href('/business/mobile/internet/short-term/'), bodySource: 'dummy' }) +
+      markedCard({ title: 'Social & communication packs', body: 'App-focused data for teams that work through messaging, social and media tools.', linkLabel: 'View social packs', href: href('/business/mobile/internet/social/'), bodySource: 'dummy' }) +
+      markedCard({ title: 'My Business Wi-Fi', body: 'Portable Mi-Fi or fixed WTTx connectivity for teams, customers and temporary sites.', linkLabel: 'Explore My Business Wi-Fi', href: href('/business/campaigns/my-business-wifi/'), bodySource: 'dummy' }) +
+    '</div>'
+  );
+
+  var connectivity = section(
+    '<div class="grid grid--2">' +
+      '<article class="cmp-card cmp-card--quiet">' +
+        '<div class="cmp-card__body">' +
+          '<p class="t-label business2-source--deck">Connectivity</p>' +
+          '<h2 class="t-h2 business2-source--deck">Connect every workplace</h2>' +
+          '<p class="t-body business2-source--dummy">Keep offices, branches and remote sites online with dedicated or wireless business connectivity.</p>' +
+          '<ul class="stack">' +
+            '<li class="t-body">My Business Internet Leased Line — dedicated business connectivity.</li>' +
+            '<li class="t-body business2-source--deck">MPLS and Fiber Internet leased line — subject to final public IA and commercial availability.</li>' +
+            '<li class="t-body">My Business Wi-Fi — portable and fixed wireless options.</li>' +
+          '</ul>' +
+        '</div>' +
+        '<div class="cmp-card__foot"><a class="btn business2-source--deck" href="' + href('/business/connectivity/') + '">Explore business connectivity</a></div>' +
+      '</article>' +
+      '<article class="cmp-card cmp-card--quiet">' +
+        '<div class="cmp-card__body">' +
+          '<p class="t-label">Roaming</p>' +
+          '<h2 class="t-h2">Stay connected anywhere in the world</h2>' +
+          '<p class="t-body business2-source--dummy">Give travelling employees a clear route to roaming packs, country prices and activation help.</p>' +
+          '<ul class="stack">' +
+            '<li class="t-body">Roaming internet packs from 10 AZN for 500MB over 3 days.</li>' +
+            '<li class="t-body">Per-country and per-operator rates for 100+ destinations.</li>' +
+            '<li class="t-body">Roaming support line — first 45 minutes free on postpaid.</li>' +
+          '</ul>' +
+        '</div>' +
+        '<div class="cmp-card__foot row-actions">' +
+          '<a class="btn btn--primary" href="' + href('/business/mobile/roaming/internet-packs/') + '">Roaming internet packs</a>' +
+          '<a class="btn" href="' + href('/business/mobile/roaming/countries-and-prices/') + '">Countries and prices</a>' +
+        '</div>' +
+      '</article>' +
+    '</div>'
+  );
+
+  var activeCampaigns = section(
+    marked(render('sectionHead', {
+      eyebrow: 'Campaigns',
+      title: 'Current offers for Azercell Business customers',
+      body: 'See limited-time offers for connectivity, devices and business loyalty.',
+      action: { label: 'View all campaigns', href: href('/business/campaigns/') }
+    }), 'dummy') +
+    render('campaignCardGrid', { items: campaigns, columns: 3 })
+  );
+
+  var biznes = section(
+    marked(render('splitBanner', {
+      eyebrow: 'Self-service',
+      title: 'Run your business account from one place',
+      body: 'Manage corporate numbers, check billing, review packages and keep day-to-day account tasks moving without waiting for support.',
+      media: 'Azercell Biznes portal',
+      actions: [
+        { label: 'Open Azercell Biznes', href: BIZNES, variant: 'primary' },
+        { label: 'View Online Itemized Bill', href: ITEMIZED_BILL }
+      ]
+    }), 'dummy')
+  );
+
+  var whyAzercell = section(
+    marked(render('sectionHead', {
+      eyebrow: 'Why Azercell Business',
+      title: 'A business partner built for growth'
+    }), 'dummy') +
+    marked('<div class="grid grid--4">' +
+      markedCard({ title: 'One partner, fewer hand-offs', body: 'Bring mobile, connectivity and digital solutions together with one business relationship.', linkLabel: 'Why Azercell Business', href: href('/business/campaigns/why-azercell-business/') }) +
+      markedCard({ title: 'Nationwide business connectivity', body: 'Support employees and operations wherever the company works.', linkLabel: 'Explore mobile services', href: href('/business/mobile/') }) +
+      markedCard({ title: 'Clearer account control', body: 'Use business billing, per-line visibility and self-service tools to stay in control.', linkLabel: 'Open Azercell Biznes', href: BIZNES }) +
+      markedCard({ title: 'Solutions beyond the SIM', body: 'Add fleet, automation, device and customer-engagement capabilities as needs grow.', linkLabel: 'Explore digital solutions', href: href('/business/digital-solutions/') }) +
+    '</div>', 'dummy')
+  );
+
+  var support = section(
+    marked(render('sectionHead', {
+      eyebrow: 'Help',
+      title: 'Get help or talk to the Business team',
+      body: 'Choose a support route or send a request for a tailored recommendation.'
+    }), 'dummy') +
+    '<div class="grid grid--4">' +
+      markedCard({ title: 'Talk to Support', body: 'Call the Azercell Business support line.', linkLabel: 'Call *6050', href: 'tel:*6050', bodySource: 'dummy' }) +
+      markedCard({ title: 'Browse all FAQs', body: 'Find answers about business services, billing and activation.', linkLabel: 'Open FAQs', href: href('/business/support/faq/'), titleSource: 'deck', bodySource: 'dummy', linkSource: 'deck' }) +
+      markedCard({ title: 'Find a location', body: 'Choose a convenient service point for in-person support.', linkLabel: 'View locations', href: href('/business/support/locations/'), titleSource: 'deck', bodySource: 'dummy', linkSource: 'deck' }) +
+      markedCard({ title: 'Online Itemized Bill', body: 'Review a per-number breakdown for the corporate account.', linkLabel: 'View itemized bill', href: ITEMIZED_BILL, bodySource: 'dummy' }) +
+    '</div>'
+  );
+
+  var regions = ['Baku', 'Ganja', 'Sumgayit', 'Nakhchivan', 'Lankaran', 'Sheki', 'Other'];
+  var leadForm = section(
+    '<div id="contact-sales" class="business2-form">' +
+      render('leadForm', {
+        id: 'business2-contact-sales-form',
+        eyebrow: 'Talk to Azercell Business',
+        title: 'Tell us what your business needs',
+        body: 'Share a few company details and a business consultant will contact you to recommend the right next step.',
+        submitLabel: 'Send request',
+        note: 'A response timeframe will be added after the Business team confirms the service SLA.',
+        fields: [
+          { name: 'name', label: 'First name and last name', type: 'text', required: true, autocomplete: 'name' },
+          { name: 'email', label: 'Business email', type: 'email', required: true, autocomplete: 'email' },
+          { name: 'phone', label: 'Phone number', type: 'tel', required: true, inputmode: 'tel', autocomplete: 'tel' },
+          { name: 'company', label: 'Company name', type: 'text', required: true, autocomplete: 'organization' },
+          { name: 'taxId', label: 'TAX ID', type: 'text', required: true },
+          { name: 'region', label: 'Region or city', type: 'select', required: true, placeholder: 'Select a region', options: regions },
+          { name: 'need', label: 'What do you need?', type: 'select', required: true, placeholder: 'Select a topic', options: ['Mobile', 'Connectivity', 'Digital solution', 'Roaming', 'Other'] },
+          { name: 'contactMethod', label: 'Preferred contact method', type: 'radio', options: ['Call', 'Email'], wide: true }
+        ],
+        handoff: {
+          label: 'Prototype — this form is not connected',
+          body: 'The fields validate locally. On the live site, a successful request should return a clear confirmation and a reference number.',
+          links: [
+            { label: 'Call *6050', href: 'tel:*6050', variant: 'primary' },
+            { label: 'Email Business team', href: 'mailto:business@azercell.com' },
+            { label: 'Open Azercell Biznes', href: BIZNES }
+          ]
+        }
+      }) +
+    '</div>'
+  );
+
+  Components.mount('#page-main', [
+    hero,
+    digitalSolutions,
+    sourceLegend,
+    quickActions,
+    mobileOffers,
+    internet,
+    connectivity,
+    activeCampaigns,
+    biznes,
+    whyAzercell,
+    support,
+    leadForm
+  ]);
+  PrototypeApp.init();
+})();
+</script>
+</body>
+</html>
