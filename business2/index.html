@@ -14,13 +14,12 @@
   .business2-source--dummy,
   .business2-source--dummy *,
   .business2-source--dummy .t-muted { color: #8000FF80 !important; }
-  .business2-form .section__title-group,
-  .business2-form .section__title-group *,
-  .business2-form .cmp-form__foot > p,
-  .business2-form [data-lead-handoff],
-  .business2-form [data-lead-handoff] *,
-  .business2-form [data-field="need"],
-  .business2-form [data-field="need"] * { color: #8000FF80 !important; }
+  .business2-hero--approved,
+  .business2-hero--approved * { color: #fff !important; }
+  .business2-campaign-feature .cmp-campaign-cards { grid-template-columns: minmax(0, 1fr); }
+  .business2-campaign-secondary,
+  .business2-campaign-more { margin-top: var(--sp-4); }
+  .business2-biznes .btn--primary { color: #fff !important; }
 </style>
 </head>
 <body>
@@ -73,7 +72,7 @@
     '</a>';
   }
 
-  var hero = marked(render('heroBanner', {
+  var hero = '<div class="business2-hero--approved">' + render('heroBanner', {
     slides: [{
       eyebrow: 'Azercell Business',
       title: 'One partner for every way your business connects',
@@ -81,12 +80,12 @@
       media: 'Azercell Business solutions',
       actions: [
         { label: 'Explore business solutions', href: href('/planned/?path=/business/digital-solutions/'), variant: 'primary' },
-        { label: 'Talk to sales', href: '#contact-sales' },
+        { label: 'Talk to sales', href: 'mailto:business@azercell.com' },
         { label: 'View My Business tariff plans', href: href('/business/mobile/tariffs/') },
         { label: 'Log in to Azercell Biznes', href: BIZNES }
       ]
     }]
-  }), 'dummy');
+  }) + '</div>';
 
   var digitalSolutions = marked(render('acquisitionBlock', {
     title: 'Digital solutions',
@@ -99,11 +98,6 @@
     ]
   }), 'deck');
 
-  var sourceLegend = section(render('campaignSourceLegend', {
-    deckLabel: 'Presentation / spreadsheet / new IA content (#f0f)',
-    dummyLabel: 'Dummy content added to complete the prototype (#8000FF80)'
-  }));
-
   var quickActions = section(
     marked(render('sectionHead', {
       title: 'What does your business need today?',
@@ -113,7 +107,7 @@
       markedCard({ title: 'Manage company numbers', body: 'View numbers, billing and packages in Azercell Biznes.', linkLabel: 'Open Azercell Biznes', href: BIZNES }) +
       markedCard({ title: 'Choose a mobile plan', body: 'Compare My Business tariffs for different roles, data needs and team sizes.', linkLabel: 'Compare tariff plans', href: href('/business/mobile/tariffs/') }) +
       markedCard({ title: 'Connect an office or branch', body: 'Explore dedicated internet and wireless workplace connectivity.', linkLabel: 'Explore connectivity', href: href('/business/connectivity/') }) +
-      markedCard({ title: 'Build a tailored solution', body: 'Tell us about the challenge and let a business consultant recommend the next step.', linkLabel: 'Talk to sales', href: '#contact-sales' }) +
+      markedCard({ title: 'Build a tailored solution', body: 'Tell us about the challenge and let a business consultant recommend the next step.', linkLabel: 'Talk to sales', href: 'mailto:business@azercell.com' }) +
     '</div>', 'dummy')
   );
 
@@ -196,6 +190,17 @@
     '</div>'
   );
 
+  function campaignByTitle(title) {
+    return campaigns.filter(function (campaign) { return campaign.title === title; })[0];
+  }
+
+  var featuredCampaign = campaignByTitle('My Business Wi-Fi');
+  var secondaryCampaigns = [campaignByTitle('Why Azercell Business?'), campaignByTitle('My Business Club')].filter(Boolean);
+  var reservedCampaigns = [featuredCampaign].concat(secondaryCampaigns);
+  var additionalCampaigns = campaigns.filter(function (campaign) {
+    return reservedCampaigns.indexOf(campaign) === -1;
+  });
+
   var activeCampaigns = section(
     marked(render('sectionHead', {
       eyebrow: 'Campaigns',
@@ -203,11 +208,13 @@
       body: 'See limited-time offers for connectivity, devices and business loyalty.',
       action: { label: 'View all campaigns', href: href('/business/campaigns/') }
     }), 'dummy') +
-    render('campaignCardGrid', { items: campaigns, columns: 3 })
+    (featuredCampaign ? '<div class="business2-campaign-feature">' + render('campaignCardGrid', { items: [featuredCampaign] }) + '</div>' : '') +
+    (secondaryCampaigns.length ? '<div class="business2-campaign-secondary">' + render('campaignCardGrid', { items: secondaryCampaigns, columns: 2 }) + '</div>' : '') +
+    (additionalCampaigns.length ? '<div class="business2-campaign-more">' + render('campaignCardGrid', { items: additionalCampaigns, columns: 3 }) + '</div>' : '')
   );
 
   var biznes = section(
-    marked(render('splitBanner', {
+    '<div class="business2-biznes">' + marked(render('splitBanner', {
       eyebrow: 'Self-service',
       title: 'Run your business account from one place',
       body: 'Manage corporate numbers, check billing, review packages and keep day-to-day account tasks moving without waiting for support.',
@@ -216,7 +223,7 @@
         { label: 'Open Azercell Biznes', href: BIZNES, variant: 'primary' },
         { label: 'View Online Itemized Bill', href: ITEMIZED_BILL }
       ]
-    }), 'dummy')
+    }), 'dummy') + '</div>'
   );
 
   var whyAzercell = section(
@@ -236,7 +243,7 @@
     marked(render('sectionHead', {
       eyebrow: 'Help',
       title: 'Get help or talk to the Business team',
-      body: 'Choose a support route or send a request for a tailored recommendation.'
+      body: 'Choose a support route for account, service and billing questions.'
     }), 'dummy') +
     '<div class="grid grid--4">' +
       markedCard({ title: 'Talk to Support', body: 'Call the Azercell Business support line.', linkLabel: 'Call *6050', href: 'tel:*6050', bodySource: 'dummy' }) +
@@ -246,43 +253,9 @@
     '</div>'
   );
 
-  var regions = ['Baku', 'Ganja', 'Sumgayit', 'Nakhchivan', 'Lankaran', 'Sheki', 'Other'];
-  var leadForm = section(
-    '<div id="contact-sales" class="business2-form">' +
-      render('leadForm', {
-        id: 'business2-contact-sales-form',
-        eyebrow: 'Talk to Azercell Business',
-        title: 'Tell us what your business needs',
-        body: 'Share a few company details and a business consultant will contact you to recommend the right next step.',
-        submitLabel: 'Send request',
-        note: 'A response timeframe will be added after the Business team confirms the service SLA.',
-        fields: [
-          { name: 'name', label: 'First name and last name', type: 'text', required: true, autocomplete: 'name' },
-          { name: 'email', label: 'Business email', type: 'email', required: true, autocomplete: 'email' },
-          { name: 'phone', label: 'Phone number', type: 'tel', required: true, inputmode: 'tel', autocomplete: 'tel' },
-          { name: 'company', label: 'Company name', type: 'text', required: true, autocomplete: 'organization' },
-          { name: 'taxId', label: 'TAX ID', type: 'text', required: true },
-          { name: 'region', label: 'Region or city', type: 'select', required: true, placeholder: 'Select a region', options: regions },
-          { name: 'need', label: 'What do you need?', type: 'select', required: true, placeholder: 'Select a topic', options: ['Mobile', 'Connectivity', 'Digital solution', 'Roaming', 'Other'] },
-          { name: 'contactMethod', label: 'Preferred contact method', type: 'radio', options: ['Call', 'Email'], wide: true }
-        ],
-        handoff: {
-          label: 'Prototype — this form is not connected',
-          body: 'The fields validate locally. On the live site, a successful request should return a clear confirmation and a reference number.',
-          links: [
-            { label: 'Call *6050', href: 'tel:*6050', variant: 'primary' },
-            { label: 'Email Business team', href: 'mailto:business@azercell.com' },
-            { label: 'Open Azercell Biznes', href: BIZNES }
-          ]
-        }
-      }) +
-    '</div>'
-  );
-
   Components.mount('#page-main', [
     hero,
     digitalSolutions,
-    sourceLegend,
     quickActions,
     mobileOffers,
     internet,
@@ -290,8 +263,7 @@
     activeCampaigns,
     biznes,
     whyAzercell,
-    support,
-    leadForm
+    support
   ]);
   PrototypeApp.init();
 })();
